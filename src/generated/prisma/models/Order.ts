@@ -31,7 +31,7 @@ export type OrderAvgAggregateOutputType = {
   subtotal: runtime.Decimal | null
   composite_tax_rate: runtime.Decimal | null
   tax_amount: runtime.Decimal | null
-  tital_amount: runtime.Decimal | null
+  total_amount: runtime.Decimal | null
   userId: number | null
 }
 
@@ -40,7 +40,7 @@ export type OrderSumAggregateOutputType = {
   subtotal: runtime.Decimal | null
   composite_tax_rate: runtime.Decimal | null
   tax_amount: runtime.Decimal | null
-  tital_amount: runtime.Decimal | null
+  total_amount: runtime.Decimal | null
   userId: number | null
 }
 
@@ -49,7 +49,7 @@ export type OrderMinAggregateOutputType = {
   subtotal: runtime.Decimal | null
   composite_tax_rate: runtime.Decimal | null
   tax_amount: runtime.Decimal | null
-  tital_amount: runtime.Decimal | null
+  total_amount: runtime.Decimal | null
   timestamp: Date | null
   created_at: Date | null
   updated_at: Date | null
@@ -61,7 +61,7 @@ export type OrderMaxAggregateOutputType = {
   subtotal: runtime.Decimal | null
   composite_tax_rate: runtime.Decimal | null
   tax_amount: runtime.Decimal | null
-  tital_amount: runtime.Decimal | null
+  total_amount: runtime.Decimal | null
   timestamp: Date | null
   created_at: Date | null
   updated_at: Date | null
@@ -73,7 +73,7 @@ export type OrderCountAggregateOutputType = {
   subtotal: number
   composite_tax_rate: number
   tax_amount: number
-  tital_amount: number
+  total_amount: number
   timestamp: number
   created_at: number
   updated_at: number
@@ -87,7 +87,7 @@ export type OrderAvgAggregateInputType = {
   subtotal?: true
   composite_tax_rate?: true
   tax_amount?: true
-  tital_amount?: true
+  total_amount?: true
   userId?: true
 }
 
@@ -96,7 +96,7 @@ export type OrderSumAggregateInputType = {
   subtotal?: true
   composite_tax_rate?: true
   tax_amount?: true
-  tital_amount?: true
+  total_amount?: true
   userId?: true
 }
 
@@ -105,7 +105,7 @@ export type OrderMinAggregateInputType = {
   subtotal?: true
   composite_tax_rate?: true
   tax_amount?: true
-  tital_amount?: true
+  total_amount?: true
   timestamp?: true
   created_at?: true
   updated_at?: true
@@ -117,7 +117,7 @@ export type OrderMaxAggregateInputType = {
   subtotal?: true
   composite_tax_rate?: true
   tax_amount?: true
-  tital_amount?: true
+  total_amount?: true
   timestamp?: true
   created_at?: true
   updated_at?: true
@@ -129,7 +129,7 @@ export type OrderCountAggregateInputType = {
   subtotal?: true
   composite_tax_rate?: true
   tax_amount?: true
-  tital_amount?: true
+  total_amount?: true
   timestamp?: true
   created_at?: true
   updated_at?: true
@@ -228,7 +228,7 @@ export type OrderGroupByOutputType = {
   subtotal: runtime.Decimal
   composite_tax_rate: runtime.Decimal
   tax_amount: runtime.Decimal
-  tital_amount: runtime.Decimal
+  total_amount: runtime.Decimal
   timestamp: Date
   created_at: Date
   updated_at: Date
@@ -263,7 +263,7 @@ export type OrderWhereInput = {
   subtotal?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFilter<"Order"> | Date | string
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -277,7 +277,7 @@ export type OrderOrderByWithRelationInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -294,7 +294,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   subtotal?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFilter<"Order"> | Date | string
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -308,7 +308,7 @@ export type OrderOrderByWithAggregationInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -328,7 +328,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   subtotal?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalWithAggregatesFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -339,7 +339,7 @@ export type OrderCreateInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -352,7 +352,7 @@ export type OrderUncheckedCreateInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -364,7 +364,7 @@ export type OrderUpdateInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -377,7 +377,7 @@ export type OrderUncheckedUpdateInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -390,7 +390,7 @@ export type OrderCreateManyInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -401,7 +401,7 @@ export type OrderUpdateManyMutationInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -412,7 +412,7 @@ export type OrderUncheckedUpdateManyInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -434,7 +434,7 @@ export type OrderCountOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -446,7 +446,7 @@ export type OrderAvgOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -455,7 +455,7 @@ export type OrderMaxOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -467,7 +467,7 @@ export type OrderMinOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -479,7 +479,7 @@ export type OrderSumOrderByAggregateInput = {
   subtotal?: Prisma.SortOrder
   composite_tax_rate?: Prisma.SortOrder
   tax_amount?: Prisma.SortOrder
-  tital_amount?: Prisma.SortOrder
+  total_amount?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -556,7 +556,7 @@ export type OrderCreateWithoutUserInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -568,7 +568,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -609,7 +609,7 @@ export type OrderScalarWhereInput = {
   subtotal?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFilter<"Order"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFilter<"Order"> | Date | string
   created_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -620,7 +620,7 @@ export type OrderCreateWithoutJurisdictionsInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -632,7 +632,7 @@ export type OrderUncheckedCreateWithoutJurisdictionsInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -659,7 +659,7 @@ export type OrderUpdateWithoutJurisdictionsInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -671,7 +671,7 @@ export type OrderUncheckedUpdateWithoutJurisdictionsInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -683,7 +683,7 @@ export type OrderCreateManyUserInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Date | string
   created_at?: Date | string
   updated_at?: Date | string
@@ -693,7 +693,7 @@ export type OrderUpdateWithoutUserInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -705,7 +705,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -717,7 +717,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tital_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -759,7 +759,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   subtotal?: boolean
   composite_tax_rate?: boolean
   tax_amount?: boolean
-  tital_amount?: boolean
+  total_amount?: boolean
   timestamp?: boolean
   created_at?: boolean
   updated_at?: boolean
@@ -774,7 +774,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   subtotal?: boolean
   composite_tax_rate?: boolean
   tax_amount?: boolean
-  tital_amount?: boolean
+  total_amount?: boolean
   timestamp?: boolean
   created_at?: boolean
   updated_at?: boolean
@@ -787,7 +787,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   subtotal?: boolean
   composite_tax_rate?: boolean
   tax_amount?: boolean
-  tital_amount?: boolean
+  total_amount?: boolean
   timestamp?: boolean
   created_at?: boolean
   updated_at?: boolean
@@ -800,14 +800,14 @@ export type OrderSelectScalar = {
   subtotal?: boolean
   composite_tax_rate?: boolean
   tax_amount?: boolean
-  tital_amount?: boolean
+  total_amount?: boolean
   timestamp?: boolean
   created_at?: boolean
   updated_at?: boolean
   userId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subtotal" | "composite_tax_rate" | "tax_amount" | "tital_amount" | "timestamp" | "created_at" | "updated_at" | "userId", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subtotal" | "composite_tax_rate" | "tax_amount" | "total_amount" | "timestamp" | "created_at" | "updated_at" | "userId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   jurisdictions?: boolean | Prisma.Order$jurisdictionsArgs<ExtArgs>
@@ -831,7 +831,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     subtotal: runtime.Decimal
     composite_tax_rate: runtime.Decimal
     tax_amount: runtime.Decimal
-    tital_amount: runtime.Decimal
+    total_amount: runtime.Decimal
     timestamp: Date
     created_at: Date
     updated_at: Date
@@ -1265,7 +1265,7 @@ export interface OrderFieldRefs {
   readonly subtotal: Prisma.FieldRef<"Order", 'Decimal'>
   readonly composite_tax_rate: Prisma.FieldRef<"Order", 'Decimal'>
   readonly tax_amount: Prisma.FieldRef<"Order", 'Decimal'>
-  readonly tital_amount: Prisma.FieldRef<"Order", 'Decimal'>
+  readonly total_amount: Prisma.FieldRef<"Order", 'Decimal'>
   readonly timestamp: Prisma.FieldRef<"Order", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"Order", 'DateTime'>

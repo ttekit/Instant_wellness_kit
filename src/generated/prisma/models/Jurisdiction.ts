@@ -192,15 +192,15 @@ export type JurisdictionWhereInput = {
   NOT?: Prisma.JurisdictionWhereInput | Prisma.JurisdictionWhereInput[]
   id?: Prisma.IntFilter<"Jurisdiction"> | number
   name?: Prisma.StringFilter<"Jurisdiction"> | string
-  tax_rates?: Prisma.TaxRateListRelationFilter
   orders?: Prisma.OrderOnJurisdictionListRelationFilter
+  tax_rates?: Prisma.TaxRateListRelationFilter
 }
 
 export type JurisdictionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  tax_rates?: Prisma.TaxRateOrderByRelationAggregateInput
   orders?: Prisma.OrderOnJurisdictionOrderByRelationAggregateInput
+  tax_rates?: Prisma.TaxRateOrderByRelationAggregateInput
 }
 
 export type JurisdictionWhereUniqueInput = Prisma.AtLeast<{
@@ -209,8 +209,8 @@ export type JurisdictionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.JurisdictionWhereInput[]
   NOT?: Prisma.JurisdictionWhereInput | Prisma.JurisdictionWhereInput[]
   name?: Prisma.StringFilter<"Jurisdiction"> | string
-  tax_rates?: Prisma.TaxRateListRelationFilter
   orders?: Prisma.OrderOnJurisdictionListRelationFilter
+  tax_rates?: Prisma.TaxRateListRelationFilter
 }, "id">
 
 export type JurisdictionOrderByWithAggregationInput = {
@@ -233,28 +233,28 @@ export type JurisdictionScalarWhereWithAggregatesInput = {
 
 export type JurisdictionCreateInput = {
   name: string
-  tax_rates?: Prisma.TaxRateCreateNestedManyWithoutJurisdictionInput
   orders?: Prisma.OrderOnJurisdictionCreateNestedManyWithoutJurisdictionInput
+  tax_rates?: Prisma.TaxRateCreateNestedManyWithoutJurisdictionInput
 }
 
 export type JurisdictionUncheckedCreateInput = {
   id?: number
   name: string
-  tax_rates?: Prisma.TaxRateUncheckedCreateNestedManyWithoutJurisdictionInput
   orders?: Prisma.OrderOnJurisdictionUncheckedCreateNestedManyWithoutJurisdictionInput
+  tax_rates?: Prisma.TaxRateUncheckedCreateNestedManyWithoutJurisdictionInput
 }
 
 export type JurisdictionUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  tax_rates?: Prisma.TaxRateUpdateManyWithoutJurisdictionNestedInput
   orders?: Prisma.OrderOnJurisdictionUpdateManyWithoutJurisdictionNestedInput
+  tax_rates?: Prisma.TaxRateUpdateManyWithoutJurisdictionNestedInput
 }
 
 export type JurisdictionUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  tax_rates?: Prisma.TaxRateUncheckedUpdateManyWithoutJurisdictionNestedInput
   orders?: Prisma.OrderOnJurisdictionUncheckedUpdateManyWithoutJurisdictionNestedInput
+  tax_rates?: Prisma.TaxRateUncheckedUpdateManyWithoutJurisdictionNestedInput
 }
 
 export type JurisdictionCreateManyInput = {
@@ -409,13 +409,13 @@ export type JurisdictionUncheckedUpdateWithoutTax_ratesInput = {
  */
 
 export type JurisdictionCountOutputType = {
-  tax_rates: number
   orders: number
+  tax_rates: number
 }
 
 export type JurisdictionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  tax_rates?: boolean | JurisdictionCountOutputTypeCountTax_ratesArgs
   orders?: boolean | JurisdictionCountOutputTypeCountOrdersArgs
+  tax_rates?: boolean | JurisdictionCountOutputTypeCountTax_ratesArgs
 }
 
 /**
@@ -431,23 +431,23 @@ export type JurisdictionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
 /**
  * JurisdictionCountOutputType without action
  */
-export type JurisdictionCountOutputTypeCountTax_ratesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TaxRateWhereInput
+export type JurisdictionCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderOnJurisdictionWhereInput
 }
 
 /**
  * JurisdictionCountOutputType without action
  */
-export type JurisdictionCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OrderOnJurisdictionWhereInput
+export type JurisdictionCountOutputTypeCountTax_ratesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaxRateWhereInput
 }
 
 
 export type JurisdictionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  tax_rates?: boolean | Prisma.Jurisdiction$tax_ratesArgs<ExtArgs>
   orders?: boolean | Prisma.Jurisdiction$ordersArgs<ExtArgs>
+  tax_rates?: boolean | Prisma.Jurisdiction$tax_ratesArgs<ExtArgs>
   _count?: boolean | Prisma.JurisdictionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jurisdiction"]>
 
@@ -468,8 +468,8 @@ export type JurisdictionSelectScalar = {
 
 export type JurisdictionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["jurisdiction"]>
 export type JurisdictionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  tax_rates?: boolean | Prisma.Jurisdiction$tax_ratesArgs<ExtArgs>
   orders?: boolean | Prisma.Jurisdiction$ordersArgs<ExtArgs>
+  tax_rates?: boolean | Prisma.Jurisdiction$tax_ratesArgs<ExtArgs>
   _count?: boolean | Prisma.JurisdictionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type JurisdictionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -478,8 +478,8 @@ export type JurisdictionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types
 export type $JurisdictionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Jurisdiction"
   objects: {
-    tax_rates: Prisma.$TaxRatePayload<ExtArgs>[]
     orders: Prisma.$OrderOnJurisdictionPayload<ExtArgs>[]
+    tax_rates: Prisma.$TaxRatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -878,8 +878,8 @@ readonly fields: JurisdictionFieldRefs;
  */
 export interface Prisma__JurisdictionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  tax_rates<T extends Prisma.Jurisdiction$tax_ratesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Jurisdiction$tax_ratesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Jurisdiction$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Jurisdiction$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderOnJurisdictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tax_rates<T extends Prisma.Jurisdiction$tax_ratesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Jurisdiction$tax_ratesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaxRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1299,30 +1299,6 @@ export type JurisdictionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * Jurisdiction.tax_rates
- */
-export type Jurisdiction$tax_ratesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TaxRate
-   */
-  select?: Prisma.TaxRateSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TaxRate
-   */
-  omit?: Prisma.TaxRateOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TaxRateInclude<ExtArgs> | null
-  where?: Prisma.TaxRateWhereInput
-  orderBy?: Prisma.TaxRateOrderByWithRelationInput | Prisma.TaxRateOrderByWithRelationInput[]
-  cursor?: Prisma.TaxRateWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TaxRateScalarFieldEnum | Prisma.TaxRateScalarFieldEnum[]
-}
-
-/**
  * Jurisdiction.orders
  */
 export type Jurisdiction$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1344,6 +1320,30 @@ export type Jurisdiction$ordersArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.OrderOnJurisdictionScalarFieldEnum | Prisma.OrderOnJurisdictionScalarFieldEnum[]
+}
+
+/**
+ * Jurisdiction.tax_rates
+ */
+export type Jurisdiction$tax_ratesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TaxRate
+   */
+  select?: Prisma.TaxRateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TaxRate
+   */
+  omit?: Prisma.TaxRateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TaxRateInclude<ExtArgs> | null
+  where?: Prisma.TaxRateWhereInput
+  orderBy?: Prisma.TaxRateOrderByWithRelationInput | Prisma.TaxRateOrderByWithRelationInput[]
+  cursor?: Prisma.TaxRateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TaxRateScalarFieldEnum | Prisma.TaxRateScalarFieldEnum[]
 }
 
 /**

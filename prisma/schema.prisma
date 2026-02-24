@@ -39,7 +39,7 @@ model Order {
   subtotal           Decimal
   composite_tax_rate Decimal               @map("composite_tax_rate")
   tax_amount         Decimal               @map("tax_amount")
-  tital_amount       Decimal               @map("total_amount")
+  total_amount       Decimal               @map("total_amount")
   timestamp          DateTime              @default(now())
   created_at         DateTime              @default(now()) @map("created_at")
   updated_at         DateTime              @updatedAt @map("updated_at")

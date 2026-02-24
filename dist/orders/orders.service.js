@@ -5,13 +5,98 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersService = void 0;
 const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../prisma.service");
 let OrdersService = class OrdersService {
+    prisma;
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async create(CreateOrderDto) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: CreateOrderDto.userId }
+        });
+        if (!user) {
+            throw new common_1.BadRequestException(`User with ID ${CreateOrderDto.userId} not found`);
+        }
+        const jurisdictionsData = CreateOrderDto.jurisdictionIds?.map((id) => ({
+            jurisdiction: { connect: { id } },
+        })) || [];
+        return this.prisma.order.create({
+            data: {
+                subtotal: CreateOrderDto.subtotal,
+                composite_tax_rate: CreateOrderDto.composite_tax_rate,
+                tax_amount: CreateOrderDto.tax_amount,
+                total_amount: CreateOrderDto.total_amount,
+                user: { connect: { id: CreateOrderDto.userId } },
+                jurisdictions: {
+                    create: jurisdictionsData,
+                },
+            },
+            include: {
+                jurisdictions: true,
+            }
+        });
+    }
+    async findAll() {
+        return this.prisma.order.findMany({
+            include: {
+                jurisdictions: {
+                    include: {
+                        jurisdiction: true,
+                    }
+                }
+            }
+        });
+    }
+    async findOne(id) {
+        const order = await this.prisma.order.findUnique({
+            where: { id },
+            include: {
+                jurisdictions: {
+                    include: { jurisdiction: true }
+                }
+            }
+        });
+        if (!order) {
+            throw new common_1.NotFoundException(`Order with ID ${id} not found`);
+        }
+        return order;
+    }
+    async update(id, UpdateOrderDto) {
+        const existingOrder = await this.prisma.order.findUnique({ where: { id } });
+        if (!existingOrder) {
+            throw new common_1.NotFoundException(`Order with ID ${id} not found`);
+        }
+        const { jurisdictionIds, ...dataToUpdate } = UpdateOrderDto;
+        return this.prisma.order.update({
+            where: { id },
+            data: dataToUpdate,
+        });
+    }
+    async remove(id) {
+        const order = await this.prisma.order.findUnique({
+            where: { id }
+        });
+        if (!order) {
+            throw new common_1.NotFoundException(`Order with ID ${id} not found`);
+        }
+        await this.prisma.orderOnJurisdiction.deleteMany({
+            where: { order_id: id }
+        });
+        return this.prisma.order.delete({
+            where: { id }
+        });
+    }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], OrdersService);
 //# sourceMappingURL=orders.service.js.map

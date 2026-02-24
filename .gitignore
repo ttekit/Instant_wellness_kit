@@ -1,6 +1,10 @@
 # Dependency directories
 node_modules/
 /dist/
+dist/
+dist
+/dist
+
 
 # Prisma
 /prisma/migrations/*.sql # Keep migration files, but ignore if they're auto-generated during dev sometimes

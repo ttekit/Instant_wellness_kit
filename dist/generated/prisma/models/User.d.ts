@@ -136,9 +136,9 @@ export type UserWhereInput = {
     password?: Prisma.StringFilter<"User"> | string;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     roleId?: Prisma.IntFilter<"User"> | number;
-    role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>;
     billings?: Prisma.BillingListRelationFilter;
     orders?: Prisma.OrderListRelationFilter;
+    role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -148,9 +148,9 @@ export type UserOrderByWithRelationInput = {
     password?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     roleId?: Prisma.SortOrder;
-    role?: Prisma.RoleOrderByWithRelationInput;
     billings?: Prisma.BillingOrderByRelationAggregateInput;
     orders?: Prisma.OrderOrderByRelationAggregateInput;
+    role?: Prisma.RoleOrderByWithRelationInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: number;
@@ -163,9 +163,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     password?: Prisma.StringFilter<"User"> | string;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     roleId?: Prisma.IntFilter<"User"> | number;
-    role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>;
     billings?: Prisma.BillingListRelationFilter;
     orders?: Prisma.OrderListRelationFilter;
+    role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>;
 }, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -199,9 +199,9 @@ export type UserCreateInput = {
     email: string;
     password: string;
     createdAt?: Date | string;
-    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
     billings?: Prisma.BillingCreateNestedManyWithoutUserInput;
     orders?: Prisma.OrderCreateNestedManyWithoutUserInput;
+    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
 };
 export type UserUncheckedCreateInput = {
     id?: number;
@@ -220,9 +220,9 @@ export type UserUpdateInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
     billings?: Prisma.BillingUpdateManyWithoutUserNestedInput;
     orders?: Prisma.OrderUpdateManyWithoutUserNestedInput;
+    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -388,8 +388,8 @@ export type UserCreateWithoutBillingsInput = {
     email: string;
     password: string;
     createdAt?: Date | string;
-    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
     orders?: Prisma.OrderCreateNestedManyWithoutUserInput;
+    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
 };
 export type UserUncheckedCreateWithoutBillingsInput = {
     id?: number;
@@ -420,8 +420,8 @@ export type UserUpdateWithoutBillingsInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
     orders?: Prisma.OrderUpdateManyWithoutUserNestedInput;
+    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
 };
 export type UserUncheckedUpdateWithoutBillingsInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -439,8 +439,8 @@ export type UserCreateWithoutOrdersInput = {
     email: string;
     password: string;
     createdAt?: Date | string;
-    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
     billings?: Prisma.BillingCreateNestedManyWithoutUserInput;
+    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
 };
 export type UserUncheckedCreateWithoutOrdersInput = {
     id?: number;
@@ -471,8 +471,8 @@ export type UserUpdateWithoutOrdersInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
     billings?: Prisma.BillingUpdateManyWithoutUserNestedInput;
+    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
 };
 export type UserUncheckedUpdateWithoutOrdersInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -596,9 +596,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     password?: boolean;
     createdAt?: boolean;
     roleId?: boolean;
-    role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
     billings?: boolean | Prisma.User$billingsArgs<ExtArgs>;
     orders?: boolean | Prisma.User$ordersArgs<ExtArgs>;
+    role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -632,9 +632,9 @@ export type UserSelectScalar = {
 };
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "surname" | "email" | "password" | "createdAt" | "roleId", ExtArgs["result"]["user"]>;
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
     billings?: boolean | Prisma.User$billingsArgs<ExtArgs>;
     orders?: boolean | Prisma.User$ordersArgs<ExtArgs>;
+    role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -646,9 +646,9 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "User";
     objects: {
-        role: Prisma.$RolePayload<ExtArgs>;
         billings: Prisma.$BillingPayload<ExtArgs>[];
         orders: Prisma.$OrderPayload<ExtArgs>[];
+        role: Prisma.$RolePayload<ExtArgs>;
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: number;
@@ -710,9 +710,9 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
-    role<T extends Prisma.RoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoleDefaultArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     billings<T extends Prisma.User$billingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$billingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BillingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    role<T extends Prisma.RoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoleDefaultArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;

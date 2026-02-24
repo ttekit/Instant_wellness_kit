@@ -96,14 +96,14 @@ export type OrderOnJurisdictionWhereInput = {
     NOT?: Prisma.OrderOnJurisdictionWhereInput | Prisma.OrderOnJurisdictionWhereInput[];
     order_id?: Prisma.IntFilter<"OrderOnJurisdiction"> | number;
     jurisdiction_id?: Prisma.IntFilter<"OrderOnJurisdiction"> | number;
-    order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>;
     jurisdiction?: Prisma.XOR<Prisma.JurisdictionScalarRelationFilter, Prisma.JurisdictionWhereInput>;
+    order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>;
 };
 export type OrderOnJurisdictionOrderByWithRelationInput = {
     order_id?: Prisma.SortOrder;
     jurisdiction_id?: Prisma.SortOrder;
-    order?: Prisma.OrderOrderByWithRelationInput;
     jurisdiction?: Prisma.JurisdictionOrderByWithRelationInput;
+    order?: Prisma.OrderOrderByWithRelationInput;
 };
 export type OrderOnJurisdictionWhereUniqueInput = Prisma.AtLeast<{
     order_id_jurisdiction_id?: Prisma.OrderOnJurisdictionOrder_idJurisdiction_idCompoundUniqueInput;
@@ -112,8 +112,8 @@ export type OrderOnJurisdictionWhereUniqueInput = Prisma.AtLeast<{
     NOT?: Prisma.OrderOnJurisdictionWhereInput | Prisma.OrderOnJurisdictionWhereInput[];
     order_id?: Prisma.IntFilter<"OrderOnJurisdiction"> | number;
     jurisdiction_id?: Prisma.IntFilter<"OrderOnJurisdiction"> | number;
-    order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>;
     jurisdiction?: Prisma.XOR<Prisma.JurisdictionScalarRelationFilter, Prisma.JurisdictionWhereInput>;
+    order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>;
 }, "order_id_jurisdiction_id">;
 export type OrderOnJurisdictionOrderByWithAggregationInput = {
     order_id?: Prisma.SortOrder;
@@ -132,16 +132,16 @@ export type OrderOnJurisdictionScalarWhereWithAggregatesInput = {
     jurisdiction_id?: Prisma.IntWithAggregatesFilter<"OrderOnJurisdiction"> | number;
 };
 export type OrderOnJurisdictionCreateInput = {
-    order: Prisma.OrderCreateNestedOneWithoutJurisdictionsInput;
     jurisdiction: Prisma.JurisdictionCreateNestedOneWithoutOrdersInput;
+    order: Prisma.OrderCreateNestedOneWithoutJurisdictionsInput;
 };
 export type OrderOnJurisdictionUncheckedCreateInput = {
     order_id: number;
     jurisdiction_id: number;
 };
 export type OrderOnJurisdictionUpdateInput = {
-    order?: Prisma.OrderUpdateOneRequiredWithoutJurisdictionsNestedInput;
     jurisdiction?: Prisma.JurisdictionUpdateOneRequiredWithoutOrdersNestedInput;
+    order?: Prisma.OrderUpdateOneRequiredWithoutJurisdictionsNestedInput;
 };
 export type OrderOnJurisdictionUncheckedUpdateInput = {
     order_id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -352,20 +352,20 @@ export type OrderOnJurisdictionUncheckedUpdateManyWithoutJurisdictionInput = {
 export type OrderOnJurisdictionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     order_id?: boolean;
     jurisdiction_id?: boolean;
-    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
     jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>;
+    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["orderOnJurisdiction"]>;
 export type OrderOnJurisdictionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     order_id?: boolean;
     jurisdiction_id?: boolean;
-    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
     jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>;
+    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["orderOnJurisdiction"]>;
 export type OrderOnJurisdictionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     order_id?: boolean;
     jurisdiction_id?: boolean;
-    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
     jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>;
+    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["orderOnJurisdiction"]>;
 export type OrderOnJurisdictionSelectScalar = {
     order_id?: boolean;
@@ -373,22 +373,22 @@ export type OrderOnJurisdictionSelectScalar = {
 };
 export type OrderOnJurisdictionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"order_id" | "jurisdiction_id", ExtArgs["result"]["orderOnJurisdiction"]>;
 export type OrderOnJurisdictionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
     jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>;
+    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
 };
 export type OrderOnJurisdictionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
     jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>;
+    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
 };
 export type OrderOnJurisdictionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
     jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>;
+    order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>;
 };
 export type $OrderOnJurisdictionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "OrderOnJurisdiction";
     objects: {
-        order: Prisma.$OrderPayload<ExtArgs>;
         jurisdiction: Prisma.$JurisdictionPayload<ExtArgs>;
+        order: Prisma.$OrderPayload<ExtArgs>;
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         order_id: number;
@@ -445,8 +445,8 @@ export interface OrderOnJurisdictionDelegate<ExtArgs extends runtime.Types.Exten
 }
 export interface Prisma__OrderOnJurisdictionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
-    order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     jurisdiction<T extends Prisma.JurisdictionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JurisdictionDefaultArgs<ExtArgs>>): Prisma.Prisma__JurisdictionClient<runtime.Types.Result.GetResult<Prisma.$JurisdictionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;

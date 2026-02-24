@@ -753,7 +753,7 @@ export declare const OrderScalarFieldEnum: {
     readonly subtotal: "subtotal";
     readonly composite_tax_rate: "composite_tax_rate";
     readonly tax_amount: "tax_amount";
-    readonly tital_amount: "tital_amount";
+    readonly total_amount: "total_amount";
     readonly timestamp: "timestamp";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
