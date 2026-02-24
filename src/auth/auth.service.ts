@@ -31,11 +31,11 @@ export class AuthService {
     }
 
     const roleExist = await this.prisma.role.findUnique({
-        where: { id: roleId }
+      where: { id: roleId }
     });
 
     if (!roleExist) {
-        throw new BadRequestException(`Role with ID ${roleId} does not exist`);
+      throw new BadRequestException(`Role with ID ${roleId} does not exist`);
     }
 
     const hashed_password = await bcrypt.hash(password, 10);
@@ -47,7 +47,7 @@ export class AuthService {
         name,
         surname,
         role: {
-            connect: { id: roleId }
+          connect: { id: roleId }
         }
       },
       select: {
@@ -56,10 +56,10 @@ export class AuthService {
         name: true,
         surname: true,
         role: {
-            select: {
-                id: true,
-                name: true,
-            }
+          select: {
+            id: true,
+            name: true,
+          }
         }
       }
     })

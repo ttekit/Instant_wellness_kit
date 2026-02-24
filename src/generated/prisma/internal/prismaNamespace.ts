@@ -997,7 +997,7 @@ export const OrderScalarFieldEnum = {
   subtotal: 'subtotal',
   composite_tax_rate: 'composite_tax_rate',
   tax_amount: 'tax_amount',
-  tital_amount: 'tital_amount',
+  total_amount: 'total_amount',
   timestamp: 'timestamp',
   created_at: 'created_at',
   updated_at: 'updated_at',

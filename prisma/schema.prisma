@@ -7,91 +7,90 @@ datasource db {
   provider = "postgresql"
 }
 
-enum PaymentMethodType {
-  CREDIT_CARD
-  PAYPAL
-  BANK_TRANSFER
-}
-
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   surname   String
-  email     String   @unique
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
-  roleId    Int      @map("role_id")
-  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime  @default(now())
+  roleId    Int       @map("role_id")
+  billings  Billing[]
+  orders    Order[]
+  role      Role      @relation(fields: [roleId], references: [id])
 
-  billings Billing[]
-  orders Order[]
-
-@@map("users")
+  @@map("users")
 }
 
 model Billing {
   id            Int               @id @default(autoincrement())
-  user          User              @relation(fields: [userId], references: [id])
   userId        Int               @map("user_id")
-  paymentMethod PaymentMethodType @map("payment_method") 
+  paymentMethod PaymentMethodType @map("payment_method")
   details       Json
   createdAt     DateTime          @default(now()) @map("created_at")
   updatedAt     DateTime          @updatedAt @map("updated_at")
+  user          User              @relation(fields: [userId], references: [id])
 
   @@map("billing")
 }
 
 model Order {
-  id        Int      @id @default(autoincrement())
-  subtotal  Decimal
-  composite_tax_rate  Decimal @map("composite_tax_rate")
-  tax_amount   Decimal  @map("tax_amount")
+  id                 Int                   @id @default(autoincrement())
+  subtotal           Decimal
+  composite_tax_rate Decimal               @map("composite_tax_rate")
+  tax_amount         Decimal               @map("tax_amount")
+  total_amount       Decimal               @map("total_amount")
+  timestamp          DateTime              @default(now())
+  created_at         DateTime              @default(now()) @map("created_at")
+  updated_at         DateTime              @updatedAt @map("updated_at")
+  userId             Int                   @map("user_id")
+  user               User                  @relation(fields: [userId], references: [id])
+  jurisdictions      OrderOnJurisdiction[]
 
-  tital_amount Decimal  @map("total_amount")
-  timestamp   DateTime @default(now())
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
-  user        User @relation(fields: [userId], references: [id])
-  userId      Int @map("user_id")
-
-  jurisdictions OrderOnJurisdiction[]
-
-@@map("order")
+  @@map("order")
 }
+
 model Jurisdiction {
-  id        Int      @id @default(autoincrement())
+  id        Int                   @id @default(autoincrement())
   name      String
-  tax_rates TaxRate[]
   orders    OrderOnJurisdiction[]
+  tax_rates TaxRate[]
 }
-model  OrderOnJurisdiction{
-  order     Order    @relation(fields: [order_id], references: [id])
-  order_id   Int    @map("order_id")
-  jurisdiction Jurisdiction   @relation(fields: [jurisdiction_id], references: [id])
-  jurisdiction_id   Int @map("jurisdiction_id")
 
-@@id([order_id, jurisdiction_id])
-@@map("order_on_jurisdiction")
+model OrderOnJurisdiction {
+  order_id        Int          @map("order_id")
+  jurisdiction_id Int          @map("jurisdiction_id")
+  jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id])
+  order           Order        @relation(fields: [order_id], references: [id])
+
+  @@id([order_id, jurisdiction_id])
+  @@map("order_on_jurisdiction")
 }
 
 model TaxRate {
-  id        Int      @id @default(autoincrement())
-  rate      Decimal
-  type      Decimal
-  created_at  DateTime  @map("created_at")
-  updated_at  DateTime  @map("updated_at")
-  jurisdiction Jurisdiction @relation(fields: [jurisdiction_id], references: [id])
-  jurisdiction_id Int @map("jurisdiction_id")
+  id              Int          @id @default(autoincrement())
+  rate            Decimal
+  type            Decimal
+  created_at      DateTime     @map("created_at")
+  updated_at      DateTime     @map("updated_at")
+  jurisdiction_id Int          @map("jurisdiction_id")
+  jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id])
 
   @@map("tax_rates")
 }
 
 model Role {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
   description String?
   permissions Json
   users       User[]
 
   @@map("roles")
+}
+
+enum PaymentMethodType {
+  CREDIT_CARD
+  PAYPAL
+  BANK_TRANSFER
 }
