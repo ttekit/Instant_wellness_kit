@@ -20,9 +20,9 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "jsx": "preserve",
-    "allowJs": true,
-    "moduleResolution": "node"
+    // "rootDir": "./src"
+    // "noEmit": true,
+    // "allowImportingTsExtensions": true
   },
   "include": [
     "src/**/*"
