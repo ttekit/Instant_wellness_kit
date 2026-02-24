@@ -10,13 +10,14 @@ exports.JurisdictionsModule = void 0;
 const common_1 = require("@nestjs/common");
 const jurisdictions_service_1 = require("./jurisdictions.service");
 const jurisdictions_controller_1 = require("./jurisdictions.controller");
+const prisma_service_1 = require("../prisma.service");
 let JurisdictionsModule = class JurisdictionsModule {
 };
 exports.JurisdictionsModule = JurisdictionsModule;
 exports.JurisdictionsModule = JurisdictionsModule = __decorate([
     (0, common_1.Module)({
         controllers: [jurisdictions_controller_1.JurisdictionsController],
-        providers: [jurisdictions_service_1.JurisdictionsService],
+        providers: [jurisdictions_service_1.JurisdictionsService, prisma_service_1.PrismaService],
     })
 ], JurisdictionsModule);
 //# sourceMappingURL=jurisdictions.module.js.map

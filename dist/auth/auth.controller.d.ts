@@ -5,14 +5,14 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     register(registerDto: RegisterDto): Promise<{
-        id: number;
+        role: {
+            name: string;
+            id: number;
+        };
         name: string;
         surname: string;
         email: string;
-        role: {
-            id: number;
-            name: string;
-        };
+        id: number;
     }>;
     login(loginDto: LoginDto): Promise<{
         access_token: string;

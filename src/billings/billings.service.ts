@@ -5,7 +5,7 @@ import { UpdateBillingDto } from './dto/update-billing.dto';
 
 @Injectable()
 export class BillingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(createBillingDto: CreateBillingDto) {
     const user = await this.prisma.user.findUnique({ where: { id: createBillingDto.userId } });
@@ -53,7 +53,7 @@ export class BillingsService {
 
     return this.prisma.billing.update({
       where: { id },
-      data: updateBillingDto, // Directly spread the DTO for partial updates
+      data: updateBillingDto,
     });
   }
 

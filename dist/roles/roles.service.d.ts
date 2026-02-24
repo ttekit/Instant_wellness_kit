@@ -5,33 +5,33 @@ export declare class RolesService {
     private prisma;
     constructor(prisma: PrismaService);
     create(createRoleDto: CreateRoleDto): Promise<{
-        id: number;
-        name: string;
         description: string | null;
+        name: string;
+        id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }>;
     findAll(): Promise<{
-        id: number;
-        name: string;
         description: string | null;
+        name: string;
+        id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }[]>;
     findOne(id: number): Promise<{
-        id: number;
-        name: string;
         description: string | null;
+        name: string;
+        id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }>;
     update(id: number, updateRoleDto: UpdateRoleDto): Promise<{
-        id: number;
-        name: string;
         description: string | null;
+        name: string;
+        id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }>;
     remove(id: number): Promise<{
-        id: number;
-        name: string;
         description: string | null;
+        name: string;
+        id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }>;
 }
