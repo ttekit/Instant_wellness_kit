@@ -92,9 +92,10 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const BillingScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  card: 'card',
-  cvv: 'cvv',
-  date: 'date'
+  paymentMethod: 'paymentMethod',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type BillingScalarFieldEnum = (typeof BillingScalarFieldEnum)[keyof typeof BillingScalarFieldEnum]

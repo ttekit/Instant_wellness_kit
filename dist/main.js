@@ -5,17 +5,20 @@ const dotenv_1 = require("dotenv");
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const swagger_1 = require("@nestjs/swagger");
+const common_1 = require("@nestjs/common");
 console.log("NEST TYPE:", typeof process.env.DATABASE_URL);
 console.log("NEST VALUE:", process.env.DATABASE_URL);
 async function bootstrap() {
     console.log('DATABASE_URL:', process.env.DATABASE_URL);
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors();
+    app.useGlobalPipes(new common_1.ValidationPipe());
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Instant Wellness Kit API')
         .setDescription('The Instant Wellness Kit API description')
         .setVersion('1.0')
         .addTag('roles')
+        .addTag('billings', 'Operations related to user billing information')
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup('api', app, document);

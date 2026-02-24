@@ -40,9 +40,10 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export declare const BillingScalarFieldEnum: {
     readonly id: "id";
     readonly userId: "userId";
-    readonly card: "card";
-    readonly cvv: "cvv";
-    readonly date: "date";
+    readonly paymentMethod: "paymentMethod";
+    readonly details: "details";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
 };
 export type BillingScalarFieldEnum = (typeof BillingScalarFieldEnum)[keyof typeof BillingScalarFieldEnum];
 export declare const OrderScalarFieldEnum: {

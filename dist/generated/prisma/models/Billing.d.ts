@@ -1,4 +1,5 @@
 import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums";
 import type * as Prisma from "../internal/prismaNamespace";
 export type BillingModel = runtime.Types.Result.DefaultSelection<Prisma.$BillingPayload>;
 export type AggregateBilling = {
@@ -19,23 +20,24 @@ export type BillingSumAggregateOutputType = {
 export type BillingMinAggregateOutputType = {
     id: number | null;
     userId: number | null;
-    card: string | null;
-    cvv: string | null;
-    date: string | null;
+    paymentMethod: $Enums.PaymentMethodType | null;
+    createdAt: Date | null;
+    updatedAt: Date | null;
 };
 export type BillingMaxAggregateOutputType = {
     id: number | null;
     userId: number | null;
-    card: string | null;
-    cvv: string | null;
-    date: string | null;
+    paymentMethod: $Enums.PaymentMethodType | null;
+    createdAt: Date | null;
+    updatedAt: Date | null;
 };
 export type BillingCountAggregateOutputType = {
     id: number;
     userId: number;
-    card: number;
-    cvv: number;
-    date: number;
+    paymentMethod: number;
+    details: number;
+    createdAt: number;
+    updatedAt: number;
     _all: number;
 };
 export type BillingAvgAggregateInputType = {
@@ -49,23 +51,24 @@ export type BillingSumAggregateInputType = {
 export type BillingMinAggregateInputType = {
     id?: true;
     userId?: true;
-    card?: true;
-    cvv?: true;
-    date?: true;
+    paymentMethod?: true;
+    createdAt?: true;
+    updatedAt?: true;
 };
 export type BillingMaxAggregateInputType = {
     id?: true;
     userId?: true;
-    card?: true;
-    cvv?: true;
-    date?: true;
+    paymentMethod?: true;
+    createdAt?: true;
+    updatedAt?: true;
 };
 export type BillingCountAggregateInputType = {
     id?: true;
     userId?: true;
-    card?: true;
-    cvv?: true;
-    date?: true;
+    paymentMethod?: true;
+    details?: true;
+    createdAt?: true;
+    updatedAt?: true;
     _all?: true;
 };
 export type BillingAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -99,9 +102,10 @@ export type BillingGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type BillingGroupByOutputType = {
     id: number;
     userId: number;
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: runtime.JsonValue;
+    createdAt: Date;
+    updatedAt: Date;
     _count: BillingCountAggregateOutputType | null;
     _avg: BillingAvgAggregateOutputType | null;
     _sum: BillingSumAggregateOutputType | null;
@@ -117,17 +121,19 @@ export type BillingWhereInput = {
     NOT?: Prisma.BillingWhereInput | Prisma.BillingWhereInput[];
     id?: Prisma.IntFilter<"Billing"> | number;
     userId?: Prisma.IntFilter<"Billing"> | number;
-    card?: Prisma.StringFilter<"Billing"> | string;
-    cvv?: Prisma.StringFilter<"Billing"> | string;
-    date?: Prisma.StringFilter<"Billing"> | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFilter<"Billing"> | $Enums.PaymentMethodType;
+    details?: Prisma.JsonFilter<"Billing">;
+    createdAt?: Prisma.DateTimeFilter<"Billing"> | Date | string;
+    updatedAt?: Prisma.DateTimeFilter<"Billing"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
 };
 export type BillingOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    card?: Prisma.SortOrder;
-    cvv?: Prisma.SortOrder;
-    date?: Prisma.SortOrder;
+    paymentMethod?: Prisma.SortOrder;
+    details?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    updatedAt?: Prisma.SortOrder;
     user?: Prisma.UserOrderByWithRelationInput;
 };
 export type BillingWhereUniqueInput = Prisma.AtLeast<{
@@ -136,17 +142,19 @@ export type BillingWhereUniqueInput = Prisma.AtLeast<{
     OR?: Prisma.BillingWhereInput[];
     NOT?: Prisma.BillingWhereInput | Prisma.BillingWhereInput[];
     userId?: Prisma.IntFilter<"Billing"> | number;
-    card?: Prisma.StringFilter<"Billing"> | string;
-    cvv?: Prisma.StringFilter<"Billing"> | string;
-    date?: Prisma.StringFilter<"Billing"> | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFilter<"Billing"> | $Enums.PaymentMethodType;
+    details?: Prisma.JsonFilter<"Billing">;
+    createdAt?: Prisma.DateTimeFilter<"Billing"> | Date | string;
+    updatedAt?: Prisma.DateTimeFilter<"Billing"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
 }, "id">;
 export type BillingOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    card?: Prisma.SortOrder;
-    cvv?: Prisma.SortOrder;
-    date?: Prisma.SortOrder;
+    paymentMethod?: Prisma.SortOrder;
+    details?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    updatedAt?: Prisma.SortOrder;
     _count?: Prisma.BillingCountOrderByAggregateInput;
     _avg?: Prisma.BillingAvgOrderByAggregateInput;
     _max?: Prisma.BillingMaxOrderByAggregateInput;
@@ -159,54 +167,62 @@ export type BillingScalarWhereWithAggregatesInput = {
     NOT?: Prisma.BillingScalarWhereWithAggregatesInput | Prisma.BillingScalarWhereWithAggregatesInput[];
     id?: Prisma.IntWithAggregatesFilter<"Billing"> | number;
     userId?: Prisma.IntWithAggregatesFilter<"Billing"> | number;
-    card?: Prisma.StringWithAggregatesFilter<"Billing"> | string;
-    cvv?: Prisma.StringWithAggregatesFilter<"Billing"> | string;
-    date?: Prisma.StringWithAggregatesFilter<"Billing"> | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeWithAggregatesFilter<"Billing"> | $Enums.PaymentMethodType;
+    details?: Prisma.JsonWithAggregatesFilter<"Billing">;
+    createdAt?: Prisma.DateTimeWithAggregatesFilter<"Billing"> | Date | string;
+    updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Billing"> | Date | string;
 };
 export type BillingCreateInput = {
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutBillingsInput;
 };
 export type BillingUncheckedCreateInput = {
     id?: number;
     userId: number;
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
 };
 export type BillingUpdateInput = {
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutBillingsNestedInput;
 };
 export type BillingUncheckedUpdateInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     userId?: Prisma.IntFieldUpdateOperationsInput | number;
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type BillingCreateManyInput = {
     id?: number;
     userId: number;
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
 };
 export type BillingUpdateManyMutationInput = {
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type BillingUncheckedUpdateManyInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     userId?: Prisma.IntFieldUpdateOperationsInput | number;
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type BillingListRelationFilter = {
     every?: Prisma.BillingWhereInput;
@@ -219,9 +235,10 @@ export type BillingOrderByRelationAggregateInput = {
 export type BillingCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    card?: Prisma.SortOrder;
-    cvv?: Prisma.SortOrder;
-    date?: Prisma.SortOrder;
+    paymentMethod?: Prisma.SortOrder;
+    details?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    updatedAt?: Prisma.SortOrder;
 };
 export type BillingAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -230,16 +247,16 @@ export type BillingAvgOrderByAggregateInput = {
 export type BillingMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    card?: Prisma.SortOrder;
-    cvv?: Prisma.SortOrder;
-    date?: Prisma.SortOrder;
+    paymentMethod?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    updatedAt?: Prisma.SortOrder;
 };
 export type BillingMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
-    card?: Prisma.SortOrder;
-    cvv?: Prisma.SortOrder;
-    date?: Prisma.SortOrder;
+    paymentMethod?: Prisma.SortOrder;
+    createdAt?: Prisma.SortOrder;
+    updatedAt?: Prisma.SortOrder;
 };
 export type BillingSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -283,16 +300,21 @@ export type BillingUncheckedUpdateManyWithoutUserNestedInput = {
     updateMany?: Prisma.BillingUpdateManyWithWhereWithoutUserInput | Prisma.BillingUpdateManyWithWhereWithoutUserInput[];
     deleteMany?: Prisma.BillingScalarWhereInput | Prisma.BillingScalarWhereInput[];
 };
+export type EnumPaymentMethodTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentMethodType;
+};
 export type BillingCreateWithoutUserInput = {
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
 };
 export type BillingUncheckedCreateWithoutUserInput = {
     id?: number;
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
 };
 export type BillingCreateOrConnectWithoutUserInput = {
     where: Prisma.BillingWhereUniqueInput;
@@ -321,65 +343,74 @@ export type BillingScalarWhereInput = {
     NOT?: Prisma.BillingScalarWhereInput | Prisma.BillingScalarWhereInput[];
     id?: Prisma.IntFilter<"Billing"> | number;
     userId?: Prisma.IntFilter<"Billing"> | number;
-    card?: Prisma.StringFilter<"Billing"> | string;
-    cvv?: Prisma.StringFilter<"Billing"> | string;
-    date?: Prisma.StringFilter<"Billing"> | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFilter<"Billing"> | $Enums.PaymentMethodType;
+    details?: Prisma.JsonFilter<"Billing">;
+    createdAt?: Prisma.DateTimeFilter<"Billing"> | Date | string;
+    updatedAt?: Prisma.DateTimeFilter<"Billing"> | Date | string;
 };
 export type BillingCreateManyUserInput = {
     id?: number;
-    card: string;
-    cvv: string;
-    date: string;
+    paymentMethod: $Enums.PaymentMethodType;
+    details: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
 };
 export type BillingUpdateWithoutUserInput = {
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type BillingUncheckedUpdateWithoutUserInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type BillingUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
-    card?: Prisma.StringFieldUpdateOperationsInput | string;
-    cvv?: Prisma.StringFieldUpdateOperationsInput | string;
-    date?: Prisma.StringFieldUpdateOperationsInput | string;
+    paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType;
+    details?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type BillingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     userId?: boolean;
-    card?: boolean;
-    cvv?: boolean;
-    date?: boolean;
+    paymentMethod?: boolean;
+    details?: boolean;
+    createdAt?: boolean;
+    updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["billing"]>;
 export type BillingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     userId?: boolean;
-    card?: boolean;
-    cvv?: boolean;
-    date?: boolean;
+    paymentMethod?: boolean;
+    details?: boolean;
+    createdAt?: boolean;
+    updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["billing"]>;
 export type BillingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     userId?: boolean;
-    card?: boolean;
-    cvv?: boolean;
-    date?: boolean;
+    paymentMethod?: boolean;
+    details?: boolean;
+    createdAt?: boolean;
+    updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["billing"]>;
 export type BillingSelectScalar = {
     id?: boolean;
     userId?: boolean;
-    card?: boolean;
-    cvv?: boolean;
-    date?: boolean;
+    paymentMethod?: boolean;
+    details?: boolean;
+    createdAt?: boolean;
+    updatedAt?: boolean;
 };
-export type BillingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "card" | "cvv" | "date", ExtArgs["result"]["billing"]>;
+export type BillingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "paymentMethod" | "details" | "createdAt" | "updatedAt", ExtArgs["result"]["billing"]>;
 export type BillingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
@@ -397,9 +428,10 @@ export type $BillingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: number;
         userId: number;
-        card: string;
-        cvv: string;
-        date: string;
+        paymentMethod: $Enums.PaymentMethodType;
+        details: runtime.JsonValue;
+        createdAt: Date;
+        updatedAt: Date;
     }, ExtArgs["result"]["billing"]>;
     composites: {};
 };
@@ -460,9 +492,10 @@ export interface Prisma__BillingClient<T, Null = never, ExtArgs extends runtime.
 export interface BillingFieldRefs {
     readonly id: Prisma.FieldRef<"Billing", 'Int'>;
     readonly userId: Prisma.FieldRef<"Billing", 'Int'>;
-    readonly card: Prisma.FieldRef<"Billing", 'String'>;
-    readonly cvv: Prisma.FieldRef<"Billing", 'String'>;
-    readonly date: Prisma.FieldRef<"Billing", 'String'>;
+    readonly paymentMethod: Prisma.FieldRef<"Billing", 'PaymentMethodType'>;
+    readonly details: Prisma.FieldRef<"Billing", 'Json'>;
+    readonly createdAt: Prisma.FieldRef<"Billing", 'DateTime'>;
+    readonly updatedAt: Prisma.FieldRef<"Billing", 'DateTime'>;
 }
 export type BillingFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.BillingSelect<ExtArgs> | null;

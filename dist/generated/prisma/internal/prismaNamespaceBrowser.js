@@ -71,9 +71,10 @@ exports.UserScalarFieldEnum = {
 exports.BillingScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
-    card: 'card',
-    cvv: 'cvv',
-    date: 'date'
+    paymentMethod: 'paymentMethod',
+    details: 'details',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 exports.OrderScalarFieldEnum = {
     id: 'id',

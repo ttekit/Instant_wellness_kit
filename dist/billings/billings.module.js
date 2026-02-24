@@ -10,13 +10,14 @@ exports.BillingsModule = void 0;
 const common_1 = require("@nestjs/common");
 const billings_service_1 = require("./billings.service");
 const billings_controller_1 = require("./billings.controller");
+const prisma_service_1 = require("../prisma.service");
 let BillingsModule = class BillingsModule {
 };
 exports.BillingsModule = BillingsModule;
 exports.BillingsModule = BillingsModule = __decorate([
     (0, common_1.Module)({
         controllers: [billings_controller_1.BillingsController],
-        providers: [billings_service_1.BillingsService],
+        providers: [billings_service_1.BillingsService, prisma_service_1.PrismaService],
     })
 ], BillingsModule);
 //# sourceMappingURL=billings.module.js.map
