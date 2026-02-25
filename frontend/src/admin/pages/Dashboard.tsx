@@ -3,8 +3,12 @@ import OrdersTable from "../components/ui/OrdersTable";
 import { mockOrders } from "../components/mockData/mockOrders";
 import { ShoppingCart, DollarSign, Package, Truck } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import TaxCalc from "../components/ui/TaxCalc";
+import TaxResult from "../components/ui/TaxResult";
+import { useState } from "react";
 
 export default function Dashboard() {
+  const [hasData, setHasData] = useState(false);
   return (
     <div className="p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
@@ -46,7 +50,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="col-span-1 bg-white rounded-xl border border-gray-200 p-6">
+        <div className="col-span-1 bg-white rounded-xl border border-gray-200 p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-gray-900">
               Quick Tax Lookup
@@ -58,6 +62,9 @@ export default function Dashboard() {
               Full Tool
             </NavLink>
           </div>
+
+          <TaxCalc compact onSearch={() => setHasData(true)} />
+          <TaxResult hasData={hasData} />
         </div>
       </div>
     </div>

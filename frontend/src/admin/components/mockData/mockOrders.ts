@@ -1,9 +1,8 @@
 import { OrderInfo } from "../ui/OrdersTable";
-//mock data for checking, delete later
+
 export const mockOrders: OrderInfo[] = [
   {
     orderID: "10234",
-    orderTime: "2026-02-24 14:30",
     customer: "Sarah Jenkins",
     kit: "Premium Wellness",
     jurisdiction: "New York City",
@@ -15,7 +14,6 @@ export const mockOrders: OrderInfo[] = [
   },
   {
     orderID: "10235",
-    orderTime: "2026-02-24 15:05",
     customer: "Michael Chen",
     kit: "Basic Kit",
     jurisdiction: "Albany",

@@ -34,7 +34,10 @@ const headers = {
 
 export default function Topbar() {
   const location = useLocation();
-  const curr = headers[location.pathname];
+  const curr = headers[location.pathname as keyof typeof headers] || {
+    title: "",
+    descr: "",
+  };
 
   return (
     <header className="h-[72px] bg-white border-b border-gray-200 flex items-center px-8 shrink-0 w-full">

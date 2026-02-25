@@ -1,17 +1,20 @@
 import { MoreHorizontal, Pencil, CheckCircle, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { OrderInfo } from "./OrdersTable";
 
 interface DropdownProps {
-  order: OrderInfo;
+  order: { status: string };
   onDelete: () => void;
   onChangeStatus: (newStatus: string) => void;
+  onEdit?: () => void;
+  unblockStatus?: string;
 }
 
 export default function DropdownMenu({
   order,
   onDelete,
   onChangeStatus,
+  onEdit,
+  unblockStatus = "Pending",
 }: DropdownProps) {
   const [active, setActive] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -30,7 +33,7 @@ export default function DropdownMenu({
   const isBlocked = order.status === "Blocked";
   const handleToggleBlock = () => {
     if (isBlocked) {
-      onChangeStatus("Pending");
+      onChangeStatus(unblockStatus);
     } else {
       onChangeStatus("Blocked");
     }
@@ -51,7 +54,13 @@ export default function DropdownMenu({
       {active && (
         <div className="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg border border-gray-100 z-10">
           <div className="py-2 flex flex-col">
-            <button className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left">
+            <button
+              onClick={() => {
+                onEdit?.();
+                setActive(false);
+              }}
+              className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+            >
               <Pencil size={16} className="text-gray-500" />
               Edit
             </button>

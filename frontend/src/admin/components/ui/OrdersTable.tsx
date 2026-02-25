@@ -12,28 +12,45 @@ export interface OrderInfo {
   tax: number;
   total: number;
   status: string;
-  orderTime: string;
 }
 
 interface OrderTable {
   orders: OrderInfo[];
   limit?: number;
+  onEdit?: (order: OrderInfo) => void;
+  onDelete?: (order: OrderInfo) => void;
 }
 
-export default function OrdersTable({ orders, limit }: OrderTable) {
-  const [tableData, setTableData] = useState(orders.slice(0, limit));
+export default function OrdersTable({
+  orders,
+  limit,
+  onEdit,
+  onDelete,
+}: OrderTable) {
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const [statusMap, setStatusMap] = useState<{ [id: string]: string }>({});
 
-  const handleDelete = (orderID: string) => {
-    setTableData(tableData.filter((order) => order.orderID !== orderID));
+  const handleDelete = (order: OrderInfo) => {
+    if (onDelete) {
+      onDelete(order);
+      return;
+    }
+    setDeletedIds([...deletedIds, order.orderID]);
   };
 
   const statusChange = (orderID: string, newStatus: string) => {
-    setTableData(
-      tableData.map((order) =>
-        order.orderID === orderID ? { ...order, status: newStatus } : order,
-      ),
-    );
+    setStatusMap({ ...statusMap, [orderID]: newStatus });
   };
+
+  const displayData = orders
+    .filter((order) => !deletedIds.includes(order.orderID))
+    .slice(0, limit)
+    .map((order) => {
+      if (statusMap[order.orderID]) {
+        return { ...order, status: statusMap[order.orderID] };
+      }
+      return order;
+    });
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-auto h-[300px]">
@@ -49,12 +66,11 @@ export default function OrdersTable({ orders, limit }: OrderTable) {
             <th className="px-4 py-3 font-medium">Tax</th>
             <th className="px-4 py-3 font-medium">Total</th>
             <th className="px-4 py-3 font-medium">Status</th>
-            <th className="px-4 py-3 font-medium">Time of Order</th>
             <th className="px-4 py-3 font-medium"></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {tableData.map((order) => (
+          {displayData.map((order) => (
             <tr key={order.orderID} className="hover:bg-gray-50">
               <td className="px-4 py-3 font-medium text-gray-900">
                 {order.orderID}
@@ -75,12 +91,12 @@ export default function OrdersTable({ orders, limit }: OrderTable) {
               <td className="px-4 py-3 text-gray-600">
                 <Status stat={order.status} />
               </td>
-              <td className="px-4 py-3 text-gray-600">{order.orderTime}</td>
 
               <td>
                 <DropdownMenu
                   order={order}
-                  onDelete={() => handleDelete(order.orderID)}
+                  onEdit={() => onEdit?.(order)}
+                  onDelete={() => handleDelete(order)}
                   onChangeStatus={(newStatus) =>
                     statusChange(order.orderID, newStatus)
                   }
