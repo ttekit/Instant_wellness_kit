@@ -7,4 +7,4 @@ import { PrismaService } from '../prisma.service';
   controllers: [RolesController],
   providers: [RolesService, PrismaService],
 })
-export class RolesModule {}
+export class RolesModule { }

@@ -21,10 +21,11 @@ exports.CreateRoleDto = CreateRoleDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The name of the role', example: 'admin' }),
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateRoleDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: 'A brief description of the role', example: 'Full access to all features', required: false }),
+    (0, swagger_1.ApiPropertyOptional)({ description: 'A brief description of the role', example: 'Full access to all features', required: false }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
@@ -32,12 +33,10 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: 'An array of permissions associated with the role',
-        example: ['Users', 'Roles', 'Packages', 'Products', 'Orders', 'Settings', 'Tax Lookup'],
-        type: [String],
+        example: { users: ['read', 'create', 'update', 'delete'], orders: ['read'] },
     }),
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.IsString)({ each: true }),
-    (0, class_validator_1.ArrayMinSize)(1),
-    __metadata("design:type", Array)
+    (0, class_validator_1.IsObject)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Object)
 ], CreateRoleDto.prototype, "permissions", void 0);
 //# sourceMappingURL=create-role.dto.js.map

@@ -16,19 +16,19 @@ export declare class RolesController {
         id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }[]>;
-    findOne(id: string): Promise<{
+    findOne(id: number): Promise<{
         description: string | null;
         name: string;
         id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }>;
-    update(id: string, updateRoleDto: UpdateRoleDto): Promise<{
+    update(id: number, updateRoleDto: UpdateRoleDto): Promise<{
         description: string | null;
         name: string;
         id: number;
         permissions: import("@prisma/client/runtime/client").JsonValue;
     }>;
-    remove(id: string): Promise<{
+    remove(id: number): Promise<{
         description: string | null;
         name: string;
         id: number;
