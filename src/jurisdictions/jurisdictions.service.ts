@@ -10,17 +10,33 @@ export class JurisdictionsService {
     constructor(private prisma: PrismaService) { }
 
 
-    async create(createJurisdictionDto: CreateJurisdictionDto) {
+    async create(dto: CreateJurisdictionDto) {
 
         return this.prisma.jurisdiction.create({
             data: {
-                name: createJurisdictionDto.name,
+                name: dto.name,
+                type: dto.type,
+                fipsCode: dto.fipsCode,
+                tax_rates: {
+                    create: {
+                        rate: dto.rate,
+                        local_rate: dto.local_rate,
+                        mctd: dto.mctd,
+                        composite: dto.composite
+                    }
+                }
             },
         });
     }
 
+
+
     async findAll() {
-        return this.prisma.jurisdiction.findMany();
+        return this.prisma.jurisdiction.findMany({
+            include: {
+                tax_rates: true,
+            }
+        });
     }
 
     async findOne(id: number) {
