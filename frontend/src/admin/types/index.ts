@@ -9,6 +9,23 @@ export interface Jurisdiction {
   composite: number;
 }
 
+
+
+export interface BackendTaxRate {
+  rate: string | number;
+  local_rate: string | number;
+  mctd: string | number | null;
+  composite: string | number;
+}
+
+export interface BackendJurisdiction {
+  id: number;
+  name: string;
+  type: string;
+  fipsCode: string;
+  tax_rates: BackendTaxRate[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -41,7 +58,7 @@ export interface Role {
   id: string;
   name: string;
   description: string;
-  permissions: string[];
+  permissions: Record<string, boolean>;
 }
 
 export const allPermissions = [
