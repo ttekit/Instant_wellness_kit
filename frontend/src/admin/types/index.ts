@@ -1,12 +1,10 @@
 export interface Jurisdiction {
   id: string;
   name: string;
-  type: string;
-  fips: string;
-  stateRate: number;
-  localRate: number;
-  mctd: number | null;
-  composite: number;
+  code: string;
+  fipCode: string;
+  description: string;
+  status: string;
 }
 
 export interface Product {
