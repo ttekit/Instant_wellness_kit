@@ -46,7 +46,9 @@ model Order {
   userId             Int                   @map("user_id")
   user               User                  @relation(fields: [userId], references: [id])
   jurisdictions      OrderOnJurisdiction[]
-
+  status             Status                @default(PENDING)
+  packageId          Int                   @unique @map("package_id")
+  package            ProductPackage        @relation(fields: [packageId], references: [id])
   @@map("order")
 }
 
@@ -93,12 +95,14 @@ model Role {
 
 
 model ProductPackage {
-  id       Int       @id @default(autoincrement())
+  id       Int                @id @default(autoincrement())
   package  String
   price    Decimal
-  status   Status    @default(PENDING)
-  taxRate  Decimal   @map("tax_rate")
-    products ProductOnPackage[]
+  status   Status             @default(PENDING)
+  taxRate  Decimal            @map("tax_rate")
+  products ProductOnPackage[]
+
+  order    Order?
 
   @@map("products_packegs")
 }

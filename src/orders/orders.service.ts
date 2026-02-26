@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from 'src/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Status } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class OrdersService {
@@ -29,6 +30,7 @@ export class OrdersService {
                 jurisdictions: {
                     create: jurisdictionsData,
                 },
+                package: { connect: { id: CreateOrderDto.packageId } },
             },
             include: {
                 jurisdictions: true,
@@ -50,6 +52,24 @@ export class OrdersService {
 
     }
 
+    async getAllOrdersWithDetails() {
+        const orders = await this.prisma.order.findMany({
+            include: {
+                user: true,
+                package: true,
+                jurisdictions: {
+                    include: { jurisdiction: true }
+                }
+            },
+        });
+
+        return orders.map(order => ({
+            ...order,
+            customerName: `${order.user.name} ${order.user.surname}`,
+            orderPackage: order.package,
+        }));
+    }
+
     async findOne(id: number) {
         const order = await this.prisma.order.findUnique({
             where: { id },
@@ -68,18 +88,65 @@ export class OrdersService {
 
     }
 
+    async getOrderWithDetails(orderId: number) {
+        const order = await this.prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                user: true,
+                package: true,
+                jurisdictions: {
+                    include: { jurisdiction: true }
+                }
+            },
+        });
+
+        if (!order) {
+            throw new NotFoundException(`Order with ID ${orderId} not found`);
+        }
+
+        const customerName = `${order.user.name} ${order.user.surname}`;
+
+        return {
+            ...order,
+            customerName: customerName,
+            orderPackage: order.package,
+        };
+    }
+
     async update(id: number, UpdateOrderDto: UpdateOrderDto) {
         const existingOrder = await this.prisma.order.findUnique({ where: { id } })
         if (!existingOrder) {
             throw new NotFoundException(`Order with ID ${id} not found`)
         }
 
-        const { jurisdictionIds, ...dataToUpdate } = UpdateOrderDto;
+        const { jurisdictions, ...dataToUpdate } = UpdateOrderDto;
 
-        return this.prisma.order.update({
+        const updateData: any = { ...dataToUpdate };
+
+        if (jurisdictions !== undefined) {
+            updateData.jurisdictions = {
+                deleteMany: {},
+                create: jurisdictions.map(jurisdictionItem => ({
+                    jurisdiction: {
+                        connect: { id: jurisdictionItem.jurisdiction_id }
+                    }
+                })),
+            };
+        }
+
+        const updatedOrder = await this.prisma.order.update({
             where: { id },
-            data: dataToUpdate,
+            data: updateData,
+            include: {
+                jurisdictions: {
+                    include: { jurisdiction: true }
+                },
+                user: true,
+                package: true
+            }
         });
+
+        return this.getOrderWithDetails(updatedOrder.id);
 
     }
     async remove(id: number) {
@@ -97,5 +164,21 @@ export class OrdersService {
         return this.prisma.order.delete({
             where: { id }
         })
+    }
+
+
+
+    async changeStatus(id: number, newStatus: Status) {
+        const existingOrder = await this.prisma.order.findUnique({ where: { id } });
+        if (!existingOrder) {
+            throw new NotFoundException(`Order with ID ${id} not found`);
+        }
+
+        const updatedOrder = await this.prisma.order.update({
+            where: { id },
+            data: { status: newStatus },
+        });
+
+        return this.getOrderWithDetails(updatedOrder.id);
     }
 }

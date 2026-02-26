@@ -1,5 +1,6 @@
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsArray } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsArray, IsEnum } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Status } from 'src/generated/prisma/enums';
 
 export class CreateOrderDto {
     @ApiProperty({ description: 'The ID of the user creating the order', example: 1 })
@@ -35,4 +36,14 @@ export class CreateOrderDto {
     @IsInt({ each: true })
     @IsOptional()
     jurisdictionIds?: number[];
+
+    @ApiProperty({ description: 'The ID of the product package associated with the order', example: 1 })
+    @IsInt()
+    @IsNotEmpty()
+    packageId: number;
+
+    @ApiPropertyOptional({ description: 'The current status of the order', enum: Status, example: Status.PENDING })
+    @IsEnum(Status)
+    @IsOptional()
+    status?: Status;
 }

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCo
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('orders')
@@ -26,6 +27,13 @@ export class OrdersController {
     return this.ordersService.findAll();
   }
 
+  @Get('details')
+  @ApiOperation({ summary: 'Retrieve all orders with customer and package details' })
+  @ApiResponse({ status: 200, description: 'All orders with details retrieved successfully.' })
+  getAllOrdersWithDetails() {
+    return this.ordersService.getAllOrdersWithDetails();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve order by ID' })
   @ApiResponse({ status: 200, description: 'Order retrieved successfully.' })
@@ -33,6 +41,15 @@ export class OrdersController {
   @ApiParam({ name: 'id', type: Number, description: 'The ID of the order' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findOne(id);
+  }
+
+  @Get(':id/details')
+  @ApiOperation({ summary: 'Retrieve order with customer and package details by ID' })
+  @ApiResponse({ status: 200, description: 'Order details retrieved successfully.' })
+  @ApiResponse({ status: 404, description: 'Order not found.' })
+  @ApiParam({ name: 'id', type: Number, description: 'The ID of the order' })
+  getOrderWithDetails(@Param('id', ParseIntPipe) id: number) {
+    return this.ordersService.getOrderWithDetails(id);
   }
 
   @Patch(':id')
@@ -43,6 +60,7 @@ export class OrdersController {
   @ApiParam({ name: 'id', type: Number, description: 'The ID of the order' })
   @ApiBody({ type: UpdateOrderDto })
   update(@Param('id', ParseIntPipe) id: number, @Body() updateOrderDto: UpdateOrderDto) {
+    console.log(updateOrderDto);
     return this.ordersService.update(id, updateOrderDto);
   }
 
@@ -54,5 +72,18 @@ export class OrdersController {
   @ApiParam({ name: 'id', type: Number, description: 'The ID of the order' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.remove(id);
+  }
+
+
+
+  @Patch(':id/status')
+  @ApiOperation({ summary: 'Change the status of an order by ID' })
+  @ApiResponse({ status: 200, description: 'The order status has been successfully updated.' })
+  @ApiResponse({ status: 404, description: 'Order not found.' })
+  @ApiResponse({ status: 400, description: 'Bad Request (e.g., invalid status provided).' })
+  @ApiParam({ name: 'id', type: Number, description: 'The ID of the order to change status' })
+  @ApiBody({ type: ChangeOrderStatusDto })
+  changeStatus(@Param('id', ParseIntPipe) id: number, @Body() changeOrderStatusDto: ChangeOrderStatusDto) {
+    return this.ordersService.changeStatus(id, changeOrderStatusDto.status);
   }
 }

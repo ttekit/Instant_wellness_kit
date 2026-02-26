@@ -1,15 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { ProductPackage, Prisma, Status } from 'src/generated/prisma/client';
+import { ProductPackage, Status } from 'src/generated/prisma/client';
 import { CreateProductPackageDto } from './dto/create-product-package.dto';
 import { UpdateProductPackageDto } from './dto/update-product-package.dto';
+import { ProductPackageDetailsDto } from './dto/product-package-detail.dto';
 
 @Injectable()
 export class ProductPackegesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createProductPackageDto: CreateProductPackageDto): Promise<any> {
-    const { productIds, ...packageData } = createProductPackageDto;
+  async create(createProductPackageDto: CreateProductPackageDto): Promise<ProductPackage> {
+    const { productIds, ...productPackageData } = createProductPackageDto;
 
     if (productIds && productIds.length > 0) {
       const existingProducts = await this.prisma.product.findMany({
@@ -21,46 +26,59 @@ export class ProductPackegesService {
       });
 
       if (existingProducts.length !== productIds.length) {
-        const foundProductIds = new Set(existingProducts.map(p => p.id));
-        const nonExistentProductIds = productIds.filter(id => !foundProductIds.has(id));
-        throw new NotFoundException(`Products with IDs ${nonExistentProductIds.join(', ')} not found.`);
+        const foundProductIds = new Set(existingProducts.map((p) => p.id));
+        const nonExistentProductIds = productIds.filter(
+          (id) => !foundProductIds.has(id),
+        );
+        throw new NotFoundException(
+          `Products with IDs ${nonExistentProductIds.join(', ')} not found.`,
+        );
       }
     }
 
-    const newPackage = await this.prisma.productPackage.create({
-      data: {
-        ...packageData,
-        ...(productIds && productIds.length > 0
-          ? {
-              products: {
-                create: productIds.map((productId) => ({
-                  product: {
-                    connect: { id: productId },
-                  },
-                })),
-              },
-            }
-          : {}),
-      },
-    });
+    try {
+      return await this.prisma.$transaction(async (prisma) => {
+        const productPackage = await prisma.productPackage.create({
+          data: productPackageData,
+        });
 
-    return this.getProductPackegeWithJurisdictionAndProductsById(newPackage.id);
+        if (productIds && productIds.length > 0) {
+          const productOnPackageData = productIds.map((productId) => ({
+            packageId: productPackage.id,
+            productId: productId,
+          }));
+          await prisma.productOnPackage.createMany({
+            data: productOnPackageData,
+          });
+        }
+        return productPackage;
+      });
+    } catch (error) {
+      throw new ConflictException('Error creating product package');
+    }
   }
 
   async findAll(): Promise<ProductPackage[]> {
-    return this.prisma.productPackage.findMany();
-  }
-
-  async findOne(id: number): Promise<ProductPackage | null> {
-    return this.prisma.productPackage.findUnique({
-      where: { id },
+    return this.prisma.productPackage.findMany({
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
+        },
+      },
     });
   }
 
-  async update(id: number, updateProductPackageDto: UpdateProductPackageDto): Promise<ProductPackage> {
-    const { productIds, ...packageData } = updateProductPackageDto;
+  async findOne(id: number): Promise<ProductPackageDetailsDto | null> {
+    return this.getProductPackegeWithJurisdictionAndProductsById(id);
+  }
 
-    if (productIds && productIds.length > 0) {
+  async update(id: number, updateProductPackageDto: UpdateProductPackageDto): Promise<ProductPackageDetailsDto | null> {
+    console.log(updateProductPackageDto);
+    const { productIds, ...productPackageData } = updateProductPackageDto;
+
+    if (productIds !== undefined && productIds.length > 0) {
       const existingProducts = await this.prisma.product.findMany({
         where: {
           id: {
@@ -70,39 +88,52 @@ export class ProductPackegesService {
       });
 
       if (existingProducts.length !== productIds.length) {
-        const foundProductIds = new Set(existingProducts.map(p => p.id));
-        const nonExistentProductIds = productIds.filter(id => !foundProductIds.has(id));
-        throw new NotFoundException(`Products with IDs ${nonExistentProductIds.join(', ')} not found.`);
+        const foundProductIds = new Set(existingProducts.map((p) => p.id));
+        const nonExistentProductIds = productIds.filter(
+          (productId) => !foundProductIds.has(productId),
+        );
+        throw new NotFoundException(
+          `Products with IDs ${nonExistentProductIds.join(', ')} not found.`,
+        );
       }
     }
 
-    return this.prisma.productPackage.update({
-      where: { id },
-      data: {
-        ...packageData,
-        ...(productIds !== undefined
-          ? {
-              products: {
-                deleteMany: {}, // Delete all existing ProductOnPackage relations
-                create: productIds.map((productId) => ({
-                  product: {
-                    connect: { id: productId },
-                  },
-                })),
-              },
-            }
-          : {}),
-      },
+    await this.prisma.$transaction(async (prisma) => {
+      await prisma.productPackage.update({
+        where: { id },
+        data: productPackageData,
+      });
+
+      if (productIds !== undefined) {
+        await prisma.productOnPackage.deleteMany({
+          where: { packageId: id },
+        });
+
+        if (productIds.length > 0) {
+          const productOnPackageData = productIds.map((productId) => ({
+            packageId: id,
+            productId: productId,
+          }));
+          await prisma.productOnPackage.createMany({
+            data: productOnPackageData,
+          });
+        }
+      }
     });
+
+    return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
   async remove(id: number): Promise<ProductPackage> {
+    await this.prisma.productOnPackage.deleteMany({
+      where: { packageId: id },
+    });
     return this.prisma.productPackage.delete({
       where: { id },
     });
   }
 
-  async block(id: number): Promise<ProductPackage> {
+  async block(id: number): Promise<ProductPackageDetailsDto | null> {
     const existingPackage = await this.prisma.productPackage.findUnique({
       where: { id },
     });
@@ -111,15 +142,16 @@ export class ProductPackegesService {
       throw new NotFoundException(`Product Package with ID ${id} not found.`);
     }
 
-    return this.prisma.productPackage.update({
+    await this.prisma.productPackage.update({
       where: { id },
       data: {
         status: Status.BLOCKED,
       },
     });
+    return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
-  async unblock(id: number): Promise<ProductPackage> {
+  async unblock(id: number): Promise<ProductPackageDetailsDto | null> {
     const existingPackage = await this.prisma.productPackage.findUnique({
       where: { id },
     });
@@ -128,15 +160,16 @@ export class ProductPackegesService {
       throw new NotFoundException(`Product Package with ID ${id} not found.`);
     }
 
-    return this.prisma.productPackage.update({
+    await this.prisma.productPackage.update({
       where: { id },
       data: {
         status: Status.PENDING,
       },
     });
+    return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
-  async getProductPackegeWithJurisdictionAndProducts() {
+  async getProductPackegeWithJurisdictionAndProducts(): Promise<ProductPackageDetailsDto[]> {
     const packages = await this.prisma.productPackage.findMany({
       include: {
         products: {
@@ -163,23 +196,29 @@ export class ProductPackegesService {
       const uniqueJurisdictions = new Map();
       productsWithJurisdictions.forEach((product) => {
         product.jurisdictions.forEach((jurisdiction) => {
-          uniqueJurisdictions.set(jurisdiction.id, { id: jurisdiction.id, name: jurisdiction.name });
+          uniqueJurisdictions.set(jurisdiction.id, {
+            id: jurisdiction.id,
+            name: jurisdiction.name,
+          });
         });
       });
 
       return {
         id: pkg.id,
         package: pkg.package,
-        price: pkg.price,
+        price: Number(pkg.price),
         status: pkg.status,
-        tax_rate: pkg.taxRate,
+        tax_rate: Number(pkg.taxRate),
         jurisdictions: Array.from(uniqueJurisdictions.values()),
-        products: productsWithJurisdictions.map(({ jurisdictions, ...productWithoutJurisdictions }) => productWithoutJurisdictions),
+        products: productsWithJurisdictions.map(
+          ({ jurisdictions, ...productWithoutJurisdictions }) =>
+            productWithoutJurisdictions,
+        ),
       };
     });
   }
 
-  async getProductPackegeWithJurisdictionAndProductsById(id: number) {
+  async getProductPackegeWithJurisdictionAndProductsById(id: number): Promise<ProductPackageDetailsDto | null> {
     const pkg = await this.prisma.productPackage.findUnique({
       where: { id },
       include: {
@@ -210,18 +249,24 @@ export class ProductPackegesService {
     const uniqueJurisdictions = new Map();
     productsWithJurisdictions.forEach((product) => {
       product.jurisdictions.forEach((jurisdiction) => {
-        uniqueJurisdictions.set(jurisdiction.id, { id: jurisdiction.id, name: jurisdiction.name });
+        uniqueJurisdictions.set(jurisdiction.id, {
+          id: jurisdiction.id,
+          name: jurisdiction.name,
+        });
       });
     });
 
     return {
       id: pkg.id,
       package: pkg.package,
-      price: pkg.price,
+      price: Number(pkg.price),
       status: pkg.status,
-      tax_rate: pkg.taxRate,
+      tax_rate: Number(pkg.taxRate),
       jurisdictions: Array.from(uniqueJurisdictions.values()),
-      products: productsWithJurisdictions.map(({ jurisdictions, ...productWithoutJurisdictions }) => productWithoutJurisdictions),
+      products: productsWithJurisdictions.map(
+        ({ jurisdictions, ...productWithoutJurisdictions }) =>
+          productWithoutJurisdictions,
+      ),
     };
   }
 }
