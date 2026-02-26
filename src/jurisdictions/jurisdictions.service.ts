@@ -11,10 +11,8 @@ export class JurisdictionsService {
         return this.prisma.jurisdiction.create({
             data: {
                 name: dto.name,
-                code: dto.code || "TEMP_CODE",
                 type: dto.type,
                 fipCode: dto.fipsCode,
-                description: dto.description,
                 status: dto.status || "Active",
 
                 tax_rates: {
@@ -54,10 +52,8 @@ export class JurisdictionsService {
             where: { id },
             data: {
                 name: updateDto.name,
-                code: updateDto.code,
                 type: updateDto.type,
                 fipCode: updateDto.fipsCode,
-                description: updateDto.description,
                 status: updateDto.status,
             },
         });
