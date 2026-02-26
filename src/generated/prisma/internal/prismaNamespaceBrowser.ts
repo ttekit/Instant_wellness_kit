@@ -118,7 +118,14 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 
 export const JurisdictionScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  code: 'code',
+  fipCode: 'fipCode',
+  description: 'description',
+  type: 'type',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type JurisdictionScalarFieldEnum = (typeof JurisdictionScalarFieldEnum)[keyof typeof JurisdictionScalarFieldEnum]
@@ -135,7 +142,10 @@ export type OrderOnJurisdictionScalarFieldEnum = (typeof OrderOnJurisdictionScal
 export const TaxRateScalarFieldEnum = {
   id: 'id',
   rate: 'rate',
+  local_rate: 'local_rate',
   type: 'type',
+  composite: 'composite',
+  mctd: 'mctd',
   created_at: 'created_at',
   updated_at: 'updated_at',
   jurisdiction_id: 'jurisdiction_id'
