@@ -5,6 +5,8 @@ export default function Status({ stat }: { stat: string }) {
     Pending: "bg-white border border-gray-300 text-gray-700",
     Cancelled: "bg-red-600 text-white",
     Blocked: "bg-red-600 text-white",
+    Available: "bg-green-600 text-white",
+    Active: "bg-green-600 text-white",
   };
 
   const style = statusColor[stat];

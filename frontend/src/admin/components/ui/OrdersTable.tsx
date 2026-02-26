@@ -1,39 +1,61 @@
-import DropdownMenu from "./DropdownMenu";
+import OrderDropdownMenu from "./OrderDropdownMenu";
 import Status from "./Status";
 import { useState } from "react";
+import { Order } from "../../types/Orders.types";
 
-export interface OrderInfo {
-  orderID: string;
-  customer: string;
-  kit: string;
-  jurisdiction: string;
-  subtotal: number;
-  taxRate: number;
-  tax: number;
-  total: number;
-  status: string;
-  orderTime: string;
-}
-
-interface OrderTable {
-  orders: OrderInfo[];
+interface OrdersTableProps {
+  orders: Order[];
   limit?: number;
+  onEdit?: (order: Order) => void;
+  onDelete?: (order: Order) => void;
+  onStatusChange?: (orderId: number, newStatus: string) => void;
 }
 
-export default function OrdersTable({ orders, limit }: OrderTable) {
-  const [tableData, setTableData] = useState(orders.slice(0, limit));
+export default function OrdersTable({
+  orders,
+  limit,
+  onEdit,
+  onDelete,
+  onStatusChange,
+}: OrdersTableProps) {
+  const [deletedIds, setDeletedIds] = useState<number[]>([]);
 
-  const handleDelete = (orderID: string) => {
-    setTableData(tableData.filter((order) => order.orderID !== orderID));
+  const handleDelete = (order: Order) => {
+    if (onDelete) {
+      onDelete(order);
+      return;
+    }
+    setDeletedIds([...deletedIds, order.id]);
   };
 
-  const statusChange = (orderID: string, newStatus: string) => {
-    setTableData(
-      tableData.map((order) =>
-        order.orderID === orderID ? { ...order, status: newStatus } : order,
-      ),
-    );
-  };
+  const displayData = orders
+    .filter((order) => !deletedIds.includes(order.id))
+    .slice(0, limit)
+    .map((order) => {
+      const subtotal = parseFloat(order.subtotal || "0");
+      const taxRate = parseFloat(order.composite_tax_rate || "0") * 100;
+      const taxAmount = parseFloat(order.tax_amount || "0");
+      const totalAmount = parseFloat(order.total_amount || "0");
+
+      const customer = order.customerName || "N/A";
+      const kit = order.orderPackage?.package || "N/A";
+
+      const jurisdiction =
+        order.jurisdictions?.[0]?.jurisdiction?.name || "N/A";
+      const status = order.status;
+
+      return {
+        ...order,
+        displaySubtotal: subtotal,
+        displayTaxRate: taxRate,
+        displayTaxAmount: taxAmount,
+        displayTotalAmount: totalAmount,
+        displayCustomer: customer,
+        displayKit: kit,
+        displayJurisdiction: jurisdiction,
+        displayStatus: status,
+      };
+    });
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-auto h-[300px]">
@@ -49,41 +71,44 @@ export default function OrdersTable({ orders, limit }: OrderTable) {
             <th className="px-4 py-3 font-medium">Tax</th>
             <th className="px-4 py-3 font-medium">Total</th>
             <th className="px-4 py-3 font-medium">Status</th>
-            <th className="px-4 py-3 font-medium">Time of Order</th>
             <th className="px-4 py-3 font-medium"></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {tableData.map((order) => (
-            <tr key={order.orderID} className="hover:bg-gray-50">
+          {displayData.map((order) => (
+            <tr key={order.id} className="hover:bg-gray-50">
               <td className="px-4 py-3 font-medium text-gray-900">
-                {order.orderID}
+                {order.id}
               </td>
-              <td className="px-4 py-3 text-gray-900">{order.customer}</td>
-              <td className="px-4 py-3 text-gray-600">{order.kit}</td>
-              <td className="px-4 py-3 text-gray-600">{order.jurisdiction}</td>
               <td className="px-4 py-3 text-gray-900">
-                ${order.subtotal.toFixed(2)}
+                {order.displayCustomer}
               </td>
-              <td className="px-4 py-3 text-gray-600">{order.taxRate}%</td>
+              <td className="px-4 py-3 text-gray-600">{order.displayKit}</td>
               <td className="px-4 py-3 text-gray-600">
-                ${order.tax.toFixed(2)}
+                {order.displayJurisdiction}
+              </td>
+              <td className="px-4 py-3 text-gray-900">
+                ${order.displaySubtotal.toFixed(2)}
+              </td>
+              <td className="px-4 py-3 text-gray-600">
+                {order.displayTaxRate.toFixed(2)}%
+              </td>
+              <td className="px-4 py-3 text-gray-600">
+                ${order.displayTaxAmount.toFixed(2)}
               </td>
               <td className="px-4 py-3 font-medium text-gray-900">
-                ${order.total.toFixed(2)}
+                ${order.displayTotalAmount.toFixed(2)}
               </td>
               <td className="px-4 py-3 text-gray-600">
-                <Status stat={order.status} />
+                <Status stat={order.displayStatus} />
               </td>
-              <td className="px-4 py-3 text-gray-600">{order.orderTime}</td>
 
               <td>
-                <DropdownMenu
+                <OrderDropdownMenu
                   order={order}
-                  onDelete={() => handleDelete(order.orderID)}
-                  onChangeStatus={(newStatus) =>
-                    statusChange(order.orderID, newStatus)
-                  }
+                  onEdit={onEdit}
+                  onDelete={handleDelete}
+                  onStatusChange={onStatusChange}
                 />
               </td>
             </tr>
