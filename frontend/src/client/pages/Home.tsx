@@ -30,7 +30,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/45" />
         <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#f3f6f4] to-transparent" />
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pb-12">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pb-12 pt-24">
 
           <div className="badge flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-xs font-semibold tracking-widest uppercase rounded-full px-4 py-2 mb-6">
             <span className="dot w-2 h-2 rounded-full bg-yellow-400 inline-block" />

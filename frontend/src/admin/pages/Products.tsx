@@ -83,7 +83,7 @@ export default function Products() {
     ));
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-gray-50 min-h-full">
       <div className="flex items-center justify-between mb-4">
         <div className="flex-1 bg-white rounded-xl border border-gray-200 p-4 mr-4">
           <SearchBar

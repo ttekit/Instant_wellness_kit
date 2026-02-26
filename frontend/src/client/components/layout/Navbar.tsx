@@ -26,7 +26,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-2 bg-[#e8eceb] select-none">
+    <nav className="sticky top-0 z-50 flex items-center justify-between px-8 py-2 bg-[#e8eceb] select-none">
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
         <div className="bg-[#2596be] text-white rounded-lg p-1.5">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">

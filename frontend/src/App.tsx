@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from './client/pages/Home'
 import Admin from './admin/Admin'
 import Account from './client/pages/Account'
@@ -22,13 +22,11 @@ export default function App() {
   }, [])
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/admin/*" element={<Admin />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/admin/*" element={<Admin />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
