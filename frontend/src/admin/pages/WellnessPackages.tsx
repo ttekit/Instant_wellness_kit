@@ -3,12 +3,7 @@ import SearchBar from "../components/ui/SearchBar";
 import Status from "../components/ui/Status";
 import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
-import {
-  mockWellnessPackages,
-  WellnessPackage,
-} from "../components/mockData/mockWellnessPackages";
-import { mockJurisdictions } from "../components/mockData/mockJurisdictions";
-import { mockProducts } from "../components/mockData/mockProducts";
+import { WellnessPackage, Jurisdiction, Product } from "../types";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 
 const emptyPackage: WellnessPackage = {
@@ -24,7 +19,9 @@ const emptyPackage: WellnessPackage = {
 
 export default function WellnessPackages() {
   const [search, setSearch] = useState("");
-  const [packages, setPackages] = useState(mockWellnessPackages);
+  const [packages, setPackages] = useState<WellnessPackage[]>([]);
+  const [jurisdictions] = useState<Jurisdiction[]>([]);
+  const [products] = useState<Product[]>([]);
   const [editPkg, setEditPkg] = useState<WellnessPackage | null>(null);
   const [newPkg, setNewPkg] = useState<WellnessPackage>(emptyPackage);
   const [showAdd, setShowAdd] = useState(false);
@@ -59,7 +56,7 @@ export default function WellnessPackages() {
   const toggleJur = (jurId, pkg, setPkg) => {
     const ids =
       pkg.jurisdictionIds === "all"
-        ? mockJurisdictions.map((j) => j.id)
+        ? jurisdictions.map((j) => j.id)
         : [...pkg.jurisdictionIds];
     const updated = ids.includes(jurId)
       ? ids.filter((id) => id !== jurId)
@@ -113,10 +110,10 @@ export default function WellnessPackages() {
                   ? ["All"]
                   : pkg.jurisdictionIds.map(
                       (id) =>
-                        mockJurisdictions.find((j) => j.id === id)?.name ?? id,
+                        jurisdictions.find((j) => j.id === id)?.name ?? id,
                     );
               const prodNames = pkg.productIds.map(
-                (id) => mockProducts.find((p) => p.id === id)?.name ?? id,
+                (id) => products.find((p) => p.id === id)?.name ?? id,
               );
               return (
                 <tr key={pkg.id} className="hover:bg-gray-50">
@@ -241,7 +238,7 @@ export default function WellnessPackages() {
                 Jurisdictions
               </label>
               <div className="mt-1 border border-gray-200 rounded-lg h-36 overflow-y-auto">
-                {mockJurisdictions.map((jur) => (
+                {jurisdictions.map((jur) => (
                   <label
                     key={jur.id}
                     className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700"
@@ -265,7 +262,7 @@ export default function WellnessPackages() {
                 Products
               </label>
               <div className="mt-1 border border-gray-200 rounded-lg h-36 overflow-y-auto">
-                {mockProducts.map((prod) => (
+                {products.map((prod) => (
                   <label
                     key={prod.id}
                     className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700"
@@ -328,7 +325,7 @@ export default function WellnessPackages() {
               Jurisdictions
             </label>
             <div className="mt-1 border border-gray-200 rounded-lg h-36 overflow-y-auto">
-              {mockJurisdictions.map((jur) => (
+              {jurisdictions.map((jur) => (
                 <label
                   key={jur.id}
                   className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700"
@@ -352,7 +349,7 @@ export default function WellnessPackages() {
               Products
             </label>
             <div className="mt-1 border border-gray-200 rounded-lg h-36 overflow-y-auto">
-              {mockProducts.map((prod) => (
+              {products.map((prod) => (
                 <label
                   key={prod.id}
                   className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700"

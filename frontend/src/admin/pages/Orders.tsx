@@ -3,13 +3,13 @@ import SearchBar from "../components/ui/SearchBar";
 import OrdersTable from "../components/ui/OrdersTable";
 import Window from "../components/ui/Window";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
-import { mockOrders } from "../components/mockData/mockOrders";
-import { mockJurisdictions } from "../components/mockData/mockJurisdictions";
 import { OrderInfo } from "../components/ui/OrdersTable";
+import { Jurisdiction } from "../types";
 
 export default function Orders() {
   const [search, setSearch] = useState("");
-  const [orders, setOrders] = useState(mockOrders);
+  const [orders, setOrders] = useState<OrderInfo[]>([]);
+  const [jurisdictions] = useState<Jurisdiction[]>([]);
   const [editOrder, setEditOrder] = useState<OrderInfo | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<OrderInfo | null>(null);
 
@@ -137,7 +137,7 @@ export default function Orders() {
                   setEditOrder({ ...editOrder, jurisdiction: e.target.value })
                 }
               >
-                {mockJurisdictions.map((j) => (
+                {jurisdictions.map((j) => (
                   <option key={j.id} value={j.name}>
                     {j.name} {j.type}
                   </option>

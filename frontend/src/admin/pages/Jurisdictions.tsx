@@ -1,22 +1,23 @@
 import { useState } from "react";
 import SearchBar from "../components/ui/SearchBar";
-import { mockJurisdictions } from "../components/mockData/mockJurisdictions";
+import { Jurisdiction } from "../types";
 
 export default function Jurisdictions() {
   const [search, setSearch] = useState("");
+  const [jurisdictions] = useState<Jurisdiction[]>([]);
 
-  const filtered = mockJurisdictions.filter((jur) =>
+  const filtered = jurisdictions.filter((jur) =>
     jur.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const mctdCount = mockJurisdictions.filter((j) => j.mctd !== null).length;
+  const mctdCount = jurisdictions.filter((j) => j.mctd !== null).length;
 
-  const total = mockJurisdictions.reduce((sum, j) => sum + j.composite, 0);
-  const avg = total / mockJurisdictions.length;
+  const total = jurisdictions.reduce((sum, j) => sum + j.composite, 0);
+  const avg = jurisdictions.length > 0 ? total / jurisdictions.length : 0;
 
-  const rates = mockJurisdictions.map((j) => j.composite);
-  const min = Math.min(...rates);
-  const max = Math.max(...rates);
+  const rates = jurisdictions.map((j) => j.composite);
+  const min = rates.length > 0 ? Math.min(...rates) : 0;
+  const max = rates.length > 0 ? Math.max(...rates) : 0;
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -26,7 +27,7 @@ export default function Jurisdictions() {
             Total Jurisdictions
           </h3>
           <p className="text-3xl font-bold text-gray-900">
-            {mockJurisdictions.length}
+            {jurisdictions.length}
           </p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col justify-center h-28">

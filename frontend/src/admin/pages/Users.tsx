@@ -3,7 +3,7 @@ import SearchBar from "../components/ui/SearchBar";
 import Status from "../components/ui/Status";
 import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
-import { mockUsers, User } from "../components/mockData/mockUsers";
+import { User } from "../types";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 
 const emptyUser: User = {
@@ -17,7 +17,7 @@ const emptyUser: User = {
 export default function Users() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [newUser, setNewUser] = useState<User>(emptyUser);
   const [showAdd, setShowAdd] = useState(false);

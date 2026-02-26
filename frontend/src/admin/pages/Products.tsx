@@ -3,8 +3,7 @@ import SearchBar from "../components/ui/SearchBar";
 import Status from "../components/ui/Status";
 import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
-import { mockProducts, Product } from "../components/mockData/mockProducts";
-import { mockJurisdictions } from "../components/mockData/mockJurisdictions";
+import { Product, Jurisdiction } from "../types";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 
 const emptyProduct: Product = {
@@ -18,7 +17,8 @@ const emptyProduct: Product = {
 
 export default function Products() {
   const [search, setSearch] = useState("");
-  const [products, setProducts] = useState(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [jurisdictions] = useState<Jurisdiction[]>([]);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [newProduct, setNewProduct] = useState<Product>(emptyProduct);
   const [showAdd, setShowAdd] = useState(false);
@@ -55,7 +55,7 @@ export default function Products() {
   const toggleJur = (jurId, product, setProduct) => {
     const current =
       product.jurisdictionIds === "all"
-        ? mockJurisdictions.map((j) => j.id)
+        ? jurisdictions.map((j) => j.id)
         : [...product.jurisdictionIds];
     const updated = current.includes(jurId)
       ? current.filter((id) => id !== jurId)
@@ -64,7 +64,7 @@ export default function Products() {
   };
 
   const jurCheckboxes = (product, setProduct) =>
-    mockJurisdictions.map((jur) => (
+    jurisdictions.map((jur) => (
       <label
         key={jur.id}
         className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700"
@@ -118,7 +118,7 @@ export default function Products() {
                   ? ["All"]
                   : product.jurisdictionIds.map(
                       (id) =>
-                        mockJurisdictions.find((j) => j.id === id)?.name ?? id,
+                        jurisdictions.find((j) => j.id === id)?.name ?? id,
                     );
               return (
                 <tr key={product.id} className="hover:bg-gray-50">

@@ -2,18 +2,14 @@ import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import SearchBar from "../components/ui/SearchBar";
 import Window from "../components/ui/Window";
-import {
-  mockRoles,
-  Role,
-  allPermissions,
-} from "../components/mockData/mockRoles";
+import { Role, allPermissions } from "../types";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 
 const emptyRole: Role = { id: "", name: "", description: "", permissions: [] };
 
 export default function Roles() {
   const [search, setSearch] = useState("");
-  const [roles, setRoles] = useState(mockRoles);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [editRole, setEditRole] = useState<Role | null>(null);
   const [newRole, setNewRole] = useState<Role>(emptyRole);
   const [showAdd, setShowAdd] = useState(false);
