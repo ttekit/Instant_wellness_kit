@@ -6,8 +6,8 @@ export declare class OrdersController {
     constructor(ordersService: OrdersService);
     create(createOrderDto: CreateOrderDto): Promise<{
         jurisdictions: {
-            jurisdiction_id: number;
             order_id: number;
+            jurisdiction_id: number;
         }[];
     } & {
         id: number;
@@ -23,12 +23,12 @@ export declare class OrdersController {
     findAll(): Promise<({
         jurisdictions: ({
             jurisdiction: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            jurisdiction_id: number;
             order_id: number;
+            jurisdiction_id: number;
         })[];
     } & {
         id: number;
@@ -44,12 +44,12 @@ export declare class OrdersController {
     findOne(id: number): Promise<{
         jurisdictions: ({
             jurisdiction: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            jurisdiction_id: number;
             order_id: number;
+            jurisdiction_id: number;
         })[];
     } & {
         id: number;

@@ -16,3 +16,13 @@ export const PaymentMethodType = {
 } as const
 
 export type PaymentMethodType = (typeof PaymentMethodType)[keyof typeof PaymentMethodType]
+
+
+export const Status = {
+  ARRIVED: 'ARRIVED',
+  DELIVERING: 'DELIVERING',
+  PENDING: 'PENDING',
+  BLOCKED: 'BLOCKED'
+} as const
+
+export type Status = (typeof Status)[keyof typeof Status]

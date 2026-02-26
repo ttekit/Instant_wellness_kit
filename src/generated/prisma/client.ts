@@ -72,3 +72,18 @@ export type TaxRate = Prisma.TaxRateModel
  * 
  */
 export type Role = Prisma.RoleModel
+/**
+ * Model ProductPackage
+ * 
+ */
+export type ProductPackage = Prisma.ProductPackageModel
+/**
+ * Model Product
+ * 
+ */
+export type Product = Prisma.ProductModel
+/**
+ * Model ProductOnPackage
+ * 
+ */
+export type ProductOnPackage = Prisma.ProductOnPackageModel

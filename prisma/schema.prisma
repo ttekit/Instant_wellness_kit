@@ -55,6 +55,7 @@ model Jurisdiction {
   name      String
   orders    OrderOnJurisdiction[]
   tax_rates TaxRate[]
+  products  Product[]
 }
 
 model OrderOnJurisdiction {
@@ -89,8 +90,50 @@ model Role {
   @@map("roles")
 }
 
+
+
+model ProductPackage {
+  id       Int       @id @default(autoincrement())
+  package  String
+  price    Decimal
+  status   Status    @default(PENDING)
+  taxRate  Decimal   @map("tax_rate")
+    products ProductOnPackage[]
+
+  @@map("products_packegs")
+}
+
+model Product {
+  id            Int              @id @default(autoincrement())
+  product       String
+  price         Decimal
+  status        Status           @default(PENDING)
+
+  packages      ProductOnPackage[]
+  jurisdictions Jurisdiction[]
+
+  @@map("products")
+}
+
+model ProductOnPackage {
+  productId Int @map("product_id")
+  packageId Int @map("package_id")
+
+  product   Product        @relation(fields: [productId], references: [id])
+  package   ProductPackage @relation(fields: [packageId], references: [id])
+
+  @@id([productId, packageId])
+  @@map("product_on_package")
+}
+
 enum PaymentMethodType {
   CREDIT_CARD
   PAYPAL
   BANK_TRANSFER
+}
+enum Status {
+  ARRIVED
+  DELIVERING
+  PENDING
+  BLOCKED
 }

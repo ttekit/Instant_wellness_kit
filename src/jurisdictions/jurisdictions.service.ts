@@ -14,7 +14,7 @@ export class JurisdictionsService {
 
         return this.prisma.jurisdiction.create({
             data: {
-                name: CreateJurisdictionDto.name,
+                name: createJurisdictionsDto.name,
             },
         });
     }
@@ -51,7 +51,7 @@ export class JurisdictionsService {
     }
 
     async remove(id: number) {
-        const jurisdiction = await this.prisma.billing.findUnique({
+        const jurisdiction = await this.prisma.jurisdiction.findUnique({
             where: { id },
         });
         if (!jurisdiction) {

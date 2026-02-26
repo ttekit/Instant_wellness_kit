@@ -57,7 +57,10 @@ export const ModelName = {
   Jurisdiction: 'Jurisdiction',
   OrderOnJurisdiction: 'OrderOnJurisdiction',
   TaxRate: 'TaxRate',
-  Role: 'Role'
+  Role: 'Role',
+  ProductPackage: 'ProductPackage',
+  Product: 'Product',
+  ProductOnPackage: 'ProductOnPackage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -152,6 +155,35 @@ export const RoleScalarFieldEnum = {
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+export const ProductPackageScalarFieldEnum = {
+  id: 'id',
+  package: 'package',
+  price: 'price',
+  status: 'status',
+  taxRate: 'taxRate'
+} as const
+
+export type ProductPackageScalarFieldEnum = (typeof ProductPackageScalarFieldEnum)[keyof typeof ProductPackageScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  product: 'product',
+  price: 'price',
+  status: 'status'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const ProductOnPackageScalarFieldEnum = {
+  productId: 'productId',
+  packageId: 'packageId'
+} as const
+
+export type ProductOnPackageScalarFieldEnum = (typeof ProductOnPackageScalarFieldEnum)[keyof typeof ProductOnPackageScalarFieldEnum]
 
 
 export const SortOrder = {
