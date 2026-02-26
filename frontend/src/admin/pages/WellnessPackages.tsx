@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SearchBar from "../components/ui/SearchBar";
+import Status from "../components/ui/Status";
 import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
 import {
@@ -98,6 +99,7 @@ export default function WellnessPackages() {
             <tr>
               <th className="px-6 py-3 font-medium">Package</th>
               <th className="px-6 py-3 font-medium">Price</th>
+              <th className="px-6 py-3 font-medium">Status</th>
               <th className="px-6 py-3 font-medium">Tax Rate</th>
               <th className="px-6 py-3 font-medium">Jurisdictions</th>
               <th className="px-6 py-3 font-medium">Products</th>
@@ -133,6 +135,9 @@ export default function WellnessPackages() {
                   </td>
                   <td className="px-6 py-4 text-gray-900">
                     ${pkg.price.toFixed(2)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <Status stat={pkg.status} />
                   </td>
                   <td className="px-6 py-4 text-gray-600">
                     {pkg.taxRate === "auto" ? "Auto" : `${pkg.taxRate}%`}
@@ -171,6 +176,7 @@ export default function WellnessPackages() {
                       )}
                     </div>
                   </td>
+
                   <td className="px-6 py-4 text-right">
                     <DropdownMenu
                       order={pkg}

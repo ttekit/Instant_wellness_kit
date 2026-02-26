@@ -46,7 +46,7 @@ export default function DropdownMenu({
         onClick={() => {
           setActive(!active);
         }}
-        className="text-gray-400 hover:text-gray-600"
+        className="text-gray-400 hover:text-gray-600 cursor-pointer"
       >
         <MoreHorizontal size={16} />
       </button>
