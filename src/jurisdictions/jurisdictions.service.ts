@@ -10,11 +10,11 @@ export class JurisdictionsService {
     constructor(private prisma: PrismaService) { }
 
 
-    async create(createJurisdictionsDto: CreateJurisdictionDto) {
+    async create(createJurisdictionDto: CreateJurisdictionDto) {
 
         return this.prisma.jurisdiction.create({
             data: {
-                name: CreateJurisdictionDto.name,
+                name: createJurisdictionDto.name,
             },
         });
     }
@@ -37,10 +37,10 @@ export class JurisdictionsService {
     }
 
     async update(id: number, updateJurisdictionDto: UpdateJurisdictionDto) {
-        const existingJurisdictio = await this.prisma.jurisdiction.findUnique({
+        const existingJurisdiction = await this.prisma.jurisdiction.findUnique({
             where: { id },
         });
-        if (!existingJurisdictio) {
+        if (!existingJurisdiction) {
             throw new NotFoundException(`Jurisdiction information with ID ${id} not found.`);
         }
 
@@ -51,7 +51,7 @@ export class JurisdictionsService {
     }
 
     async remove(id: number) {
-        const jurisdiction = await this.prisma.billing.findUnique({
+        const jurisdiction = await this.prisma.jurisdiction.findUnique({
             where: { id },
         });
         if (!jurisdiction) {
