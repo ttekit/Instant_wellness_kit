@@ -21,15 +21,21 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "lucide-react": "^0.575.0",
     "pg": "^8.18.0",
     "prisma": "^7.4.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.1"
+    "react-router-dom": "^7.13.1",
+    "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+<<<<<<< HEAD
     "@tailwindcss/vite": "^4.2.1",
+=======
+    "@tailwindcss/postcss": "^4.2.1",
+>>>>>>> d874c88a4c3e336b53c89649283e3966eec591f0
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
@@ -37,7 +43,11 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+<<<<<<< HEAD
     "autoprefixer": "^10.4.24",
+=======
+    "autoprefixer": "^10.4.27",
+>>>>>>> d874c88a4c3e336b53c89649283e3966eec591f0
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

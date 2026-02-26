@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './client/pages/Home'
@@ -32,3 +33,12 @@ export default function App() {
     </Router>
   )
 }
+=======
+// import { useState } from 'react'
+
+function App() {
+  return <></>;
+}
+
+export default App;
+>>>>>>> d874c88a4c3e336b53c89649283e3966eec591f0

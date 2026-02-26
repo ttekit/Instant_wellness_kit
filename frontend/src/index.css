@@ -1,4 +1,5 @@
 @import "tailwindcss";
+<<<<<<< HEAD
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -57,3 +58,5 @@ h1 {
 html {
   scroll-behavior: smooth;
 }
+=======
+>>>>>>> d874c88a4c3e336b53c89649283e3966eec591f0
