@@ -53,7 +53,7 @@ export default function OrdersTable({
     });
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-auto h-[300px]">
+    <div className="bg-white rounded-xl border border-gray-200 overflow-auto h-75">
       <table className="w-full text-sm text-left whitespace-nowrap">
         <thead className="bg-gray-50 border-b border-gray-200 text-gray-500">
           <tr>

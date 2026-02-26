@@ -100,7 +100,7 @@ export default function Products() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200">
         <table className="w-full text-sm text-left whitespace-nowrap">
           <thead className="bg-gray-50 border-b border-gray-200 text-gray-500">
             <tr>

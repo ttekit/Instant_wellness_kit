@@ -9,7 +9,7 @@ export default function TaxResult({ hasData }: TaxResultProp) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center text-gray-400 py-4">
         <ReceiptText size={48} strokeWidth={1} className="mb-4 text-gray-300" />
-        <p className="text-sm max-w-[250px]">
+        <p className="text-sm max-w-62.5">
           Enter coordinates and click "Look Up Tax Rate" to see the breakdown
         </p>
       </div>

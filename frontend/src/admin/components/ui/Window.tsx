@@ -23,7 +23,7 @@ export default function Window({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-[500px] flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-125 flex flex-col max-h-[90vh]">
         <div className="flex justify-between items-start p-6 border-b border-gray-100 shrink-0">
           <div>
             <h2 className="text-lg font-bold text-gray-900">{title}</h2>

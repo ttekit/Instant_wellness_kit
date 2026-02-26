@@ -56,7 +56,7 @@ export default function Jurisdictions() {
         onChange={setSearch}
       />
 
-      <div className="mt-4 bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="mt-4 bg-white rounded-xl border border-gray-200">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left whitespace-nowrap">
             <thead className="bg-white border-b border-gray-200 text-gray-900">
