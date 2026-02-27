@@ -1,76 +1,40 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import SearchBar from "../components/ui/SearchBar";
 import Status from "../components/ui/Status";
 import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
-// import { User } from "../types"; // <-- Используем локальный расширенный тип ниже
+import { UIUser, BackendRole, BackendUser, NewUserForm, emptyUser } from "../types";
+import 'dotenv/config'
 
-const API_USERS_URL = "http://localhost:4200/users";
-const API_ROLES_URL = "http://localhost:4200/roles";
 
 const getToken = (): string => localStorage.getItem("access_token") || "";
 
-// Локальный тип для пользователя (чтобы хранить и roleId для отправки на сервер)
-export interface UIUser {
-  id: string;
-  name: string;
-  email: string;
-  role: string; // Название роли для таблицы
-  roleId: number; // ID роли для бекенда
-  status: "Active" | "Blocked";
-}
 
-// Тип для формы создания (плюс пароль)
-interface NewUserForm extends UIUser {
-  password?: string;
-}
 
-interface BackendUser {
-  id: number;
-  name: string;
-  surname: string;
-  email: string;
-  roleId: number;
-  role: { id: number; name: string };
-}
 
-interface BackendRole {
-  id: number;
-  name: string;
-}
-
-const emptyUser: NewUserForm = {
-  id: "",
-  name: "",
-  email: "",
-  role: "",
-  roleId: 0,
-  status: "Active",
-  password: "",
-};
 
 export default function Users() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [users, setUsers] = useState<UIUser[]>([]);
-  const [rolesList, setRolesList] = useState<BackendRole[]>([]); // Сохраняем загруженные роли
+  const [rolesList, setRolesList] = useState<BackendRole[]>([]);
   const [editUser, setEditUser] = useState<UIUser | null>(null);
   const [newUser, setNewUser] = useState<NewUserForm>(emptyUser);
   const [showAdd, setShowAdd] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<UIUser | null>(null);
 
-  // 1. Сначала скачиваем доступные роли из БД
   const fetchRoles = async () => {
     try {
-      const response = await fetch(API_ROLES_URL, {
+      const response = await fetch(import.meta.env.VITE_API_USERS_URL, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       if (!response.ok) throw new Error("Failed to fetch roles");
       const data: BackendRole[] = await response.json();
       setRolesList(data);
 
-      // Устанавливаем роль по умолчанию для новой формы, если она не выбрана
+
       if (data.length > 0) {
         setNewUser((prev) => ({ ...prev, roleId: data[0].id }));
       }
@@ -79,10 +43,9 @@ export default function Users() {
     }
   };
 
-  // 2. Скачиваем пользователей
   const fetchUsers = async () => {
     try {
-      const response = await fetch(API_USERS_URL, {
+      const response = await fetch(import.meta.env.VITE_API_USERS_URL, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -120,7 +83,7 @@ export default function Users() {
     const surname = surnameParts.join(" ") || "Unknown";
 
     try {
-      const response = await fetch(`${API_USERS_URL}/${editUser.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${editUser.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +93,7 @@ export default function Users() {
           name,
           surname,
           email: editUser.email,
-          roleId: Number(editUser.roleId), // Отправляем динамический ID
+          roleId: Number(editUser.roleId),
         }),
       });
 
@@ -147,7 +110,7 @@ export default function Users() {
     const surname = surnameParts.join(" ") || "Unknown";
 
     try {
-      const response = await fetch(API_USERS_URL, {
+      const response = await fetch(import.meta.env.VITE_API_USERS_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,14 +121,14 @@ export default function Users() {
           surname,
           email: newUser.email,
           password: newUser.password,
-          roleId: Number(newUser.roleId), // Отправляем динамический ID
+          roleId: Number(newUser.roleId),
         }),
       });
 
       if (!response.ok) throw new Error("Failed to create user");
 
       await fetchUsers();
-      // Сбрасываем форму, но сохраняем первую доступную роль
+
       setNewUser({ ...emptyUser, roleId: rolesList[0]?.id || 0 });
       setShowAdd(false);
     } catch (error) {
@@ -175,7 +138,7 @@ export default function Users() {
 
   const deleteUser = async (id: string) => {
     try {
-      const response = await fetch(`${API_USERS_URL}/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${getToken()}` },
       });
@@ -190,7 +153,7 @@ export default function Users() {
     setUsers(users.map((u) => (u.id === id ? { ...u, status: newStatus } : u)));
   };
 
-  // Извлекаем уникальные названия ролей для фильтра
+
   const uniqueRoles = Array.from(new Set(users.map((u) => u.role)));
 
   return (

@@ -48,10 +48,6 @@ export interface BackendUser {
 }
 
 
-export interface NewUserForm extends User {
-  password?: string;
-}
-
 export interface WellnessPackage {
   id: string;
   name: string;
@@ -87,3 +83,43 @@ export const allPermissions = [
   "Settings",
   "Tax Lookup",
 ] as const;
+
+
+export interface UIUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  roleId: number;
+  status: "Active" | "Blocked";
+}
+
+export interface NewUserForm extends UIUser {
+  password?: string;
+}
+
+export interface BackendUser {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  roleId: number;
+  role: { id: number; name: string };
+}
+
+export interface BackendRole {
+  id: number;
+  name: string;
+}
+
+export const emptyUser: NewUserForm = {
+  id: "",
+  name: "",
+  email: "",
+  role: "editor",
+  roleId: 0,
+  status: "Active",
+  password: "",
+};
+
+
