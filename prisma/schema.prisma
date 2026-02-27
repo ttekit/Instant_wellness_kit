@@ -59,6 +59,10 @@ model Jurisdiction {
   tax_rates TaxRate[]
 }
 
+
+  tax_rates   TaxRate[]
+  orders      OrderOnJurisdiction[]
+}
 model OrderOnJurisdiction {
   order_id        Int          @map("order_id")
   jurisdiction_id Int          @map("jurisdiction_id")

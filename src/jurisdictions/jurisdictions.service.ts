@@ -1,12 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { UpdateJurisdictionDto } from './dto/update-jurisdictions.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma.service'; // Проверь правильность пути
 import { CreateJurisdictionDto } from './dto/create-jurisdictions.dto';
+import { UpdateJurisdictionDto } from './dto/update-jurisdictions.dto';
 
 @Injectable()
 export class JurisdictionsService {
-
     constructor(private prisma: PrismaService) { }
 
 
@@ -42,13 +40,9 @@ export class JurisdictionsService {
     async findOne(id: number) {
         const jurisdiction = await this.prisma.jurisdiction.findUnique({
             where: { id },
-            include: {
-                tax_rates: true,
-            }
+            include: { tax_rates: true }
         });
-        if (!jurisdiction) {
-            throw new NotFoundException(`Jurisdiction information with ID ${id} not found.`);
-        }
+        if (!jurisdiction) throw new NotFoundException(`Jurisdiction with ID ${id} not found.`);
         return jurisdiction;
     }
 
@@ -62,7 +56,12 @@ export class JurisdictionsService {
 
         return this.prisma.jurisdiction.update({
             where: { id },
-            data: updateJurisdictionDto,
+            data: {
+                name: updateDto.name,
+                type: updateDto.type,
+                fipCode: updateDto.fipsCode,
+                status: updateDto.status,
+            },
         });
     }
 
@@ -76,5 +75,7 @@ export class JurisdictionsService {
         return this.prisma.jurisdiction.delete({
             where: { id },
         });
+
+        return this.prisma.jurisdiction.delete({ where: { id } });
     }
 }
