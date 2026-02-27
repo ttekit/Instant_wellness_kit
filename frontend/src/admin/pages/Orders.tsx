@@ -16,24 +16,34 @@ export default function Orders() {
   const [selectedJurisdictionToAdd, setSelectedJurisdictionToAdd] = useState<
     number | ""
   >("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Fixed limit for now
+  const [sortBy, setSortBy] = useState("id");
+  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("ASC");
+  const [totalOrdersCount, setTotalOrdersCount] = useState(0);
 
   useEffect(() => {
     const fetchOrdersAndJurisdictions = async () => {
       try {
-        const ordersResponse = await fetch("http://localhost:4200/orders/details");
+        const ordersResponse = await fetch(
+          `http://localhost:4200/orders/details?page=${currentPage}&limit=${itemsPerPage}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        );
         if (!ordersResponse.ok) {
           throw new Error(`HTTP error! status: ${ordersResponse.status}`);
         }
-        const ordersData: Order[] = await ordersResponse.json();
-        setOrders(ordersData);
+        const responseData = await ordersResponse.json();
+        setOrders(responseData.data || []); // Ensure it's an array, even if data is null/undefined
+        setTotalOrdersCount(responseData.totalCount || 0);
 
-        const jurisdictionResponse = await fetch("http://localhost:4200/jurisdictions");
+        const jurisdictionResponse = await fetch(
+          "http://localhost:4200/jurisdictions",
+        );
         if (!jurisdictionResponse.ok) {
           throw new Error(`HTTP error! status: ${jurisdictionResponse.status}`);
         }
-        const jurisdictionData: Jurisdiction[] = await jurisdictionResponse.json();
+        const jurisdictionData: Jurisdiction[] =
+          await jurisdictionResponse.json();
         setJurisdictions(jurisdictionData);
-
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -42,7 +52,7 @@ export default function Orders() {
     };
 
     fetchOrdersAndJurisdictions();
-  }, []);
+  }, [currentPage, itemsPerPage, sortBy, sortOrder]);
 
   const handleAddJurisdiction = () => {
     if (!editOrder || !selectedJurisdictionToAdd) return;
@@ -82,8 +92,6 @@ export default function Orders() {
       ),
     });
   };
-
-
 
   const handleStatusChange = async (orderId: number, newStatus: string) => {
     try {
@@ -125,22 +133,25 @@ export default function Orders() {
     if (!editOrder) return;
 
     try {
-      const response = await fetch(`http://localhost:4200/orders/${editOrder.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `http://localhost:4200/orders/${editOrder.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            subtotal: parseFloat(editOrder.subtotal),
+            composite_tax_rate: parseFloat(editOrder.composite_tax_rate),
+            tax_amount: parseFloat(editOrder.tax_amount),
+            total_amount: parseFloat(editOrder.total_amount),
+            jurisdictions: editOrder.jurisdictions.map((oj) => ({
+              jurisdiction_id: oj.jurisdiction.id,
+              order_id: oj.order_id, // Assuming the backend requires this for updates
+            })),
+          }),
         },
-        body: JSON.stringify({
-          subtotal: parseFloat(editOrder.subtotal),
-          composite_tax_rate: parseFloat(editOrder.composite_tax_rate),
-          tax_amount: parseFloat(editOrder.tax_amount),
-          total_amount: parseFloat(editOrder.total_amount),
-          jurisdictions: editOrder.jurisdictions.map((oj) => ({
-            jurisdiction_id: oj.jurisdiction.id,
-            order_id: oj.order_id, // Assuming the backend requires this for updates
-          })),
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -159,7 +170,7 @@ export default function Orders() {
   const updateSubtotal = (value: number) => {
     if (!editOrder) return;
 
-    const currentTaxRate = parseFloat(editOrder.composite_tax_rate || '0');
+    const currentTaxRate = parseFloat(editOrder.composite_tax_rate || "0");
     const newTaxAmount = value * currentTaxRate;
     const newTotalAmount = value + newTaxAmount;
 
@@ -171,9 +182,18 @@ export default function Orders() {
     });
   };
 
-  const totalRevenue = orders.reduce((sum, o) => sum + parseFloat(o.subtotal || '0'), 0);
-  const totalTax = orders.reduce((sum, o) => sum + parseFloat(o.tax_amount || '0'), 0);
-  const totalIncTax = orders.reduce((sum, o) => sum + parseFloat(o.total_amount || '0'), 0);
+  const totalRevenue = orders.reduce(
+    (sum, o) => sum + parseFloat(o.subtotal || "0"),
+    0,
+  );
+  const totalTax = orders.reduce(
+    (sum, o) => sum + parseFloat(o.tax_amount || "0"),
+    0,
+  );
+  const totalIncTax = orders.reduce(
+    (sum, o) => sum + parseFloat(o.total_amount || "0"),
+    0,
+  );
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -204,8 +224,12 @@ export default function Orders() {
         </div>
       </div>
 
-      {loading && <div className="p-8 text-center text-gray-600">Loading orders...</div>}
-      {error && <div className="p-8 text-center text-red-600">Error: {error}</div>}
+      {loading && (
+        <div className="p-8 text-center text-gray-600">Loading orders...</div>
+      )}
+      {error && (
+        <div className="p-8 text-center text-red-600">Error: {error}</div>
+      )}
 
       {!loading && !error && (
         <>
@@ -216,11 +240,51 @@ export default function Orders() {
           />
           <div className="mt-4">
             <OrdersTable
-              orders={filtered}
+              orders={filtered} // 'filtered' still applies client-side search on the current page's data
               onEdit={setEditOrder}
               onDelete={setConfirmDelete}
               onStatusChange={handleStatusChange}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSort={(column: string) => {
+                if (column === sortBy) {
+                  setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC");
+                } else {
+                  setSortBy(column);
+                  setSortOrder("ASC"); // Default to ASC when changing sort column
+                }
+              }}
             />
+            {/* Pagination Controls */}
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:bg-gray-300"
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of{" "}
+                {Math.ceil(totalOrdersCount / itemsPerPage) || 1}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    Math.min(
+                      prev + 1,
+                      Math.ceil(totalOrdersCount / itemsPerPage) || 1,
+                    ),
+                  )
+                }
+                disabled={
+                  currentPage === (Math.ceil(totalOrdersCount / itemsPerPage) || 1)
+                }
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:bg-gray-300"
+              >
+                Next
+              </button>
+            </div>
           </div>
 
           <Window
@@ -232,7 +296,10 @@ export default function Orders() {
             {editOrder && (
               <div className="flex flex-col gap-4">
                 <div>
-                  <label htmlFor="editOrderId" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="editOrderId"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Order ID
                   </label>
                   <input
@@ -243,7 +310,10 @@ export default function Orders() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="editCustomer" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="editCustomer"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Customer
                   </label>
                   <input
@@ -254,7 +324,10 @@ export default function Orders() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="editKit" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="editKit"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Kit
                   </label>
                   <input
@@ -269,7 +342,8 @@ export default function Orders() {
                     Assigned Jurisdictions
                   </label>
                   <div className="mt-1 p-2 border border-gray-200 rounded-lg bg-gray-50 max-h-24 overflow-y-auto">
-                    {editOrder.jurisdictions && editOrder.jurisdictions.length > 0 ? (
+                    {editOrder.jurisdictions &&
+                    editOrder.jurisdictions.length > 0 ? (
                       <ul className="list-none space-y-1">
                         {editOrder.jurisdictions.map((orderJurisdiction) => (
                           <li
@@ -340,33 +414,46 @@ export default function Orders() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="editSubtotal" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="editSubtotal"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Subtotal
                   </label>
                   <input
                     id="editSubtotal"
                     type="number"
                     className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-                    value={parseFloat(editOrder.subtotal || '0')}
+                    value={parseFloat(editOrder.subtotal || "0")}
                     onChange={(e) => updateSubtotal(Number(e.target.value))}
                   />
                 </div>
                 <div>
-                  <label htmlFor="editTaxAmount" className="text-sm font-medium text-gray-700">Tax Amount</label>
+                  <label
+                    htmlFor="editTaxAmount"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Tax Amount
+                  </label>
                   <input
                     id="editTaxAmount"
                     readOnly
                     className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-500"
-                    value={parseFloat(editOrder.tax_amount || '0').toFixed(2)}
+                    value={parseFloat(editOrder.tax_amount || "0").toFixed(2)}
                   />
                 </div>
                 <div>
-                  <label htmlFor="editTotalAmount" className="text-sm font-medium text-gray-700">Total</label>
+                  <label
+                    htmlFor="editTotalAmount"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Total
+                  </label>
                   <input
                     id="editTotalAmount"
                     readOnly
                     className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-500"
-                    value={parseFloat(editOrder.total_amount || '0').toFixed(2)}
+                    value={parseFloat(editOrder.total_amount || "0").toFixed(2)}
                   />
                 </div>
               </div>
@@ -378,9 +465,12 @@ export default function Orders() {
             onConfirm={async () => {
               if (!confirmDelete) return;
               try {
-                const response = await fetch(`http://localhost:4200/orders/${confirmDelete.id}`, {
-                  method: "DELETE",
-                });
+                const response = await fetch(
+                  `http://localhost:4200/orders/${confirmDelete.id}`,
+                  {
+                    method: "DELETE",
+                  },
+                );
 
                 if (!response.ok) {
                   throw new Error(`HTTP error! status: ${response.status}`);

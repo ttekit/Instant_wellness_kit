@@ -9,6 +9,9 @@ interface OrdersTableProps {
   onEdit?: (order: Order) => void;
   onDelete?: (order: Order) => void;
   onStatusChange?: (orderId: number, newStatus: string) => void;
+  sortBy: string;
+  sortOrder: "ASC" | "DESC";
+  onSort: (column: string) => void;
 }
 
 export default function OrdersTable({
@@ -17,6 +20,9 @@ export default function OrdersTable({
   onEdit,
   onDelete,
   onStatusChange,
+  sortBy,
+  sortOrder,
+  onSort,
 }: OrdersTableProps) {
   const [deletedIds, setDeletedIds] = useState<number[]>([]);
 
@@ -62,15 +68,71 @@ export default function OrdersTable({
       <table className="w-full text-sm text-left whitespace-nowrap">
         <thead className="bg-gray-50 border-b border-gray-200 text-gray-500">
           <tr>
-            <th className="px-4 py-3 font-medium">Order ID</th>
-            <th className="px-4 py-3 font-medium">Customer</th>
-            <th className="px-4 py-3 font-medium">Kit</th>
-            <th className="px-4 py-3 font-medium">Jurisdiction</th>
-            <th className="px-4 py-3 font-medium">Subtotal</th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("id")} className="flex items-center gap-1">
+                Order ID
+                {sortBy === "id" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("customerName")} className="flex items-center gap-1">
+                Customer
+                {sortBy === "customerName" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("package.package")} className="flex items-center gap-1">
+                Kit
+                {sortBy === "package.package" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("jurisdictions.name")} className="flex items-center gap-1">
+                Jurisdiction
+                {sortBy === "jurisdictions.name" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("subtotal")} className="flex items-center gap-1">
+                Subtotal
+                {sortBy === "subtotal" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
             <th className="px-4 py-3 font-medium">Tax Rate</th>
-            <th className="px-4 py-3 font-medium">Tax</th>
-            <th className="px-4 py-3 font-medium">Total</th>
-            <th className="px-4 py-3 font-medium">Status</th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("tax_amount")} className="flex items-center gap-1">
+                Tax
+                {sortBy === "tax_amount" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("total_amount")} className="flex items-center gap-1">
+                Total
+                {sortBy === "total_amount" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
+            <th className="px-4 py-3 font-medium">
+              <button onClick={() => onSort("status")} className="flex items-center gap-1">
+                Status
+                {sortBy === "status" && (
+                  <span>{sortOrder === "ASC" ? "↑" : "↓"}</span>
+                )}
+              </button>
+            </th>
             <th className="px-4 py-3 font-medium"></th>
           </tr>
         </thead>

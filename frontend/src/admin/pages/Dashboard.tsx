@@ -12,16 +12,32 @@ export default function Dashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalTaxCollected, setTotalTaxCollected] = useState(0);
+  const [activeDeliveries, setActiveDeliveries] = useState(0);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const response = await fetch("http://localhost:4200/orders");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        setLoading(true);
+        const ordersResponse = await fetch("http://localhost:4200/orders/details");
+        if (!ordersResponse.ok) {
+          throw new Error(`HTTP error! status: ${ordersResponse.status}`);
         }
-        const data: Order[] = await response.json();
-        setOrders(data);
+        const ordersData: Order[] = await ordersResponse.json();
+        setOrders(ordersData.data);
+
+        const dashboardResponse = await fetch("http://localhost:4200/orders/dashboard");
+        if (!dashboardResponse.ok) {
+          throw new Error(`HTTP error! status: ${dashboardResponse.status}`);
+        }
+        const dashboardData = await dashboardResponse.json();
+        setTotalOrders(dashboardData.totalOrders);
+        setTotalRevenue(dashboardData.revenue);
+        setTotalTaxCollected(dashboardData.taxCollected);
+        setActiveDeliveries(dashboardData.activeDeliveries);
+
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -29,12 +45,9 @@ export default function Dashboard() {
       }
     };
 
-    fetchOrders();
+    fetchDashboardData();
   }, []);
 
-  const totalOrders = orders.length;
-  const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.subtotal || '0'), 0);
-  const totalTaxCollected = orders.reduce((sum, order) => sum + parseFloat(order.tax_amount || '0'), 0);
 
   if (loading) {
     return <div className="p-8 text-center text-gray-600">Loading dashboard data...</div>;
@@ -69,7 +82,7 @@ export default function Dashboard() {
         />
         <Card
           title="Active Deliveries"
-          value={0}
+          value={activeDeliveries}
           descr="In transit"
           icon={<Truck size={20} />}
         />
