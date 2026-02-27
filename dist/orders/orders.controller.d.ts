@@ -11,20 +11,27 @@ export declare class OrdersController {
         }[];
     } & {
         id: number;
+        created_at: Date;
+        updated_at: Date;
         userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
-        created_at: Date;
-        updated_at: Date;
     }>;
     findAll(): Promise<({
         jurisdictions: ({
             jurisdiction: {
+                description: string | null;
+                type: string | null;
                 name: string;
                 id: number;
+                createdAt: Date;
+                code: string;
+                fipCode: string | null;
+                status: string;
+                updatedAt: Date;
             };
         } & {
             jurisdiction_id: number;
@@ -32,20 +39,27 @@ export declare class OrdersController {
         })[];
     } & {
         id: number;
+        created_at: Date;
+        updated_at: Date;
         userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
-        created_at: Date;
-        updated_at: Date;
     })[]>;
     findOne(id: number): Promise<{
         jurisdictions: ({
             jurisdiction: {
+                description: string | null;
+                type: string | null;
                 name: string;
                 id: number;
+                createdAt: Date;
+                code: string;
+                fipCode: string | null;
+                status: string;
+                updatedAt: Date;
             };
         } & {
             jurisdiction_id: number;
@@ -53,35 +67,35 @@ export declare class OrdersController {
         })[];
     } & {
         id: number;
+        created_at: Date;
+        updated_at: Date;
         userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
-        created_at: Date;
-        updated_at: Date;
     }>;
     update(id: number, updateOrderDto: UpdateOrderDto): Promise<{
         id: number;
+        created_at: Date;
+        updated_at: Date;
         userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
-        created_at: Date;
-        updated_at: Date;
     }>;
     remove(id: number): Promise<{
         id: number;
+        created_at: Date;
+        updated_at: Date;
         userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
-        created_at: Date;
-        updated_at: Date;
     }>;
 }

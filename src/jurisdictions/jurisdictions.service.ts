@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma.service'; // Проверь правильность пути
+import { PrismaService } from '../prisma.service';
 import { CreateJurisdictionDto } from './dto/create-jurisdictions.dto';
 import { UpdateJurisdictionDto } from './dto/update-jurisdictions.dto';
 
@@ -14,7 +14,7 @@ export class JurisdictionsService {
             data: {
                 name: dto.name,
                 type: dto.type,
-                fipsCode: dto.fipsCode,
+                fipCode: dto.fipsCode,
                 tax_rates: {
                     create: {
                         rate: dto.rate,
@@ -57,10 +57,10 @@ export class JurisdictionsService {
         return this.prisma.jurisdiction.update({
             where: { id },
             data: {
-                name: updateDto.name,
-                type: updateDto.type,
-                fipCode: updateDto.fipsCode,
-                status: updateDto.status,
+                name: updateJurisdictionDto.name,
+                type: updateJurisdictionDto.type,
+                fipCode: updateJurisdictionDto.fipsCode,
+                status: updateJurisdictionDto.status,
             },
         });
     }

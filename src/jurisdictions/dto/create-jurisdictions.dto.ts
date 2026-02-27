@@ -15,6 +15,10 @@ export class CreateJurisdictionDto {
     @IsNotEmpty()
     fipsCode: string;
 
+    @IsString()
+    @IsNotEmpty()
+    status: string;
+
     @IsNumber()
     rate: number;
 

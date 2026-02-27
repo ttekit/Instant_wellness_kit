@@ -8,6 +8,7 @@ import { TaxRatesModule } from './tax_rates/tax_rates.module';
 import { JurisdictionsModule } from './jurisdictions/jurisdictions.module';
 import { OrdersModule } from './orders/orders.module';
 import { BillingsModule } from './billings/billings.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { BillingsModule } from './billings/billings.module';
     JurisdictionsModule,
     OrdersModule,
     BillingsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
