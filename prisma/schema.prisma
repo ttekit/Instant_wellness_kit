@@ -55,6 +55,8 @@ model Order {
 model Jurisdiction {
   id        Int                   @id @default(autoincrement())
   name      String
+  type      String  
+  fipsCode  String                @map("fipsCode")
   orders    OrderOnJurisdiction[]
   tax_rates TaxRate[]
   products  Product[]
@@ -72,10 +74,13 @@ model OrderOnJurisdiction {
 
 model TaxRate {
   id              Int          @id @default(autoincrement())
-  rate            Decimal
-  type            Decimal
-  created_at      DateTime     @map("created_at")
-  updated_at      DateTime     @map("updated_at")
+  rate            Decimal      @map("rate")
+  local_rate      Decimal      @map("local_rate")
+  mctd            Decimal?
+  composite       Decimal?
+  type            Decimal?
+  created_at      DateTime     @default(now()) @map("created_at")
+  updated_at      DateTime     @updatedAt @map("updated_at")
   jurisdiction_id Int          @map("jurisdiction_id")
   jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id])
 
