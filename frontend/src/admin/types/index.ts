@@ -35,6 +35,23 @@ export interface Product {
   jurisdictionIds: string[] | "all";
 }
 
+export interface BackendUser {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  roleId: number;
+  role: {
+    id: number;
+    name: string;
+  };
+}
+
+
+export interface NewUserForm extends User {
+  password?: string;
+}
+
 export interface WellnessPackage {
   id: string;
   name: string;
