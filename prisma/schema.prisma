@@ -68,6 +68,8 @@ model Jurisdiction {
   products  Product[]
 }
 
+
+
 model OrderOnJurisdiction {
   order_id        Int          @map("order_id")
   jurisdiction_id Int          @map("jurisdiction_id")
