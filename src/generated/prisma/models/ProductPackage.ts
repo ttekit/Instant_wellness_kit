@@ -225,7 +225,7 @@ export type ProductPackageWhereInput = {
   status?: Prisma.EnumStatusFilter<"ProductPackage"> | $Enums.Status
   taxRate?: Prisma.DecimalFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   products?: Prisma.ProductOnPackageListRelationFilter
-  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  orders?: Prisma.OrderListRelationFilter
 }
 
 export type ProductPackageOrderByWithRelationInput = {
@@ -235,7 +235,7 @@ export type ProductPackageOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
   products?: Prisma.ProductOnPackageOrderByRelationAggregateInput
-  order?: Prisma.OrderOrderByWithRelationInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
 }
 
 export type ProductPackageWhereUniqueInput = Prisma.AtLeast<{
@@ -248,7 +248,7 @@ export type ProductPackageWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumStatusFilter<"ProductPackage"> | $Enums.Status
   taxRate?: Prisma.DecimalFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   products?: Prisma.ProductOnPackageListRelationFilter
-  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
+  orders?: Prisma.OrderListRelationFilter
 }, "id">
 
 export type ProductPackageOrderByWithAggregationInput = {
@@ -281,7 +281,7 @@ export type ProductPackageCreateInput = {
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   products?: Prisma.ProductOnPackageCreateNestedManyWithoutPackageInput
-  order?: Prisma.OrderCreateNestedOneWithoutPackageInput
+  orders?: Prisma.OrderCreateNestedManyWithoutPackageInput
 }
 
 export type ProductPackageUncheckedCreateInput = {
@@ -291,7 +291,7 @@ export type ProductPackageUncheckedCreateInput = {
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   products?: Prisma.ProductOnPackageUncheckedCreateNestedManyWithoutPackageInput
-  order?: Prisma.OrderUncheckedCreateNestedOneWithoutPackageInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutPackageInput
 }
 
 export type ProductPackageUpdateInput = {
@@ -300,7 +300,7 @@ export type ProductPackageUpdateInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   products?: Prisma.ProductOnPackageUpdateManyWithoutPackageNestedInput
-  order?: Prisma.OrderUpdateOneWithoutPackageNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutPackageNestedInput
 }
 
 export type ProductPackageUncheckedUpdateInput = {
@@ -310,7 +310,7 @@ export type ProductPackageUncheckedUpdateInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   products?: Prisma.ProductOnPackageUncheckedUpdateManyWithoutPackageNestedInput
-  order?: Prisma.OrderUncheckedUpdateOneWithoutPackageNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutPackageNestedInput
 }
 
 export type ProductPackageCreateManyInput = {
@@ -377,18 +377,18 @@ export type ProductPackageSumOrderByAggregateInput = {
   taxRate?: Prisma.SortOrder
 }
 
-export type ProductPackageCreateNestedOneWithoutOrderInput = {
-  create?: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrderInput, Prisma.ProductPackageUncheckedCreateWithoutOrderInput>
-  connectOrCreate?: Prisma.ProductPackageCreateOrConnectWithoutOrderInput
+export type ProductPackageCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrdersInput, Prisma.ProductPackageUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.ProductPackageCreateOrConnectWithoutOrdersInput
   connect?: Prisma.ProductPackageWhereUniqueInput
 }
 
-export type ProductPackageUpdateOneRequiredWithoutOrderNestedInput = {
-  create?: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrderInput, Prisma.ProductPackageUncheckedCreateWithoutOrderInput>
-  connectOrCreate?: Prisma.ProductPackageCreateOrConnectWithoutOrderInput
-  upsert?: Prisma.ProductPackageUpsertWithoutOrderInput
+export type ProductPackageUpdateOneRequiredWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrdersInput, Prisma.ProductPackageUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.ProductPackageCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.ProductPackageUpsertWithoutOrdersInput
   connect?: Prisma.ProductPackageWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductPackageUpdateToOneWithWhereWithoutOrderInput, Prisma.ProductPackageUpdateWithoutOrderInput>, Prisma.ProductPackageUncheckedUpdateWithoutOrderInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductPackageUpdateToOneWithWhereWithoutOrdersInput, Prisma.ProductPackageUpdateWithoutOrdersInput>, Prisma.ProductPackageUncheckedUpdateWithoutOrdersInput>
 }
 
 export type ProductPackageCreateNestedOneWithoutProductsInput = {
@@ -405,7 +405,7 @@ export type ProductPackageUpdateOneRequiredWithoutProductsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductPackageUpdateToOneWithWhereWithoutProductsInput, Prisma.ProductPackageUpdateWithoutProductsInput>, Prisma.ProductPackageUncheckedUpdateWithoutProductsInput>
 }
 
-export type ProductPackageCreateWithoutOrderInput = {
+export type ProductPackageCreateWithoutOrdersInput = {
   package: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
@@ -413,7 +413,7 @@ export type ProductPackageCreateWithoutOrderInput = {
   products?: Prisma.ProductOnPackageCreateNestedManyWithoutPackageInput
 }
 
-export type ProductPackageUncheckedCreateWithoutOrderInput = {
+export type ProductPackageUncheckedCreateWithoutOrdersInput = {
   id?: number
   package: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -422,23 +422,23 @@ export type ProductPackageUncheckedCreateWithoutOrderInput = {
   products?: Prisma.ProductOnPackageUncheckedCreateNestedManyWithoutPackageInput
 }
 
-export type ProductPackageCreateOrConnectWithoutOrderInput = {
+export type ProductPackageCreateOrConnectWithoutOrdersInput = {
   where: Prisma.ProductPackageWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrderInput, Prisma.ProductPackageUncheckedCreateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrdersInput, Prisma.ProductPackageUncheckedCreateWithoutOrdersInput>
 }
 
-export type ProductPackageUpsertWithoutOrderInput = {
-  update: Prisma.XOR<Prisma.ProductPackageUpdateWithoutOrderInput, Prisma.ProductPackageUncheckedUpdateWithoutOrderInput>
-  create: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrderInput, Prisma.ProductPackageUncheckedCreateWithoutOrderInput>
+export type ProductPackageUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.ProductPackageUpdateWithoutOrdersInput, Prisma.ProductPackageUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.ProductPackageCreateWithoutOrdersInput, Prisma.ProductPackageUncheckedCreateWithoutOrdersInput>
   where?: Prisma.ProductPackageWhereInput
 }
 
-export type ProductPackageUpdateToOneWithWhereWithoutOrderInput = {
+export type ProductPackageUpdateToOneWithWhereWithoutOrdersInput = {
   where?: Prisma.ProductPackageWhereInput
-  data: Prisma.XOR<Prisma.ProductPackageUpdateWithoutOrderInput, Prisma.ProductPackageUncheckedUpdateWithoutOrderInput>
+  data: Prisma.XOR<Prisma.ProductPackageUpdateWithoutOrdersInput, Prisma.ProductPackageUncheckedUpdateWithoutOrdersInput>
 }
 
-export type ProductPackageUpdateWithoutOrderInput = {
+export type ProductPackageUpdateWithoutOrdersInput = {
   package?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
@@ -446,7 +446,7 @@ export type ProductPackageUpdateWithoutOrderInput = {
   products?: Prisma.ProductOnPackageUpdateManyWithoutPackageNestedInput
 }
 
-export type ProductPackageUncheckedUpdateWithoutOrderInput = {
+export type ProductPackageUncheckedUpdateWithoutOrdersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   package?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -460,7 +460,7 @@ export type ProductPackageCreateWithoutProductsInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  order?: Prisma.OrderCreateNestedOneWithoutPackageInput
+  orders?: Prisma.OrderCreateNestedManyWithoutPackageInput
 }
 
 export type ProductPackageUncheckedCreateWithoutProductsInput = {
@@ -469,7 +469,7 @@ export type ProductPackageUncheckedCreateWithoutProductsInput = {
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  order?: Prisma.OrderUncheckedCreateNestedOneWithoutPackageInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutPackageInput
 }
 
 export type ProductPackageCreateOrConnectWithoutProductsInput = {
@@ -493,7 +493,7 @@ export type ProductPackageUpdateWithoutProductsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  order?: Prisma.OrderUpdateOneWithoutPackageNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutPackageNestedInput
 }
 
 export type ProductPackageUncheckedUpdateWithoutProductsInput = {
@@ -502,7 +502,7 @@ export type ProductPackageUncheckedUpdateWithoutProductsInput = {
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  order?: Prisma.OrderUncheckedUpdateOneWithoutPackageNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutPackageNestedInput
 }
 
 
@@ -512,10 +512,12 @@ export type ProductPackageUncheckedUpdateWithoutProductsInput = {
 
 export type ProductPackageCountOutputType = {
   products: number
+  orders: number
 }
 
 export type ProductPackageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | ProductPackageCountOutputTypeCountProductsArgs
+  orders?: boolean | ProductPackageCountOutputTypeCountOrdersArgs
 }
 
 /**
@@ -535,6 +537,13 @@ export type ProductPackageCountOutputTypeCountProductsArgs<ExtArgs extends runti
   where?: Prisma.ProductOnPackageWhereInput
 }
 
+/**
+ * ProductPackageCountOutputType without action
+ */
+export type ProductPackageCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
 
 export type ProductPackageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -543,7 +552,7 @@ export type ProductPackageSelect<ExtArgs extends runtime.Types.Extensions.Intern
   status?: boolean
   taxRate?: boolean
   products?: boolean | Prisma.ProductPackage$productsArgs<ExtArgs>
-  order?: boolean | Prisma.ProductPackage$orderArgs<ExtArgs>
+  orders?: boolean | Prisma.ProductPackage$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.ProductPackageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["productPackage"]>
 
@@ -574,7 +583,7 @@ export type ProductPackageSelectScalar = {
 export type ProductPackageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "package" | "price" | "status" | "taxRate", ExtArgs["result"]["productPackage"]>
 export type ProductPackageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | Prisma.ProductPackage$productsArgs<ExtArgs>
-  order?: boolean | Prisma.ProductPackage$orderArgs<ExtArgs>
+  orders?: boolean | Prisma.ProductPackage$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.ProductPackageCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductPackageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -584,7 +593,7 @@ export type $ProductPackagePayload<ExtArgs extends runtime.Types.Extensions.Inte
   name: "ProductPackage"
   objects: {
     products: Prisma.$ProductOnPackagePayload<ExtArgs>[]
-    order: Prisma.$OrderPayload<ExtArgs> | null
+    orders: Prisma.$OrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -987,7 +996,7 @@ readonly fields: ProductPackageFieldRefs;
 export interface Prisma__ProductPackageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   products<T extends Prisma.ProductPackage$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductPackage$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductOnPackagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  order<T extends Prisma.ProductPackage$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductPackage$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  orders<T extends Prisma.ProductPackage$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductPackage$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1434,9 +1443,9 @@ export type ProductPackage$productsArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * ProductPackage.order
+ * ProductPackage.orders
  */
-export type ProductPackage$orderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ProductPackage$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Order
    */
@@ -1450,6 +1459,11 @@ export type ProductPackage$orderArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.OrderInclude<ExtArgs> | null
   where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
 }
 
 /**

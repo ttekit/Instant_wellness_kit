@@ -19,6 +19,7 @@ export class TaxRatesService {
         return this.prisma.taxRate.create({
             data: {
                 rate: createTaxRateDto.rate,
+                local_rate: createTaxRateDto.rate,
                 type: createTaxRateDto.type,
                 jurisdiction: { connect: { id: createTaxRateDto.jurisdiction_id } },
                 created_at: new Date(),
@@ -93,4 +94,3 @@ export class TaxRatesService {
 
     }
 }
-

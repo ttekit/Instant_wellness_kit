@@ -47,7 +47,7 @@ model Order {
   user               User                  @relation(fields: [userId], references: [id])
   jurisdictions      OrderOnJurisdiction[]
   status             Status                @default(PENDING)
-  packageId          Int                   @unique @map("package_id")
+  packageId          Int                   @map("package_id")
   package            ProductPackage        @relation(fields: [packageId], references: [id])
   @@map("order")
 }
@@ -55,8 +55,14 @@ model Order {
 model Jurisdiction {
   id        Int                   @id @default(autoincrement())
   name      String
-  type      String  
+  type      String
   fipsCode  String                @map("fipsCode")
+
+  minLat    Float?
+  maxLat    Float?
+  minLong   Float?
+  maxLong   Float?
+
   orders    OrderOnJurisdiction[]
   tax_rates TaxRate[]
   products  Product[]
@@ -82,7 +88,7 @@ model TaxRate {
   created_at      DateTime     @default(now()) @map("created_at")
   updated_at      DateTime     @updatedAt @map("updated_at")
   jurisdiction_id Int          @map("jurisdiction_id")
-  jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id])
+  jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id], onDelete: Cascade)
 
   @@map("tax_rates")
 }
@@ -107,11 +113,10 @@ model ProductPackage {
   taxRate  Decimal            @map("tax_rate")
   products ProductOnPackage[]
 
-  order    Order?
+  orders   Order[]
 
   @@map("products_packegs")
 }
-
 model Product {
   id            Int              @id @default(autoincrement())
   product       String

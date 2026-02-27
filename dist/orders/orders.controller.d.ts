@@ -3,6 +3,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
 import { PaginationDto } from './dto/pagination.dto';
+import { Express } from 'express';
 export declare class OrdersController {
     private readonly ordersService;
     constructor(ordersService: OrdersService);
@@ -29,6 +30,12 @@ export declare class OrdersController {
             jurisdiction: {
                 id: number;
                 name: string;
+                type: string;
+                fipsCode: string;
+                minLat: number | null;
+                maxLat: number | null;
+                minLong: number | null;
+                maxLong: number | null;
             };
         } & {
             order_id: number;
@@ -77,6 +84,12 @@ export declare class OrdersController {
                 jurisdiction: {
                     id: number;
                     name: string;
+                    type: string;
+                    fipsCode: string;
+                    minLat: number | null;
+                    maxLat: number | null;
+                    minLong: number | null;
+                    maxLong: number | null;
                 };
             } & {
                 order_id: number;
@@ -109,6 +122,12 @@ export declare class OrdersController {
             jurisdiction: {
                 id: number;
                 name: string;
+                type: string;
+                fipsCode: string;
+                minLat: number | null;
+                maxLat: number | null;
+                minLong: number | null;
+                maxLong: number | null;
             };
         } & {
             order_id: number;
@@ -156,6 +175,12 @@ export declare class OrdersController {
             jurisdiction: {
                 id: number;
                 name: string;
+                type: string;
+                fipsCode: string;
+                minLat: number | null;
+                maxLat: number | null;
+                minLong: number | null;
+                maxLong: number | null;
             };
         } & {
             order_id: number;
@@ -202,6 +227,12 @@ export declare class OrdersController {
             jurisdiction: {
                 id: number;
                 name: string;
+                type: string;
+                fipsCode: string;
+                minLat: number | null;
+                maxLat: number | null;
+                minLong: number | null;
+                maxLong: number | null;
             };
         } & {
             order_id: number;
@@ -232,6 +263,7 @@ export declare class OrdersController {
         status: import("../generated/prisma/enums").Status;
         packageId: number;
     }>;
+    uploadCsv(file: Express.Multer.File): Promise<any>;
     changeStatus(id: number, changeOrderStatusDto: ChangeOrderStatusDto): Promise<{
         customerName: string;
         orderPackage: {
@@ -261,6 +293,12 @@ export declare class OrdersController {
             jurisdiction: {
                 id: number;
                 name: string;
+                type: string;
+                fipsCode: string;
+                minLat: number | null;
+                maxLat: number | null;
+                minLong: number | null;
+                maxLong: number | null;
             };
         } & {
             order_id: number;

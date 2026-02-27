@@ -24,7 +24,8 @@ async function bootstrap() {
     .setDescription('The Instant Wellness Kit API description')
     .setVersion('1.0')
     .addTag('roles')
-    .addTag('billings', 'Operations related to user billing information') // Add this line
+    .addTag('billings', 'Operations related to user billing information')
+    .addTag('jurisdictions', 'Operations related to jurisdictions')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

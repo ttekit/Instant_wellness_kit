@@ -29,6 +29,9 @@ export type AggregateTaxRate = {
 export type TaxRateAvgAggregateOutputType = {
   id: number | null
   rate: runtime.Decimal | null
+  local_rate: runtime.Decimal | null
+  mctd: runtime.Decimal | null
+  composite: runtime.Decimal | null
   type: runtime.Decimal | null
   jurisdiction_id: number | null
 }
@@ -36,6 +39,9 @@ export type TaxRateAvgAggregateOutputType = {
 export type TaxRateSumAggregateOutputType = {
   id: number | null
   rate: runtime.Decimal | null
+  local_rate: runtime.Decimal | null
+  mctd: runtime.Decimal | null
+  composite: runtime.Decimal | null
   type: runtime.Decimal | null
   jurisdiction_id: number | null
 }
@@ -43,6 +49,9 @@ export type TaxRateSumAggregateOutputType = {
 export type TaxRateMinAggregateOutputType = {
   id: number | null
   rate: runtime.Decimal | null
+  local_rate: runtime.Decimal | null
+  mctd: runtime.Decimal | null
+  composite: runtime.Decimal | null
   type: runtime.Decimal | null
   created_at: Date | null
   updated_at: Date | null
@@ -52,6 +61,9 @@ export type TaxRateMinAggregateOutputType = {
 export type TaxRateMaxAggregateOutputType = {
   id: number | null
   rate: runtime.Decimal | null
+  local_rate: runtime.Decimal | null
+  mctd: runtime.Decimal | null
+  composite: runtime.Decimal | null
   type: runtime.Decimal | null
   created_at: Date | null
   updated_at: Date | null
@@ -61,6 +73,9 @@ export type TaxRateMaxAggregateOutputType = {
 export type TaxRateCountAggregateOutputType = {
   id: number
   rate: number
+  local_rate: number
+  mctd: number
+  composite: number
   type: number
   created_at: number
   updated_at: number
@@ -72,6 +87,9 @@ export type TaxRateCountAggregateOutputType = {
 export type TaxRateAvgAggregateInputType = {
   id?: true
   rate?: true
+  local_rate?: true
+  mctd?: true
+  composite?: true
   type?: true
   jurisdiction_id?: true
 }
@@ -79,6 +97,9 @@ export type TaxRateAvgAggregateInputType = {
 export type TaxRateSumAggregateInputType = {
   id?: true
   rate?: true
+  local_rate?: true
+  mctd?: true
+  composite?: true
   type?: true
   jurisdiction_id?: true
 }
@@ -86,6 +107,9 @@ export type TaxRateSumAggregateInputType = {
 export type TaxRateMinAggregateInputType = {
   id?: true
   rate?: true
+  local_rate?: true
+  mctd?: true
+  composite?: true
   type?: true
   created_at?: true
   updated_at?: true
@@ -95,6 +119,9 @@ export type TaxRateMinAggregateInputType = {
 export type TaxRateMaxAggregateInputType = {
   id?: true
   rate?: true
+  local_rate?: true
+  mctd?: true
+  composite?: true
   type?: true
   created_at?: true
   updated_at?: true
@@ -104,6 +131,9 @@ export type TaxRateMaxAggregateInputType = {
 export type TaxRateCountAggregateInputType = {
   id?: true
   rate?: true
+  local_rate?: true
+  mctd?: true
+  composite?: true
   type?: true
   created_at?: true
   updated_at?: true
@@ -200,7 +230,10 @@ export type TaxRateGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type TaxRateGroupByOutputType = {
   id: number
   rate: runtime.Decimal
-  type: runtime.Decimal
+  local_rate: runtime.Decimal
+  mctd: runtime.Decimal | null
+  composite: runtime.Decimal | null
+  type: runtime.Decimal | null
   created_at: Date
   updated_at: Date
   jurisdiction_id: number
@@ -232,7 +265,10 @@ export type TaxRateWhereInput = {
   NOT?: Prisma.TaxRateWhereInput | Prisma.TaxRateWhereInput[]
   id?: Prisma.IntFilter<"TaxRate"> | number
   rate?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFilter<"TaxRate"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"TaxRate"> | Date | string
   jurisdiction_id?: Prisma.IntFilter<"TaxRate"> | number
@@ -242,7 +278,10 @@ export type TaxRateWhereInput = {
 export type TaxRateOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrderInput | Prisma.SortOrder
+  composite?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   jurisdiction_id?: Prisma.SortOrder
@@ -255,7 +294,10 @@ export type TaxRateWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.TaxRateWhereInput[]
   NOT?: Prisma.TaxRateWhereInput | Prisma.TaxRateWhereInput[]
   rate?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFilter<"TaxRate"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"TaxRate"> | Date | string
   jurisdiction_id?: Prisma.IntFilter<"TaxRate"> | number
@@ -265,7 +307,10 @@ export type TaxRateWhereUniqueInput = Prisma.AtLeast<{
 export type TaxRateOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrderInput | Prisma.SortOrder
+  composite?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   jurisdiction_id?: Prisma.SortOrder
@@ -282,7 +327,10 @@ export type TaxRateScalarWhereWithAggregatesInput = {
   NOT?: Prisma.TaxRateScalarWhereWithAggregatesInput | Prisma.TaxRateScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"TaxRate"> | number
   rate?: Prisma.DecimalWithAggregatesFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalWithAggregatesFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalWithAggregatesFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.DecimalNullableWithAggregatesFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.DecimalNullableWithAggregatesFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.DecimalNullableWithAggregatesFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"TaxRate"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"TaxRate"> | Date | string
   jurisdiction_id?: Prisma.IntWithAggregatesFilter<"TaxRate"> | number
@@ -290,24 +338,33 @@ export type TaxRateScalarWhereWithAggregatesInput = {
 
 export type TaxRateCreateInput = {
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  type: runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at: Date | string
-  updated_at: Date | string
+  local_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
   jurisdiction: Prisma.JurisdictionCreateNestedOneWithoutTax_ratesInput
 }
 
 export type TaxRateUncheckedCreateInput = {
   id?: number
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  type: runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at: Date | string
-  updated_at: Date | string
+  local_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
   jurisdiction_id: number
 }
 
 export type TaxRateUpdateInput = {
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   jurisdiction?: Prisma.JurisdictionUpdateOneRequiredWithoutTax_ratesNestedInput
@@ -316,7 +373,10 @@ export type TaxRateUpdateInput = {
 export type TaxRateUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   jurisdiction_id?: Prisma.IntFieldUpdateOperationsInput | number
@@ -325,15 +385,21 @@ export type TaxRateUncheckedUpdateInput = {
 export type TaxRateCreateManyInput = {
   id?: number
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  type: runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at: Date | string
-  updated_at: Date | string
+  local_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
   jurisdiction_id: number
 }
 
 export type TaxRateUpdateManyMutationInput = {
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,7 +407,10 @@ export type TaxRateUpdateManyMutationInput = {
 export type TaxRateUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   jurisdiction_id?: Prisma.IntFieldUpdateOperationsInput | number
@@ -360,6 +429,9 @@ export type TaxRateOrderByRelationAggregateInput = {
 export type TaxRateCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrder
+  composite?: Prisma.SortOrder
   type?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -369,6 +441,9 @@ export type TaxRateCountOrderByAggregateInput = {
 export type TaxRateAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrder
+  composite?: Prisma.SortOrder
   type?: Prisma.SortOrder
   jurisdiction_id?: Prisma.SortOrder
 }
@@ -376,6 +451,9 @@ export type TaxRateAvgOrderByAggregateInput = {
 export type TaxRateMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrder
+  composite?: Prisma.SortOrder
   type?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -385,6 +463,9 @@ export type TaxRateMaxOrderByAggregateInput = {
 export type TaxRateMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrder
+  composite?: Prisma.SortOrder
   type?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
@@ -394,6 +475,9 @@ export type TaxRateMinOrderByAggregateInput = {
 export type TaxRateSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   rate?: Prisma.SortOrder
+  local_rate?: Prisma.SortOrder
+  mctd?: Prisma.SortOrder
+  composite?: Prisma.SortOrder
   type?: Prisma.SortOrder
   jurisdiction_id?: Prisma.SortOrder
 }
@@ -440,19 +524,33 @@ export type TaxRateUncheckedUpdateManyWithoutJurisdictionNestedInput = {
   deleteMany?: Prisma.TaxRateScalarWhereInput | Prisma.TaxRateScalarWhereInput[]
 }
 
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type TaxRateCreateWithoutJurisdictionInput = {
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  type: runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at: Date | string
-  updated_at: Date | string
+  local_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type TaxRateUncheckedCreateWithoutJurisdictionInput = {
   id?: number
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  type: runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at: Date | string
-  updated_at: Date | string
+  local_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type TaxRateCreateOrConnectWithoutJurisdictionInput = {
@@ -487,7 +585,10 @@ export type TaxRateScalarWhereInput = {
   NOT?: Prisma.TaxRateScalarWhereInput | Prisma.TaxRateScalarWhereInput[]
   id?: Prisma.IntFilter<"TaxRate"> | number
   rate?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.DecimalNullableFilter<"TaxRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFilter<"TaxRate"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"TaxRate"> | Date | string
   jurisdiction_id?: Prisma.IntFilter<"TaxRate"> | number
@@ -496,14 +597,20 @@ export type TaxRateScalarWhereInput = {
 export type TaxRateCreateManyJurisdictionInput = {
   id?: number
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  type: runtime.Decimal | runtime.DecimalJsLike | number | string
-  created_at: Date | string
-  updated_at: Date | string
+  local_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type TaxRateUpdateWithoutJurisdictionInput = {
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -511,7 +618,10 @@ export type TaxRateUpdateWithoutJurisdictionInput = {
 export type TaxRateUncheckedUpdateWithoutJurisdictionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -519,7 +629,10 @@ export type TaxRateUncheckedUpdateWithoutJurisdictionInput = {
 export type TaxRateUncheckedUpdateManyWithoutJurisdictionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  type?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  local_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mctd?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  composite?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  type?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -529,6 +642,9 @@ export type TaxRateUncheckedUpdateManyWithoutJurisdictionInput = {
 export type TaxRateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   rate?: boolean
+  local_rate?: boolean
+  mctd?: boolean
+  composite?: boolean
   type?: boolean
   created_at?: boolean
   updated_at?: boolean
@@ -539,6 +655,9 @@ export type TaxRateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type TaxRateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   rate?: boolean
+  local_rate?: boolean
+  mctd?: boolean
+  composite?: boolean
   type?: boolean
   created_at?: boolean
   updated_at?: boolean
@@ -549,6 +668,9 @@ export type TaxRateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type TaxRateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   rate?: boolean
+  local_rate?: boolean
+  mctd?: boolean
+  composite?: boolean
   type?: boolean
   created_at?: boolean
   updated_at?: boolean
@@ -559,13 +681,16 @@ export type TaxRateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type TaxRateSelectScalar = {
   id?: boolean
   rate?: boolean
+  local_rate?: boolean
+  mctd?: boolean
+  composite?: boolean
   type?: boolean
   created_at?: boolean
   updated_at?: boolean
   jurisdiction_id?: boolean
 }
 
-export type TaxRateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "rate" | "type" | "created_at" | "updated_at" | "jurisdiction_id", ExtArgs["result"]["taxRate"]>
+export type TaxRateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "rate" | "local_rate" | "mctd" | "composite" | "type" | "created_at" | "updated_at" | "jurisdiction_id", ExtArgs["result"]["taxRate"]>
 export type TaxRateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   jurisdiction?: boolean | Prisma.JurisdictionDefaultArgs<ExtArgs>
 }
@@ -584,7 +709,10 @@ export type $TaxRatePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     rate: runtime.Decimal
-    type: runtime.Decimal
+    local_rate: runtime.Decimal
+    mctd: runtime.Decimal | null
+    composite: runtime.Decimal | null
+    type: runtime.Decimal | null
     created_at: Date
     updated_at: Date
     jurisdiction_id: number
@@ -1014,6 +1142,9 @@ export interface Prisma__TaxRateClient<T, Null = never, ExtArgs extends runtime.
 export interface TaxRateFieldRefs {
   readonly id: Prisma.FieldRef<"TaxRate", 'Int'>
   readonly rate: Prisma.FieldRef<"TaxRate", 'Decimal'>
+  readonly local_rate: Prisma.FieldRef<"TaxRate", 'Decimal'>
+  readonly mctd: Prisma.FieldRef<"TaxRate", 'Decimal'>
+  readonly composite: Prisma.FieldRef<"TaxRate", 'Decimal'>
   readonly type: Prisma.FieldRef<"TaxRate", 'Decimal'>
   readonly created_at: Prisma.FieldRef<"TaxRate", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"TaxRate", 'DateTime'>

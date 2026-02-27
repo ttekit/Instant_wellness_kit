@@ -14,10 +14,13 @@ export class JurisdictionsService {
 
         return this.prisma.jurisdiction.create({
             data: {
-                name: createJurisdictionsDto.name,
                 name: dto.name,
                 type: dto.type,
                 fipsCode: dto.fipsCode,
+                minLat: dto.minLat,
+                maxLat: dto.maxLat,
+                minLong: dto.minLong,
+                maxLong: dto.maxLong,
                 tax_rates: {
                     create: {
                         rate: dto.rate,

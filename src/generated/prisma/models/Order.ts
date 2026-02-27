@@ -312,7 +312,6 @@ export type OrderOrderByWithRelationInput = {
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  packageId?: number
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
@@ -325,10 +324,11 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   updated_at?: Prisma.DateTimeFilter<"Order"> | Date | string
   userId?: Prisma.IntFilter<"Order"> | number
   status?: Prisma.EnumStatusFilter<"Order"> | $Enums.Status
+  packageId?: Prisma.IntFilter<"Order"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   jurisdictions?: Prisma.OrderOnJurisdictionListRelationFilter
   package?: Prisma.XOR<Prisma.ProductPackageScalarRelationFilter, Prisma.ProductPackageWhereInput>
-}, "id" | "packageId">
+}, "id">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -377,7 +377,7 @@ export type OrderCreateInput = {
   status?: $Enums.Status
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   jurisdictions?: Prisma.OrderOnJurisdictionCreateNestedManyWithoutOrderInput
-  package: Prisma.ProductPackageCreateNestedOneWithoutOrderInput
+  package: Prisma.ProductPackageCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -406,7 +406,7 @@ export type OrderUpdateInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   jurisdictions?: Prisma.OrderOnJurisdictionUpdateManyWithoutOrderNestedInput
-  package?: Prisma.ProductPackageUpdateOneRequiredWithoutOrderNestedInput
+  package?: Prisma.ProductPackageUpdateOneRequiredWithoutOrdersNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -540,11 +540,6 @@ export type OrderScalarRelationFilter = {
   isNot?: Prisma.OrderWhereInput
 }
 
-export type OrderNullableScalarRelationFilter = {
-  is?: Prisma.OrderWhereInput | null
-  isNot?: Prisma.OrderWhereInput | null
-}
-
 export type OrderCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutUserInput, Prisma.OrderUncheckedCreateWithoutUserInput> | Prisma.OrderCreateWithoutUserInput[] | Prisma.OrderUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutUserInput | Prisma.OrderCreateOrConnectWithoutUserInput[]
@@ -613,36 +608,46 @@ export type OrderUpdateOneRequiredWithoutJurisdictionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutJurisdictionsInput, Prisma.OrderUpdateWithoutJurisdictionsInput>, Prisma.OrderUncheckedUpdateWithoutJurisdictionsInput>
 }
 
-export type OrderCreateNestedOneWithoutPackageInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput
-  connect?: Prisma.OrderWhereUniqueInput
+export type OrderCreateNestedManyWithoutPackageInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput> | Prisma.OrderCreateWithoutPackageInput[] | Prisma.OrderUncheckedCreateWithoutPackageInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput | Prisma.OrderCreateOrConnectWithoutPackageInput[]
+  createMany?: Prisma.OrderCreateManyPackageInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
-export type OrderUncheckedCreateNestedOneWithoutPackageInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput
-  connect?: Prisma.OrderWhereUniqueInput
+export type OrderUncheckedCreateNestedManyWithoutPackageInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput> | Prisma.OrderCreateWithoutPackageInput[] | Prisma.OrderUncheckedCreateWithoutPackageInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput | Prisma.OrderCreateOrConnectWithoutPackageInput[]
+  createMany?: Prisma.OrderCreateManyPackageInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
 }
 
-export type OrderUpdateOneWithoutPackageNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput
-  upsert?: Prisma.OrderUpsertWithoutPackageInput
-  disconnect?: Prisma.OrderWhereInput | boolean
-  delete?: Prisma.OrderWhereInput | boolean
-  connect?: Prisma.OrderWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPackageInput, Prisma.OrderUpdateWithoutPackageInput>, Prisma.OrderUncheckedUpdateWithoutPackageInput>
+export type OrderUpdateManyWithoutPackageNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput> | Prisma.OrderCreateWithoutPackageInput[] | Prisma.OrderUncheckedCreateWithoutPackageInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput | Prisma.OrderCreateOrConnectWithoutPackageInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutPackageInput | Prisma.OrderUpsertWithWhereUniqueWithoutPackageInput[]
+  createMany?: Prisma.OrderCreateManyPackageInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutPackageInput | Prisma.OrderUpdateWithWhereUniqueWithoutPackageInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutPackageInput | Prisma.OrderUpdateManyWithWhereWithoutPackageInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
-export type OrderUncheckedUpdateOneWithoutPackageNestedInput = {
-  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
-  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput
-  upsert?: Prisma.OrderUpsertWithoutPackageInput
-  disconnect?: Prisma.OrderWhereInput | boolean
-  delete?: Prisma.OrderWhereInput | boolean
-  connect?: Prisma.OrderWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPackageInput, Prisma.OrderUpdateWithoutPackageInput>, Prisma.OrderUncheckedUpdateWithoutPackageInput>
+export type OrderUncheckedUpdateManyWithoutPackageNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput> | Prisma.OrderCreateWithoutPackageInput[] | Prisma.OrderUncheckedCreateWithoutPackageInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPackageInput | Prisma.OrderCreateOrConnectWithoutPackageInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutPackageInput | Prisma.OrderUpsertWithWhereUniqueWithoutPackageInput[]
+  createMany?: Prisma.OrderCreateManyPackageInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutPackageInput | Prisma.OrderUpdateWithWhereUniqueWithoutPackageInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutPackageInput | Prisma.OrderUpdateManyWithWhereWithoutPackageInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
 export type OrderCreateWithoutUserInput = {
@@ -655,7 +660,7 @@ export type OrderCreateWithoutUserInput = {
   updated_at?: Date | string
   status?: $Enums.Status
   jurisdictions?: Prisma.OrderOnJurisdictionCreateNestedManyWithoutOrderInput
-  package: Prisma.ProductPackageCreateNestedOneWithoutOrderInput
+  package: Prisma.ProductPackageCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateWithoutUserInput = {
@@ -725,7 +730,7 @@ export type OrderCreateWithoutJurisdictionsInput = {
   updated_at?: Date | string
   status?: $Enums.Status
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
-  package: Prisma.ProductPackageCreateNestedOneWithoutOrderInput
+  package: Prisma.ProductPackageCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateWithoutJurisdictionsInput = {
@@ -768,7 +773,7 @@ export type OrderUpdateWithoutJurisdictionsInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
-  package?: Prisma.ProductPackageUpdateOneRequiredWithoutOrderNestedInput
+  package?: Prisma.ProductPackageUpdateOneRequiredWithoutOrdersNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutJurisdictionsInput = {
@@ -817,15 +822,91 @@ export type OrderCreateOrConnectWithoutPackageInput = {
   create: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
 }
 
-export type OrderUpsertWithoutPackageInput = {
-  update: Prisma.XOR<Prisma.OrderUpdateWithoutPackageInput, Prisma.OrderUncheckedUpdateWithoutPackageInput>
-  create: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
-  where?: Prisma.OrderWhereInput
+export type OrderCreateManyPackageInputEnvelope = {
+  data: Prisma.OrderCreateManyPackageInput | Prisma.OrderCreateManyPackageInput[]
+  skipDuplicates?: boolean
 }
 
-export type OrderUpdateToOneWithWhereWithoutPackageInput = {
-  where?: Prisma.OrderWhereInput
+export type OrderUpsertWithWhereUniqueWithoutPackageInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutPackageInput, Prisma.OrderUncheckedUpdateWithoutPackageInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPackageInput, Prisma.OrderUncheckedCreateWithoutPackageInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutPackageInput = {
+  where: Prisma.OrderWhereUniqueInput
   data: Prisma.XOR<Prisma.OrderUpdateWithoutPackageInput, Prisma.OrderUncheckedUpdateWithoutPackageInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutPackageInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutPackageInput>
+}
+
+export type OrderCreateManyUserInput = {
+  id?: number
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  timestamp?: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  status?: $Enums.Status
+  packageId: number
+}
+
+export type OrderUpdateWithoutUserInput = {
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  jurisdictions?: Prisma.OrderOnJurisdictionUpdateManyWithoutOrderNestedInput
+  package?: Prisma.ProductPackageUpdateOneRequiredWithoutOrdersNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  packageId?: Prisma.IntFieldUpdateOperationsInput | number
+  jurisdictions?: Prisma.OrderOnJurisdictionUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  packageId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type OrderCreateManyPackageInput = {
+  id?: number
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  timestamp?: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
+  userId: number
+  status?: $Enums.Status
 }
 
 export type OrderUpdateWithoutPackageInput = {
@@ -855,33 +936,7 @@ export type OrderUncheckedUpdateWithoutPackageInput = {
   jurisdictions?: Prisma.OrderOnJurisdictionUncheckedUpdateManyWithoutOrderNestedInput
 }
 
-export type OrderCreateManyUserInput = {
-  id?: number
-  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  composite_tax_rate: runtime.Decimal | runtime.DecimalJsLike | number | string
-  tax_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  total_amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  timestamp?: Date | string
-  created_at?: Date | string
-  updated_at?: Date | string
-  status?: $Enums.Status
-  packageId: number
-}
-
-export type OrderUpdateWithoutUserInput = {
-  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  jurisdictions?: Prisma.OrderOnJurisdictionUpdateManyWithoutOrderNestedInput
-  package?: Prisma.ProductPackageUpdateOneRequiredWithoutOrderNestedInput
-}
-
-export type OrderUncheckedUpdateWithoutUserInput = {
+export type OrderUncheckedUpdateManyWithoutPackageInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -890,22 +945,8 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  packageId?: Prisma.IntFieldUpdateOperationsInput | number
-  jurisdictions?: Prisma.OrderOnJurisdictionUncheckedUpdateManyWithoutOrderNestedInput
-}
-
-export type OrderUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  composite_tax_rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  tax_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  total_amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  packageId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
