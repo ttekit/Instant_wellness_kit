@@ -1,8 +1,70 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function AccountSettingsTab() {
-  const [name, setName]   = useState('te')
-  const [email, setEmail] = useState('dg@gsm.cio')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [userId, setUserId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const token = localStorage.getItem('access_token')
+        if (!token) return
+
+        let currentUserId = null
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]))
+          currentUserId = payload.sub || payload.id
+        } catch (e) {
+          console.log(e)
+        }
+
+        if (!currentUserId) return
+
+        setUserId(currentUserId)
+
+        const res = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${currentUserId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        if (res.ok) {
+          const data = await res.json()
+          setName(data.name || '')
+          setEmail(data.email || '')
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    loadProfile()
+  }, [])
+
+  const handleSave = async () => {
+    if (!userId) return
+
+    try {
+      const token = localStorage.getItem('access_token')
+      const res = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ name, email })
+      })
+
+      if (res.ok) {
+        window.dispatchEvent(new CustomEvent('profile_updated', { detail: { name, email } }))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleSignOut = () => {
+    localStorage.removeItem('access_token')
+    window.location.reload()
+  }
 
   return (
     <div className="tab-enter space-y-4 max-w-lg">
@@ -23,16 +85,16 @@ export default function AccountSettingsTab() {
           </div>
         </div>
         <div className="field-row">
-          <button className="sbtn bg-[#1a5c3a] hover:bg-[#154d30] text-white text-xs font-semibold px-5 py-2.5 rounded-xl">Save Changes</button>
+          <button onClick={handleSave} className="sbtn bg-[#1a5c3a] hover:bg-[#154d30] text-white text-xs font-semibold px-5 py-2.5 rounded-xl">Save Changes</button>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold text-gray-700">Member since February 2026</p>
-          <p className="text-xs text-gray-400 mt-0.5">{email}</p>
+          <p className="text-xs font-semibold text-gray-700">Member</p>
+          <p className="text-xs text-gray-400 mt-0.5">{email || 'No email set'}</p>
         </div>
-        <button className="flex items-center gap-1.5 text-xs font-semibold text-red-500 border border-red-200 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors">
+        <button onClick={handleSignOut} className="flex items-center gap-1.5 text-xs font-semibold text-red-500 border border-red-200 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors">
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
           </svg>

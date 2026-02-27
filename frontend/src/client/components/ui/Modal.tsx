@@ -1,26 +1,46 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 // Це для логіна!! Я просто коли пробувала змінити ім'я, то весь сайт ламався womp womp
 type FieldProps = { label: string; icon?: string; suffix?: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>
 
 const Field = ({ label, icon, suffix, ...props }: FieldProps) => (
   <div className="field-row">
-    <label className="text-sm font-semibold !text-gray-800 block mb-1">{label}</label>
-    <div className="iw flex items-center border !border-gray-200 rounded-xl px-3 py-2 !bg-white">
-      {icon && <span className="!text-gray-400 mr-2">{icon}</span>}
-      <input {...props} className="flex-1 text-sm outline-none !bg-transparent !text-gray-800 select-text" />
+    <label className="text-sm font-semibold text-gray-800! block mb-1">{label}</label>
+    <div className="iw flex items-center border border-gray-200! rounded-xl px-3 py-2 bg-white!">
+      {icon && <span className="!text-gray-400! mr-2">{icon}</span>}
+      <input {...props} className="flex-1 text-sm outline-none !bg-transparent! text-gray-800! select-text" />
       {suffix}
     </div>
   </div>
 )
 
+const USERS_URL = import.meta.env.VITE_API_AUTH_URL;
+
 function Modal({ onClose }: { onClose: () => void }) {
-  const [tab, setTab]         = useState<'signin' | 'create'>('signin')
-  const [showPw, setShowPw]   = useState(false)
+  const navigate = useNavigate();
+
+  const [tab, setTab] = useState<'signin' | 'create'>('signin')
+  const [showPw, setShowPw] = useState(false)
   const [closing, setClosing] = useState(false)
-  const [anim, setAnim]       = useState('')
-  const [key, setKey]         = useState(0)
+  const [anim, setAnim] = useState('')
+  const [key, setKey] = useState(0)
+
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
 
   const close = () => { setClosing(true); setTimeout(onClose, 220) }
 
@@ -36,9 +56,89 @@ function Modal({ onClose }: { onClose: () => void }) {
 
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
 
+  const handle_submit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    setError('')
+    setIsLoading(true);
+
+    try {
+
+      // Логин
+
+      if (tab === 'signin') {
+        const response = await fetch(`${USERS_URL}/login`, {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          })
+        })
+        if (!response.ok) {
+          throw new Error("Email or password is incorrect")
+        }
+        const data = await response.json();
+        localStorage.setItem('access_token', data.access_token);
+        navigate('/account')
+        close();
+      }
+
+      // Рег
+
+      else {
+        if (formData.password !== formData.confirmPassword) {
+          throw new Error("Passwords arent matching")
+        }
+
+        const [name, ...surnameParts] = formData.fullName.split(" ")
+        const surname = surnameParts.join(" ") || "User"
+
+        const response = await fetch(`${USERS_URL}/register`, {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            name,
+            surname,
+            email: formData.email,
+            password: formData.password,
+            roleId: 7
+          }),
+        })
+
+        if (!response.ok) {
+          const errText = await response.text();
+          let errorMessage = 'Registration error';
+          try {
+            const errData = JSON.parse(errText);
+
+            errorMessage = Array.isArray(errData.message)
+              ? errData.message.join(', ')
+              : (errData.message || errorMessage);
+          } catch (e) {
+            errorMessage = errText || errorMessage
+            console.log(e)
+          }
+
+          throw new Error(errorMessage)
+        }
+
+        switchTab('signin')
+        setError("Succsesful, now login")
+      }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message)
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const pwType = showPw ? 'text' : 'password'
   const eyeBtn = (
-    <button onClick={() => setShowPw(p => !p)}
+    <button
+      type='button'
+      onClick={() => setShowPw(p => !p)}
       style={{ opacity: showPw ? .7 : 1, transition: 'opacity .15s' }}
       className="!bg-transparent !text-gray-400 text-sm ml-2 outline-none !border-0">👁</button>
   )
@@ -62,23 +162,29 @@ function Modal({ onClose }: { onClose: () => void }) {
           ))}
         </div>
 
-        <div key={key} className={`flex flex-col gap-4 ${anim}`}>
+        {error && (
+          <div className={`text-sm mb-4 p-2 rounded-lg ${error.includes('Succsesful') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handle_submit} key={key} className={`flex flex-col gap-4 ${anim}`}>
           {tab === 'signin' ? <>
-            <Field label="Email"    icon="✉"  type="email"   placeholder="you@example.com" />
-            <Field label="Password"            type={pwType}  placeholder="Enter your password" suffix={eyeBtn} />
+            <Field label="Email" name="email" value={formData.email} onChange={handleChange} icon="✉" type="email" placeholder="you@example.com" required />
+            <Field label="Password" name="password" value={formData.password} onChange={handleChange} type={pwType} placeholder="Enter your password" suffix={eyeBtn} required />
             <div className="field-row">
-              <button className="sbtn w-full !bg-[#2596be] !text-white py-3 rounded-xl text-sm font-semibold outline-none !border-0">Sign In</button>
+              <button disabled={isLoading} className="sbtn w-full !bg-[#2596be] !text-white py-3 rounded-xl text-sm font-semibold outline-none !border-0 disabled:opacity-50">{isLoading ? 'Loading...' : 'Sign In'}</button>
             </div>
           </> : <>
-            <Field label="Full Name"        icon="👤" type="text"     placeholder="Jane Doe" />
-            <Field label="Email"            icon="✉"  type="email"    placeholder="you@example.com" />
-            <Field label="Password"                   type={pwType}   placeholder="Min. 6 characters" suffix={eyeBtn} />
-            <Field label="Confirm Password"           type="password" placeholder="Re-enter password" />
+            <Field label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} icon="👤" type="text" placeholder="Jane Doe" required />
+            <Field label="Email" name="email" value={formData.email} onChange={handleChange} icon="✉" type="email" placeholder="you@example.com" required />
+            <Field label="Password" name="password" value={formData.password} onChange={handleChange} type={pwType} placeholder="Min. 8 characters" suffix={eyeBtn} minLength={8} required />
+            <Field label="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type="password" placeholder="Re-enter password" minLength={8} required />
             <div className="field-row">
-              <button className="sbtn w-full !bg-[#2596be] !text-white py-3 rounded-xl text-sm font-semibold outline-none !border-0">Create Account</button>
+              <button disabled={isLoading} className="sbtn w-full !bg-[#2596be] !text-white py-3 rounded-xl text-sm font-semibold outline-none !border-0 disabled:opacity-50">{isLoading ? 'Loading...' : 'Create Account'}</button>
             </div>
           </>}
-        </div>
+        </form>
 
       </div>
     </div>

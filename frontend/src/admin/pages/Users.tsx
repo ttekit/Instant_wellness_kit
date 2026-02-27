@@ -6,13 +6,7 @@ import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 import { UIUser, BackendRole, BackendUser, NewUserForm, emptyUser } from "../types";
-import 'dotenv/config'
-
-
 const getToken = (): string => localStorage.getItem("access_token") || "";
-
-
-
 
 
 export default function Users() {

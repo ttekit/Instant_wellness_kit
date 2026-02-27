@@ -1,12 +1,62 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function PaymentTab() {
-  const [showForm, setShowForm]     = useState(false)
+  const [showForm, setShowForm] = useState(false)
   const [cardNumber, setCardNumber] = useState('')
-  const [expiry, setExpiry]         = useState('')
+  const [expiry, setExpiry] = useState('')
+  const [savedCard, setSavedCard] = useState<{ number: string; expiry: string } | null>(null)
 
-  const formatCard   = (v: string) => v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim()
-  const formatExpiry = (v: string) => { const c = v.replace(/\D/g, '').slice(0, 4); return c.length >= 3 ? `${c.slice(0,2)}/${c.slice(2)}` : c }
+  useEffect(() => {
+    const stored = localStorage.getItem('saved_card')
+    if (stored) {
+      setSavedCard(JSON.parse(stored))
+    }
+  }, [])
+
+  const formatCard = (v: string) => v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim()
+  const formatExpiry = (v: string) => {
+    const c = v.replace(/\D/g, '').slice(0, 4)
+    return c.length >= 3 ? `${c.slice(0, 2)}/${c.slice(2)}` : c
+  }
+
+  const handleSave = () => {
+    if (cardNumber.length >= 19 && expiry.length >= 5) {
+      const card = { number: cardNumber, expiry }
+      localStorage.setItem('saved_card', JSON.stringify(card))
+      setSavedCard(card)
+      setShowForm(false)
+    }
+  }
+
+  const handleRemove = () => {
+    localStorage.removeItem('saved_card')
+    setSavedCard(null)
+    setCardNumber('')
+    setExpiry('')
+  }
+
+  if (savedCard && !showForm) return (
+    <div className="tab-enter bg-white rounded-2xl border border-gray-100 p-6 max-w-lg">
+      <p className="text-sm font-bold text-gray-900 mb-5">Saved Payment Method</p>
+      <div className="flex items-center justify-between bg-gray-50 rounded-xl p-4 border border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-6 bg-[#1a5c3a] rounded flex items-center justify-center">
+            <span className="text-[10px] text-white font-bold">CARD</span>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-gray-800">•••• •••• •••• {savedCard.number.slice(-4)}</p>
+            <p className="text-xs text-gray-500">Expires {savedCard.expiry}</p>
+          </div>
+        </div>
+        <button onClick={handleRemove} className="text-xs font-semibold text-red-500 hover:text-red-600 outline-none">
+          Remove
+        </button>
+      </div>
+      <button onClick={() => setShowForm(true)} className="mt-4 sbtn w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl text-sm font-semibold outline-none border-0">
+        Update Card
+      </button>
+    </div>
+  )
 
   if (!showForm) return (
     <div className="tab-enter flex flex-col items-center py-16 text-center">
@@ -17,7 +67,7 @@ export default function PaymentTab() {
       </div>
       <p className="text-sm font-bold text-gray-800 mb-1">No payment method saved</p>
       <p className="text-xs text-gray-400 mb-5">Add a card to speed up your checkout.</p>
-      <button onClick={() => setShowForm(true)} className="sbtn bg-[#1a5c3a] hover:bg-[#154d30] text-white text-xs font-semibold px-5 py-2.5 rounded-full">
+      <button onClick={() => setShowForm(true)} className="sbtn bg-[#1a5c3a] hover:bg-[#154d30] text-white text-xs font-semibold px-5 py-2.5 rounded-full outline-none border-0">
         Add Payment Card
       </button>
     </div>
@@ -43,8 +93,8 @@ export default function PaymentTab() {
         </div>
       </div>
       <div className="field-row flex items-center gap-3">
-        <button className="sbtn flex-1 bg-[#1a5c3a] hover:bg-[#154d30] text-white py-2.5 rounded-xl text-sm font-semibold">Save Card</button>
-        <button onClick={() => setShowForm(false)} className="text-sm text-gray-400 hover:text-gray-600 transition-colors">Cancel</button>
+        <button onClick={handleSave} className="sbtn flex-1 bg-[#1a5c3a] hover:bg-[#154d30] text-white py-2.5 rounded-xl text-sm font-semibold outline-none border-0">Save Card</button>
+        <button onClick={() => setShowForm(false)} className="text-sm text-gray-400 hover:text-gray-600 transition-colors outline-none border-0 bg-transparent">Cancel</button>
       </div>
     </div>
   )

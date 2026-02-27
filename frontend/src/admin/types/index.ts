@@ -33,6 +33,7 @@ export interface Product {
   price: number;
   status: "Available" | "Blocked";
   jurisdictionIds: string[] | "all";
+  time: string;
 }
 
 export interface BackendUser {
@@ -93,6 +94,41 @@ export interface UIUser {
   roleId: number;
   status: "Active" | "Blocked";
 }
+
+export interface CreateOrderPayload {
+  userId: number;
+  subtotal: number;
+  composite_tax_rate: number;
+  tax_amount: number;
+  total_amount: number;
+  jurisdictionIds?: number[];
+}
+
+export interface DBOrder {
+  id: number;
+  subtotal: string | number;
+  composite_tax_rate: string | number;
+  tax_amount: string | number;
+  total_amount: string | number;
+  userId: number;
+  user?: {
+    name: string;
+    email: string;
+  };
+  jurisdictions: {
+    jurisdiction: Jurisdiction;
+  }[];
+}
+// export type Product = {
+//   id: number
+//   name: string
+//   tagline: string
+//   price: number
+//   image: string
+//   contents: string[]
+//   time: string
+// }
+
 
 export interface NewUserForm extends UIUser {
   password?: string;
