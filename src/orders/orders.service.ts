@@ -40,14 +40,13 @@ export class OrdersService {
     async findAll() {
         return this.prisma.order.findMany({
             include: {
+                user: true,
                 jurisdictions: {
-                    include: {
-                        jurisdiction: true,
-                    }
+                    include: { jurisdiction: true }
                 }
-            }
+            },
+            orderBy: { created_at: 'desc' }
         });
-
     }
 
     async findOne(id: number) {

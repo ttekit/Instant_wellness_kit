@@ -10,26 +10,35 @@ export declare class OrdersController {
             order_id: number;
         }[];
     } & {
-        id: number;
-        created_at: Date;
-        updated_at: Date;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
+        created_at: Date;
+        updated_at: Date;
+        id: number;
+        userId: number;
     }>;
     findAll(): Promise<({
+        user: {
+            id: number;
+            email: string;
+            name: string;
+            surname: string;
+            password: string;
+            createdAt: Date;
+            roleId: number;
+        };
         jurisdictions: ({
             jurisdiction: {
-                description: string | null;
-                type: string | null;
-                name: string;
                 id: number;
+                name: string;
                 createdAt: Date;
                 code: string;
                 fipCode: string | null;
+                description: string | null;
+                type: string | null;
                 status: string;
                 updatedAt: Date;
             };
@@ -38,26 +47,26 @@ export declare class OrdersController {
             order_id: number;
         })[];
     } & {
-        id: number;
-        created_at: Date;
-        updated_at: Date;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
+        created_at: Date;
+        updated_at: Date;
+        id: number;
+        userId: number;
     })[]>;
     findOne(id: number): Promise<{
         jurisdictions: ({
             jurisdiction: {
-                description: string | null;
-                type: string | null;
-                name: string;
                 id: number;
+                name: string;
                 createdAt: Date;
                 code: string;
                 fipCode: string | null;
+                description: string | null;
+                type: string | null;
                 status: string;
                 updatedAt: Date;
             };
@@ -66,36 +75,36 @@ export declare class OrdersController {
             order_id: number;
         })[];
     } & {
-        id: number;
-        created_at: Date;
-        updated_at: Date;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
+        created_at: Date;
+        updated_at: Date;
+        id: number;
+        userId: number;
     }>;
     update(id: number, updateOrderDto: UpdateOrderDto): Promise<{
-        id: number;
-        created_at: Date;
-        updated_at: Date;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
+        created_at: Date;
+        updated_at: Date;
+        id: number;
+        userId: number;
     }>;
     remove(id: number): Promise<{
-        id: number;
-        created_at: Date;
-        updated_at: Date;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
         total_amount: import("@prisma/client/runtime/client").Decimal;
         timestamp: Date;
+        created_at: Date;
+        updated_at: Date;
+        id: number;
+        userId: number;
     }>;
 }
