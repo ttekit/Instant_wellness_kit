@@ -51,15 +51,13 @@ model Order {
 }
 
 model Jurisdiction {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  code        String   @default("TEMP_CODE")
-  fipCode     String?  // Делаем опциональным, если не везде есть
-  description String?
-  type        String?
-  status      String   @default("Active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  id        Int                   @id @default(autoincrement())
+  name      String
+  type      String  
+  fipsCode  String                @map("fipsCode")
+  orders    OrderOnJurisdiction[]
+  tax_rates TaxRate[]
+}
 
 
   tax_rates   TaxRate[]
@@ -77,11 +75,11 @@ model OrderOnJurisdiction {
 
 model TaxRate {
   id              Int          @id @default(autoincrement())
-  rate            Decimal
-  local_rate      Float?
+  rate            Decimal      @map("rate")
+  local_rate      Decimal      @map("local_rate")
+  mctd            Decimal?
+  composite       Decimal?
   type            Decimal?
-  composite        Float?
-  mctd            Float?
   created_at      DateTime     @default(now()) @map("created_at")
   updated_at      DateTime     @updatedAt @map("updated_at")
   jurisdiction_id Int          @map("jurisdiction_id")

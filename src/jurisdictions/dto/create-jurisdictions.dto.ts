@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateJurisdictionDto {
 
@@ -7,34 +8,23 @@ export class CreateJurisdictionDto {
     name: string;
 
     @IsString()
-    @IsOptional()
-    fipsCode?: string;
+    @IsNotEmpty()
+    type: string;
 
     @IsString()
-    @IsOptional()
-    type?: string;
-
-    @IsString()
-    @IsOptional()
-    status?: string;
+    @IsNotEmpty()
+    fipsCode: string;
 
     @IsNumber()
-    @IsNotEmpty()
     rate: number;
 
     @IsNumber()
-    @IsOptional()
-    local_rate?: number;
+    local_rate: number;
 
-    @IsNumber()
     @IsOptional()
-    tax_rate_type?: number; // Это поле type из TaxRate (Decimal)
-
     @IsNumber()
-    @IsOptional()
-    composite?: number;
-
-    @IsNumber()
-    @IsOptional()
     mctd?: number;
+
+    @IsNumber()
+    composite: number;
 }
