@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ChangeOrderStatusDto } from './dto/change-order-status.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { PaginationDto } from './dto/pagination.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('orders')
 @Controller('orders')
@@ -29,9 +30,20 @@ export class OrdersController {
 
   @Get('details')
   @ApiOperation({ summary: 'Retrieve all orders with customer and package details' })
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number for pagination' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Number of items per page' })
+  @ApiQuery({ name: 'sortBy', required: false, type: String, description: 'Field to sort by (e.g., id, total_amount)' })
+  @ApiQuery({ name: 'sortOrder', required: false, enum: ['ASC', 'DESC'], description: 'Sort order (ASC or DESC)' })
   @ApiResponse({ status: 200, description: 'All orders with details retrieved successfully.' })
-  getAllOrdersWithDetails() {
-    return this.ordersService.getAllOrdersWithDetails();
+  getAllOrdersWithDetails(@Query() paginationDto: PaginationDto) {
+    return this.ordersService.getAllOrdersWithDetails(paginationDto);
+  }
+
+  @Get('dashboard')
+  @ApiOperation({ summary: 'Retrieve dashboard statistics for orders (Total Orders, Revenue, Tax Collected, Active Deliveries)' })
+  @ApiResponse({ status: 200, description: 'Dashboard data retrieved successfully.' })
+  getDashboardData() {
+    return this.ordersService.getDashboardData();
   }
 
   @Get(':id')

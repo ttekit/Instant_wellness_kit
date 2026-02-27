@@ -113,7 +113,9 @@ export const OrderScalarFieldEnum = {
   timestamp: 'timestamp',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  userId: 'userId'
+  userId: 'userId',
+  status: 'status',
+  packageId: 'packageId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]

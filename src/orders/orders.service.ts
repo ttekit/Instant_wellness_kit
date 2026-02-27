@@ -52,8 +52,16 @@ export class OrdersService {
 
     }
 
-    async getAllOrdersWithDetails() {
+    async getAllOrdersWithDetails(paginationDto: { page?: number, limit?: number, sortBy?: string, sortOrder?: 'ASC' | 'DESC' }) {
+        const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'DESC' } = paginationDto;
+        const skip = (page - 1) * limit;
+
         const orders = await this.prisma.order.findMany({
+            skip,
+            take: limit,
+            orderBy: {
+                [sortBy]: sortOrder.toLowerCase(),
+            },
             include: {
                 user: true,
                 package: true,
@@ -63,11 +71,18 @@ export class OrdersService {
             },
         });
 
-        return orders.map(order => ({
-            ...order,
-            customerName: `${order.user.name} ${order.user.surname}`,
-            orderPackage: order.package,
-        }));
+        const totalCount = await this.prisma.order.count();
+
+        return {
+            data: orders.map(order => ({
+                ...order,
+                customerName: `${order.user.name} ${order.user.surname}`,
+                orderPackage: order.package,
+            })),
+            totalCount,
+            page,
+            limit,
+        };
     }
 
     async findOne(id: number) {
@@ -180,5 +195,36 @@ export class OrdersService {
         });
 
         return this.getOrderWithDetails(updatedOrder.id);
+    }
+
+    async getDashboardData() {
+        const totalOrdersCount = await this.prisma.order.count();
+
+        const totalRevenueResult = await this.prisma.order.aggregate({
+            _sum: {
+                total_amount: true,
+            },
+        });
+        const totalRevenue = totalRevenueResult._sum.total_amount || 0;
+
+        const taxCollectedResult = await this.prisma.order.aggregate({
+            _sum: {
+                tax_amount: true,
+            },
+        });
+        const taxCollected = taxCollectedResult._sum.tax_amount || 0;
+
+        const activeDeliveriesCount = await this.prisma.order.count({
+            where: {
+                status: Status.DELIVERING,
+            },
+        });
+
+        return {
+            totalOrders: totalOrdersCount,
+            revenue: totalRevenue,
+            taxCollected: taxCollected,
+            activeDeliveries: activeDeliveriesCount,
+        };
     }
 }
