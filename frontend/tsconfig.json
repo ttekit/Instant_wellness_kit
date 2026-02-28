@@ -20,12 +20,15 @@
     "noFallthroughCasesInSwitch": false,
     "jsx": "preserve",
     "allowJs": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": [
+      "vite/client"
+    ]
   },
   "include": [
     "src",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "vite-env.d.ts"
+    "vite-env.d.ts",
   ]
 }

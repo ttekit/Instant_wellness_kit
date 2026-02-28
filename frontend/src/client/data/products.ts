@@ -1,6 +1,6 @@
 export type Product = {
   id: number
-  name: string
+  package: string
   tagline: string
   description: string
   price: number
@@ -15,7 +15,7 @@ export type Product = {
 export const products: Product[] = [
   {
     id: 1,
-    name: 'Stress Relief',
+    package: 'Stress Relief',
     tagline: 'Breathe deep. Let go.',
     description: 'A calming collection designed to melt away tension and restore your inner balance in minutes.',
     price: 34.99,
@@ -27,7 +27,7 @@ export const products: Product[] = [
   },
   {
     id: 2,
-    name: 'Energy Boost',
+    package: 'Energy Boost',
     tagline: 'Power through your afternoon.',
     description: 'Beat the midday slump with this energizing kit packed with natural pick-me-ups.',
     price: 29.99,
@@ -39,7 +39,7 @@ export const products: Product[] = [
   },
   {
     id: 3,
-    name: 'Outdoor Fitness',
+    package: 'Outdoor Fitness',
     tagline: 'Your park is your gym.',
     description: 'Everything you need for a spontaneous outdoor workout, delivered right to where you are.',
     price: 39.99,
@@ -51,7 +51,7 @@ export const products: Product[] = [
   },
   {
     id: 4,
-    name: 'Sleep Reset',
+    package: 'Sleep Reset',
     tagline: 'Wind down. Drift off.',
     description: 'Prepare for the most restful sleep of your life with this soothing nighttime ritual kit.',
     price: 36.99,
@@ -63,7 +63,7 @@ export const products: Product[] = [
   },
   {
     id: 5,
-    name: 'Mindful Focus',
+    package: 'Mindful Focus',
     tagline: 'Clarity in a box.',
     description: 'Sharpen your mind and reclaim your focus with this carefully curated concentration kit.',
     price: 32.99,
