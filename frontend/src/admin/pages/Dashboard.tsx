@@ -4,14 +4,10 @@ import { ShoppingCart, DollarSign, Package, Truck } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import TaxCalc from "../components/ui/TaxCalc";
 import TaxResult from "../components/ui/TaxResult";
-import { useState } from "react";
-import TaxCalc from "../components/ui/TaxCalc";
-import TaxResult from "../components/ui/TaxResult";
 import { useEffect, useState } from "react";
 import { Order } from "../types/Orders.types";
 
 export default function Dashboard() {
-  const [hasData, setHasData] = useState(false);
   const [hasData, setHasData] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);

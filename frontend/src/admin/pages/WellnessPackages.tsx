@@ -22,6 +22,8 @@ const emptyPackage: WellnessPackageWithId = {
   tax_rate: 0.0,
   jurisdictions: [],
   products: [],
+  description: "",
+  img_link: "",
 };
 
 export default function WellnessPackages() {
@@ -52,6 +54,8 @@ export default function WellnessPackages() {
         const parsedPkgData = pkgData.map((pkg) => ({
           id: pkg.id,
           package: pkg.package,
+          description: pkg.description,
+          img_link: pkg.link,
           status: pkg.status,
           tax_rate: pkg.tax_rate,
           jurisdictions: pkg.jurisdictions,
@@ -74,9 +78,12 @@ export default function WellnessPackages() {
         }
         const prodData: ProductDetail[] = await prodResponse.json();
         setAllProducts(prodData);
-      } catch (e: any) {
-        // Reverted to any
-        setError(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(e.message);
+        } else {
+          setError("An unknown error occurred.");
+        }
       } finally {
         setLoading(false);
       }
@@ -101,9 +108,11 @@ export default function WellnessPackages() {
           },
           body: JSON.stringify({
             package: editPkg.package,
+            description: editPkg.description,
+            img_link: editPkg.img_link,
             price: editPkg.price,
             status: editPkg.status,
-            taxRate: (editPkg.tax_rate * 1).toFixed(2),
+            taxRate: editPkg.tax_rate,
             productIds: editPkg.products.map((product) => product.id),
           }),
         },
@@ -123,9 +132,12 @@ export default function WellnessPackages() {
         packages.map((p) => (p.id === updatedPkg.id ? updatedPkg : p)),
       );
       setEditPkg(null);
-    } catch (e: any) {
-      // Reverted to any
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -139,9 +151,11 @@ export default function WellnessPackages() {
         },
         body: JSON.stringify({
           package: newPkg.package,
+          description: newPkg.description,
+          img_link: newPkg.img_link,
           price: newPkg.price,
           status: newPkg.status,
-          taxRate: (newPkg.tax_rate * 1).toFixed(2),
+          taxRate: newPkg.tax_rate,
           productIds: newPkg.products.map((product) => product.id),
         }),
       });
@@ -157,9 +171,12 @@ export default function WellnessPackages() {
       setPackages([...packages, createdPkg]);
       setNewPkg(emptyPackage);
       setShowAdd(false);
-    } catch (e: any) {
-      // Reverted to any
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -187,8 +204,12 @@ export default function WellnessPackages() {
         packages.map((p) => (p.id === updatedPkg.id ? updatedPkg : p)),
       );
       console.log("Blocked package updated status:", updatedPkg.status);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -217,8 +238,12 @@ export default function WellnessPackages() {
         packages.map((p) => (p.id === updatedPkg.id ? updatedPkg : p)),
       );
       console.log("Unblocked package updated status:", updatedPkg.status);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -240,9 +265,12 @@ export default function WellnessPackages() {
 
       setPackages(packages.filter((p) => p.id !== id));
       setConfirmDelete(null);
-    } catch (e: any) {
-      // Reverted to any
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -323,6 +351,8 @@ export default function WellnessPackages() {
           <thead className="bg-gray-50 border-b border-gray-200 text-gray-500">
             <tr>
               <th className="px-6 py-3 font-medium">Package Name</th>
+              <th className="px-6 py-3 font-medium">Description</th>
+              <th className="px-6 py-3 font-medium">Image Link</th>
               <th className="px-6 py-3 font-medium">Price</th>
               <th className="px-6 py-3 font-medium">Status</th>
               <th className="px-6 py-3 font-medium">Tax Rate</th>
@@ -349,6 +379,21 @@ export default function WellnessPackages() {
                         </p>
                       </div>
                     </div>
+                  </td>
+                  <td className="px-6 py-4 text-gray-900 line-clamp-2 w-48 max-w-sm">
+                    {pkg.description}
+                  </td>
+                  <td className="px-6 py-4">
+                    {pkg.img_link && (
+                      <a
+                        href={pkg.img_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline truncate w-32 block"
+                      >
+                        {pkg.img_link.split("/").pop()}
+                      </a>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-gray-900">${pkg.price}</td>
                   <td className="px-6 py-4">
@@ -428,6 +473,40 @@ export default function WellnessPackages() {
                 value={editPkg.package}
                 onChange={(e) =>
                   setEditPkg({ ...editPkg, package: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="editPackageDescription"
+                className="text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <textarea
+                id="editPackageDescription"
+                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                rows={3}
+                value={editPkg.description}
+                onChange={(e) =>
+                  setEditPkg({ ...editPkg, description: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="editPackageImgLink"
+                className="text-sm font-medium text-gray-700"
+              >
+                Image Link (URL)
+              </label>
+              <input
+                id="editPackageImgLink"
+                type="text"
+                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                value={editPkg.img_link}
+                onChange={(e) =>
+                  setEditPkg({ ...editPkg, img_link: e.target.value })
                 }
               />
             </div>
@@ -548,6 +627,40 @@ export default function WellnessPackages() {
                 value={newPkg.package}
                 onChange={(e) =>
                   setNewPkg({ ...newPkg, package: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="addPackageDescription"
+                className="text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <textarea
+                id="addPackageDescription"
+                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                rows={3}
+                value={newPkg.description}
+                onChange={(e) =>
+                  setNewPkg({ ...newPkg, description: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="addPackageImgLink"
+                className="text-sm font-medium text-gray-700"
+              >
+                Image Link (URL)
+              </label>
+              <input
+                id="addPackageImgLink"
+                type="text"
+                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                value={newPkg.img_link}
+                onChange={(e) =>
+                  setNewPkg({ ...newPkg, img_link: e.target.value })
                 }
               />
             </div>

@@ -16,4 +16,6 @@ export interface ProductPackage {
   tax_rate: number;
   jurisdictions: JurisdictionDetail[];
   products: ProductDetail[];
+  description: string;
+  img_link: string;
 }

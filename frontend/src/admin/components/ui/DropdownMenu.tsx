@@ -15,8 +15,6 @@ export default function DropdownMenu({
   onChangeStatus,
   onEdit,
   unblockStatus = "Pending",
-  onEdit,
-  onStatusChange,
 }: DropdownProps) {
   const [active, setActive] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

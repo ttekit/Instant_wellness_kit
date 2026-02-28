@@ -83,7 +83,7 @@ function ProductGrid() {
                   <span className="text-xs font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded-md">${p.price.toFixed(2)}</span>
                 </div>
                 <p className="text-[11px] font-semibold text-[#2596be] italic mb-2">{p.tagline}</p>
-                <p className="text-[11px] text-gray-500 leading-relaxed mb-3 flex-1">{p.desc}</p>
+                <p className="text-[11px] text-gray-500 leading-relaxed mb-3 flex-1">{p.name}</p>
                 <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-3">
                   <span className="flex items-center gap-1">
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

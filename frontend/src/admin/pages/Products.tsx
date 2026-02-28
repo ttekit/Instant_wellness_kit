@@ -1,69 +1,171 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import SearchBar from "../components/ui/SearchBar";
 import Status from "../components/ui/Status";
-import DropdownMenu from "../components/ui/DropdownMenu";
 import Window from "../components/ui/Window";
+import ProductDropdownMenu from "../components/ui/ProductDropdownMenu";
 import { Product, Jurisdiction } from "../types";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 
 const emptyProduct: Product = {
-  id: "",
-  name: "",
-  description: "",
-  price: 0,
-  status: "Available",
-  jurisdictionIds: [],
+  id: 0,
+  product: "",
+  price: "0.00",
+  status: "PENDING",
+  jurisdictions: [],
 };
 
 export default function Products() {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
-  const [jurisdictions] = useState<Jurisdiction[]>([]);
+  const [jurisdictions, setJurisdictions] = useState<Jurisdiction[]>([]);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [newProduct, setNewProduct] = useState<Product>(emptyProduct);
   const [showAdd, setShowAdd] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
 
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:4200/products/with-details",
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: Product[] = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }, []);
+
+  const fetchJurisdictions = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:4200/jurisdictions");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: Jurisdiction[] = await response.json();
+      setJurisdictions(data);
+    } catch (error) {
+      console.error("Error fetching jurisdictions:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchJurisdictions();
+  }, [fetchProducts, fetchJurisdictions]); // Dependencies for useCallback functions
+
   const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
+    p.product.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (!editProduct) return;
-    setProducts(
-      products.map((p) => (p.id === editProduct.id ? editProduct : p)),
+    try {
+      const productToSend = {
+        product: editProduct.product,
+        price: editProduct.price,
+        status: editProduct.status,
+        jurisdictionIds: editProduct.jurisdictions.map((j) => j.id),
+      };
+
+      const response = await fetch(
+        `http://localhost:4200/products/${editProduct.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productToSend),
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      await fetchProducts(); // Re-fetch all products after successful save
+      setEditProduct(null);
+    } catch (error) {
+      console.error("Error saving product:", error);
+    }
+  };
+
+  const addProduct = async () => {
+    try {
+      const productToSend = {
+        product: newProduct.product,
+        price: newProduct.price,
+        status: newProduct.status,
+        jurisdictionIds: newProduct.jurisdictions.map((j) => j.id),
+      };
+
+      const response = await fetch("http://localhost:4200/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productToSend),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      await fetchProducts(); // Re-fetch all products after successful add
+      setNewProduct(emptyProduct);
+      setShowAdd(false);
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+
+  const changeStatus = async (id: number, newStatus: Product["status"]) => {
+    // Added type annotations
+    try {
+      const response = await fetch(`http://localhost:4200/products/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }), // Only sending status for PATCH
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      await fetchProducts(); // Re-fetch all products after successful status change
+    } catch (error) {
+      console.error("Error changing product status:", error);
+    }
+  };
+
+  const deleteProduct = async (id: number) => {
+    // Added type annotation
+    try {
+      const response = await fetch(`http://localhost:4200/products/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      await fetchProducts(); // Re-fetch all products after successful delete
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
+  const toggleJur = (
+    jur: Jurisdiction,
+    product: Product,
+    setProduct: (p: Product) => void,
+  ) => {
+    const isCurrentlySelected = product.jurisdictions.some(
+      (j) => j.id === jur.id,
     );
-    setEditProduct(null);
+    const updatedJurisdictions = isCurrentlySelected
+      ? product.jurisdictions.filter((j) => j.id !== jur.id)
+      : [...product.jurisdictions, jur];
+    setProduct({ ...product, jurisdictions: updatedJurisdictions });
   };
 
-  const addProduct = () => {
-    setProducts([...products, { ...newProduct, id: `prod-${Date.now()}` }]);
-    setNewProduct(emptyProduct);
-    setShowAdd(false);
-  };
-
-  const changeStatus = (id, newStatus) => {
-    setProducts(
-      products.map((p) => (p.id === id ? { ...p, status: newStatus } : p)),
-    );
-  };
-
-  const deleteProduct = (id) => {
-    setProducts(products.filter((p) => p.id !== id));
-  };
-
-  const toggleJur = (jurId, product, setProduct) => {
-    const current =
-      product.jurisdictionIds === "all"
-        ? jurisdictions.map((j) => j.id)
-        : [...product.jurisdictionIds];
-    const updated = current.includes(jurId)
-      ? current.filter((id) => id !== jurId)
-      : [...current, jurId];
-    setProduct({ ...product, jurisdictionIds: updated });
-  };
-
-  const jurCheckboxes = (product, setProduct) =>
+  const jurCheckboxes = (product: Product, setProduct: (p: Product) => void) =>
     jurisdictions.map((jur) => (
       <label
         key={jur.id}
@@ -71,12 +173,8 @@ export default function Products() {
       >
         <input
           type="checkbox"
-          checked={
-            product.jurisdictionIds === "all"
-              ? true
-              : product.jurisdictionIds.includes(jur.id)
-          }
-          onChange={() => toggleJur(jur.id, product, setProduct)}
+          checked={product.jurisdictions.some((j) => j.id === jur.id)}
+          onChange={() => toggleJur(jur, product, setProduct)}
         />
         {jur.name} {jur.type}
       </label>
@@ -113,24 +211,15 @@ export default function Products() {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {filtered.map((product) => {
-              const jurNames =
-                product.jurisdictionIds === "all"
-                  ? ["All"]
-                  : product.jurisdictionIds.map(
-                      (id) =>
-                        jurisdictions.find((j) => j.id === id)?.name ?? id,
-                    );
+              const jurNames = (product.jurisdictions || []).map((j) => j.name);
               return (
                 <tr key={product.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
-                    <p className="font-medium text-gray-900">{product.name}</p>
-                    <p className="text-xs text-gray-400">
-                      {product.description}
+                    <p className="font-medium text-gray-900">
+                      {product.product}
                     </p>
                   </td>
-                  <td className="px-6 py-4 text-gray-900">
-                    ${product.price.toFixed(2)}
-                  </td>
+                  <td className="px-6 py-4 text-gray-900">${product.price}</td>
                   <td className="px-6 py-4">
                     <Status stat={product.status} />
                   </td>
@@ -139,14 +228,11 @@ export default function Products() {
                     {jurNames.length > 2 && ` +${jurNames.length - 2}`}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <DropdownMenu
-                      order={product}
-                      unblockStatus="Available"
-                      onEdit={() => setEditProduct(product)}
-                      onDelete={() => setConfirmDelete(product)}
-                      onChangeStatus={(newStatus) =>
-                        changeStatus(product.id, newStatus)
-                      }
+                    <ProductDropdownMenu
+                      product={product}
+                      onEdit={setEditProduct}
+                      onDelete={setConfirmDelete}
+                      onChangeStatus={changeStatus}
                     />
                   </td>
                 </tr>
@@ -165,27 +251,14 @@ export default function Products() {
         {editProduct && (
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">Name</label>
-              <input
-                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-                value={editProduct.name}
-                onChange={(e) =>
-                  setEditProduct({ ...editProduct, name: e.target.value })
-                }
-              />
-            </div>
-            <div>
               <label className="text-sm font-medium text-gray-700">
-                Description
+                Product
               </label>
               <input
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-                value={editProduct.description}
+                value={editProduct.product}
                 onChange={(e) =>
-                  setEditProduct({
-                    ...editProduct,
-                    description: e.target.value,
-                  })
+                  setEditProduct({ ...editProduct, product: e.target.value })
                 }
               />
             </div>
@@ -194,11 +267,11 @@ export default function Products() {
               <input
                 type="number"
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-                value={editProduct.price}
+                value={parseFloat(editProduct.price).toFixed(2)} // Display with 2 decimal places
                 onChange={(e) =>
                   setEditProduct({
                     ...editProduct,
-                    price: Number(e.target.value),
+                    price: e.target.value, // Keep as string
                   })
                 }
               />
@@ -224,24 +297,12 @@ export default function Products() {
       >
         <div className="flex flex-col gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-700">Name</label>
+            <label className="text-sm font-medium text-gray-700">Product</label>
             <input
               className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-              value={newProduct.name}
+              value={newProduct.product}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Description
-            </label>
-            <input
-              className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-              value={newProduct.description}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, description: e.target.value })
+                setNewProduct({ ...newProduct, product: e.target.value })
               }
             />
           </div>
@@ -250,10 +311,10 @@ export default function Products() {
             <input
               type="number"
               className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-              value={newProduct.price}
+              value={parseFloat(newProduct.price).toFixed(2)} // Display with 2 decimal places
               onChange={(e) =>
-                setNewProduct({ ...newProduct, price: Number(e.target.value) })
-              }
+                setNewProduct({ ...newProduct, price: e.target.value })
+              } // Keep as string
             />
           </div>
           <div>
@@ -266,14 +327,15 @@ export default function Products() {
           </div>
         </div>
       </Window>
+
       <ConfirmDelete
         isOpen={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
         onConfirm={() => {
-          deleteProduct(confirmDelete?.id ?? "");
+          deleteProduct(confirmDelete.id);
           setConfirmDelete(null);
         }}
-        name={confirmDelete?.name ?? ""}
+        name={confirmDelete?.product ?? ""}
         type="Product"
       />
     </div>
