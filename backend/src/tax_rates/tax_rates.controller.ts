@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { TaxRatesService } from './tax_rates.service';
 import { CreateTaxRateDto } from './dto/create-tax-rate.dto';
 import { UpdateTaxRateDto } from './dto/update-tax-rate.dto';
@@ -17,6 +17,17 @@ export class TaxRatesController {
   @ApiBody({ type: CreateTaxRateDto })
   create(@Body() createTaxRateDto: CreateTaxRateDto) {
     return this.taxRatesService.create(createTaxRateDto);
+  }
+
+  @Get('lookup')
+  @ApiOperation({ summary: 'Lookup tax rate by coordinates' })
+  @ApiResponse({ status: 200, description: 'Tax rate found successfully.' })
+  lookup(
+    @Query('latitude') latitude: string,
+    @Query('longitude') longitude: string,
+    @Query('kitPrice') kitPrice?: string,
+  ) {
+    return this.taxRatesService.lookupTaxRate(latitude, longitude, kitPrice);
   }
 
   @Get()
