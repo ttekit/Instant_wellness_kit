@@ -30,8 +30,14 @@ export class ProductPackageDetailsDto {
   @ApiProperty({ description: 'The status of the product package', enum: Status, example: Status.PENDING })
   status: Status;
 
+  @ApiProperty({ description: 'The description of the product package', example: "Its a very cool product" })
+  description: string;
+
   @ApiProperty({ description: 'The tax rate applied to the product package', example: 0.08 })
-  tax_rate: number; // Note: This field is snake_case as per the getProductPackegeWithJurisdictionAndProductsById method output
+  tax_rate: number;
+
+  @ApiProperty({ description: 'The tax rate applied to the product package', example: 0.08 })
+  img_link: string;
 
   @ApiProperty({ description: 'List of unique jurisdictions associated with products in the package', type: [ProductJurisdictionDto] })
   jurisdictions: ProductJurisdictionDto[];

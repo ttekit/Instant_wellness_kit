@@ -8,10 +8,11 @@ import { ProductPackage, Status } from "src/generated/prisma/client";
 import { CreateProductPackageDto } from "./dto/create-product-package.dto";
 import { UpdateProductPackageDto } from "./dto/update-product-package.dto";
 import { ProductPackageDetailsDto } from "./dto/product-package-detail.dto";
+import { Decimal } from "@prisma/client/runtime/client";
 
 @Injectable()
 export class ProductPackegesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(
     createProductPackageDto: CreateProductPackageDto,
@@ -51,7 +52,11 @@ export class ProductPackegesService {
     try {
       return await this.prisma.$transaction(async (prisma) => {
         const productPackage = await prisma.productPackage.create({
-          data: productPackageData,
+          data: {
+            ...productPackageData,
+            price: new Decimal(productPackageData.price),
+            taxRate: new Decimal(productPackageData.taxRate),
+          },
         });
 
         if (productIds && productIds.length > 0) {
@@ -90,8 +95,15 @@ export class ProductPackegesService {
     id: number,
     updateProductPackageDto: UpdateProductPackageDto,
   ): Promise<ProductPackageDetailsDto | null> {
-    console.log(updateProductPackageDto);
     const { productIds, ...productPackageData } = updateProductPackageDto;
+
+    const existingPackage = await this.prisma.productPackage.findUnique({
+      where: { id },
+    });
+
+    if (!existingPackage) {
+      throw new NotFoundException(`Product Package with ID ${id} not found.`);
+    }
 
     if (productIds !== undefined && productIds.length > 0) {
       const existingProducts = await this.prisma.product.findMany({
@@ -103,20 +115,18 @@ export class ProductPackegesService {
       });
 
       if (existingProducts.length !== productIds.length) {
-        const foundProductIds = new Set(existingProducts.map((p) => p.id));
-        const nonExistentProductIds = productIds.filter(
-          (productId) => !foundProductIds.has(productId),
-        );
-        throw new NotFoundException(
-          `Products with IDs ${nonExistentProductIds.join(", ")} not found.`,
-        );
+        throw new NotFoundException(`Some products not found.`);
       }
     }
 
     await this.prisma.$transaction(async (prisma) => {
       await prisma.productPackage.update({
         where: { id },
-        data: productPackageData,
+        data: {
+          ...productPackageData,
+          price: productPackageData.price ? new Decimal(productPackageData.price) : undefined,
+          taxRate: productPackageData.taxRate ? new Decimal(productPackageData.taxRate) : undefined,
+        },
       });
 
       if (productIds !== undefined) {
@@ -149,44 +159,22 @@ export class ProductPackegesService {
   }
 
   async block(id: number): Promise<ProductPackageDetailsDto | null> {
-    const existingPackage = await this.prisma.productPackage.findUnique({
-      where: { id },
-    });
-
-    if (!existingPackage) {
-      throw new NotFoundException(`Product Package with ID ${id} not found.`);
-    }
-
     await this.prisma.productPackage.update({
       where: { id },
-      data: {
-        status: Status.BLOCKED,
-      },
+      data: { status: Status.BLOCKED },
     });
     return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
   async unblock(id: number): Promise<ProductPackageDetailsDto | null> {
-    const existingPackage = await this.prisma.productPackage.findUnique({
-      where: { id },
-    });
-
-    if (!existingPackage) {
-      throw new NotFoundException(`Product Package with ID ${id} not found.`);
-    }
-
     await this.prisma.productPackage.update({
       where: { id },
-      data: {
-        status: Status.PENDING,
-      },
+      data: { status: Status.PENDING },
     });
     return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
-  async getProductPackegeWithJurisdictionAndProducts(): Promise<
-    ProductPackageDetailsDto[]
-  > {
+  async getProductPackegeWithJurisdictionAndProducts(): Promise<ProductPackageDetailsDto[]> {
     const packages = await this.prisma.productPackage.findMany({
       include: {
         products: {
@@ -208,31 +196,7 @@ export class ProductPackegesService {
       },
     });
 
-    return packages.map((pkg) => {
-      const productsWithJurisdictions = pkg.products.map((pp) => pp.product);
-      const uniqueJurisdictions = new Map();
-      productsWithJurisdictions.forEach((product) => {
-        product.jurisdictions.forEach((jurisdiction) => {
-          uniqueJurisdictions.set(jurisdiction.id, {
-            id: jurisdiction.id,
-            name: jurisdiction.name,
-          });
-        });
-      });
-
-      return {
-        id: pkg.id,
-        package: pkg.package,
-        price: Number(pkg.price),
-        status: pkg.status,
-        tax_rate: Number(pkg.taxRate),
-        jurisdictions: Array.from(uniqueJurisdictions.values()),
-        products: productsWithJurisdictions.map(
-          ({ jurisdictions, ...productWithoutJurisdictions }) =>
-            productWithoutJurisdictions,
-        ),
-      };
-    });
+    return packages.map((pkg) => this.mapToDetailsDto(pkg));
   }
 
   async getProductPackegeWithJurisdictionAndProductsById(
@@ -260,12 +224,14 @@ export class ProductPackegesService {
       },
     });
 
-    if (!pkg) {
-      return null;
-    }
+    if (!pkg) return null;
+    return this.mapToDetailsDto(pkg);
+  }
 
+  private mapToDetailsDto(pkg: any): ProductPackageDetailsDto {
     const productsWithJurisdictions = pkg.products.map((pp) => pp.product);
     const uniqueJurisdictions = new Map();
+
     productsWithJurisdictions.forEach((product) => {
       product.jurisdictions.forEach((jurisdiction) => {
         uniqueJurisdictions.set(jurisdiction.id, {
@@ -278,6 +244,8 @@ export class ProductPackegesService {
     return {
       id: pkg.id,
       package: pkg.package,
+      description: pkg.description,
+      img_link: pkg.img_link,
       price: Number(pkg.price),
       status: pkg.status,
       tax_rate: Number(pkg.taxRate),
