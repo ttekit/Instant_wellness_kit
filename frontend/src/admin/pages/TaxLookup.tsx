@@ -5,13 +5,26 @@ import TaxResult from "../components/ui/TaxResult";
 import { TaxLookupResponse, TaxRateResult } from "../types/TaxLookup.types";
 
 export default function TaxLookup() {
-  const [taxRateResult, setTaxRateResult] = useState<TaxRateResult | null>(null);
-  const [jurisdictionResult, setJurisdictionResult] = useState<string | null>(null);
+  const [taxRateResult, setTaxRateResult] = useState<TaxRateResult | null>(
+    null,
+  );
+  const [jurisdictionResult, setJurisdictionResult] = useState<string | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = async (latitude: number | null, longitude: number | null, kitPrice: number | null) => {
-    if (latitude === null || isNaN(latitude) || longitude === null || isNaN(longitude)) {
+  const handleSearch = async (
+    latitude: number | null,
+    longitude: number | null,
+    kitPrice: number | null,
+  ) => {
+    if (
+      latitude === null ||
+      isNaN(latitude) ||
+      longitude === null ||
+      isNaN(longitude)
+    ) {
       setError("Please enter valid latitude and longitude.");
       setTaxRateResult(null);
       setJurisdictionResult(null);
@@ -32,7 +45,9 @@ export default function TaxLookup() {
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
       const data: TaxLookupResponse = await response.json();
       setTaxRateResult(data.data);
@@ -65,7 +80,9 @@ export default function TaxLookup() {
             <MapPin size={20} className="text-gray-800" />
             <h2 className="text-lg font-bold text-gray-900">Tax Breakdown</h2>
           </div>
-          {loading && <p className="text-sm text-gray-500 mb-6">Loading tax rates...</p>}
+          {loading && (
+            <p className="text-sm text-gray-500 mb-6">Loading tax rates...</p>
+          )}
           {error && <p className="text-sm text-red-600 mb-6">Error: {error}</p>}
           <p className="text-sm text-gray-500 mb-6">
             {jurisdictionResult && `Jurisdiction: ${jurisdictionResult}`}

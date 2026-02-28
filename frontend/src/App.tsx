@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Home from './client/pages/Home'
 import Admin from './admin/Admin'
 import Account from './client/pages/Account'
-
 export default function App() {
   const location = useLocation()
 
@@ -12,16 +11,16 @@ export default function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible')
-            observer.unobserve(entry.target)
+            entry.target.classList.add("reveal-visible");
+            observer.unobserve(entry.target);
           }
-        })
+        });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-    )
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -46,3 +45,4 @@ export default function App() {
     </>
   )
 }
+

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Row } from '../ModalUI'
-import type { Product } from '../ProductModal'
+import { Product } from '../../../data/products'
 
 type Props = { product: Product; coords: { lat: number; lng: number }; orderId: string; onClose: () => void }
 
@@ -103,8 +103,8 @@ export default function StepSuccess({ product, coords, orderId, onClose }: Props
       )}
 
       <div className="bg-gray-50 rounded-xl p-4 mb-4 space-y-2.5 text-left">
-        <Row label="Order ID"    value={orderId} />
-        <Row label="Delivery"    value={product.time} />
+        <Row label="Order ID" value={orderId} />
+        <Row label="Delivery" value={product.time} />
         <Row label="Coordinates" value={`${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`} />
       </div>
 

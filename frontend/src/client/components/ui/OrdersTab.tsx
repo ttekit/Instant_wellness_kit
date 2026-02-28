@@ -123,12 +123,16 @@ export default function OrdersTab() {
           <div className="space-y-3">
             {myOrders.map((o) => (
               <div key={o.id} className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
-                <img
-                  src={o.image}
-                  alt={o.name}
-                  className="w-12 h-12 rounded-lg object-cover bg-gray-100 shrink-0"
-                  onError={e => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${o.id}/500/300` }}
-                />
+                {/* REPLACED IMAGE WITH DYNAMIC BLUE BLOCK */}
+                <div 
+                  className="w-12 h-12 rounded-lg shrink-0 flex items-center justify-center text-white font-bold text-[10px] shadow-sm"
+                  style={{ 
+                    backgroundColor: `hsl(196, 67%, ${40 + (o.id % 15)}%)` 
+                  }}
+                >
+                  {o.name.substring(0, 2).toUpperCase()}
+                </div>
+                
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-bold text-gray-900 truncate">{o.name}</p>
                   <p className="text-[10px] text-gray-500 mt-0.5">Order ID: {o.orderId}</p>
@@ -190,11 +194,13 @@ function KitGrid() {
             style={{ transitionDelay: `${i * 80}ms` }}
           >
             <div className="relative">
-              <img
-                src={p.image} alt={p.name}
-                className="w-full h-28 object-cover bg-gray-100"
-                onError={e => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${p.id}/500/300` }}
-              />
+              {/* REPLACED GRID IMAGE WITH DYNAMIC BLUE BLOCK */}
+              <div 
+                className="w-full h-28 flex items-center justify-center text-white font-black text-2xl"
+                style={{ backgroundColor: `hsl(196, 67%, ${35 + (p.id % 20)}%)` }}
+              >
+                {p.name.substring(0, 2).toUpperCase()}
+              </div>
               {p.popular && <span className="absolute top-2 left-2 bg-yellow-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Popular</span>}
             </div>
             <div className="p-3 flex flex-col flex-1">

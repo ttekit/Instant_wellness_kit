@@ -16,16 +16,14 @@ export default function ProductModal({ product, onClose }: { product: Product; o
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
 
   const close = () => { setClosing(true); setTimeout(onClose, 220) }
-  const handleLocation = (c: Coords) => { setCoords(c); setStep(4) }
+  const handleLocation = (c: Coords) => { setCoords(c); setStep(3) }
   const handleConfirm = (id: number) => { setServerOrderId(`INK-${id}`); setStep(4) }
 
   return (
-    <div className={`fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 ${closing ? 'b-out' : 'b-in'}`}>
+    <div className={`fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4 ${closing ? 'b-out' : 'b-in'}`}>
       <div className={`bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl ${closing ? 'm-out' : 'm-in'}`}>
 
         <div className="relative h-32 bg-gray-100">
-
-          {/* Skeleton shimmer — visible until image loads */}
           {!imgLoaded && (
             <div
               className="absolute inset-0 z-10"
@@ -44,15 +42,11 @@ export default function ProductModal({ product, onClose }: { product: Product; o
             }
           `}</style>
 
-          {/* Actual image — fades in once loaded */}
           <img
             src={product.image}
             alt={product.name}
             className="w-full h-full object-cover"
-            style={{
-              opacity: imgLoaded ? 1 : 0,
-              transition: 'opacity 0.3s ease',
-            }}
+            style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
             onLoad={() => setImgLoaded(true)}
             onError={e => {
               (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${product.id}/500/300`
