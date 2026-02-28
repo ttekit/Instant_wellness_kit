@@ -9,7 +9,7 @@ import { UpdateTaxRateDto } from "./dto/update-tax-rate.dto";
 
 @Injectable()
 export class TaxRatesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(createTaxRateDto: CreateTaxRateDto) {
     const jurisditcion = await this.prisma.jurisdiction.findUnique({
@@ -33,6 +33,63 @@ export class TaxRatesService {
       },
       include: { jurisdiction: true },
     });
+  }
+
+  async lookupTaxRate(latitude: string, longitude: string, kitPrice?: string) {
+    const lat = parseFloat(latitude);
+    const lng = parseFloat(longitude);
+
+    if (isNaN(lat) || isNaN(lng)) {
+      throw new BadRequestException('Invalid coordinates provided');
+    }
+
+    const jurisdiction = await this.prisma.jurisdiction.findFirst({
+      where: {
+        minLat: { lte: lat },
+        maxLat: { gte: lat },
+        minLong: { lte: lng },
+        maxLong: { gte: lng },
+      },
+      include: {
+        tax_rates: {
+          orderBy: { created_at: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    if (!jurisdiction || jurisdiction.tax_rates.length === 0) {
+      throw new NotFoundException('Tax rate not found for the given coordinates');
+    }
+
+    const rateInfo = jurisdiction.tax_rates[0];
+    const compositeRate = Number(rateInfo.composite || rateInfo.rate);
+
+    let estimatedTax: number | null = null;
+    let totalAmount: number | null = null;
+
+    if (kitPrice) {
+      const price = parseFloat(kitPrice);
+      if (!isNaN(price)) {
+        estimatedTax = parseFloat(((price * compositeRate) / 100).toFixed(2));
+        totalAmount = parseFloat((price + estimatedTax).toFixed(2));
+      }
+    }
+
+    return {
+      data: {
+        jurisdiction: jurisdiction.name,
+        rate: compositeRate,
+        breakdown: {
+          state: Number(rateInfo.rate) - Number(rateInfo.local_rate || 0) - Number(rateInfo.mctd || 0),
+          local: Number(rateInfo.local_rate || 0),
+          mctd: Number(rateInfo.mctd || 0),
+          composite: compositeRate,
+        },
+        estimatedTax,
+        totalAmount,
+      },
+    };
   }
 
   async findOne(id: number) {
