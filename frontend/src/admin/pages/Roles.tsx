@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import SearchBar from "../components/ui/SearchBar";
 import Window from "../components/ui/Window";
 import { Role, allPermissions } from "../types";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
 
-const emptyRole: Role = { id: "", name: "", description: "", permissions: [] };
+const API_URL = "http://localhost:4200/roles";
+
+const getToken = (): string => localStorage.getItem("access_token") || "";
+
+interface BackendRole {
+  id: number;
+  name: string;
+  description: string | null;
+  permissions: Record<string, boolean>;
+}
+
+// ИСПРАВЛЕНИЕ: permissions теперь пустой объект {}, а не массив []
+const emptyRole: Role = { id: "", name: "", description: "", permissions: {} };
 
 export default function Roles() {
   const [search, setSearch] = useState("");
@@ -15,29 +27,117 @@ export default function Roles() {
   const [showAdd, setShowAdd] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<Role | null>(null);
 
+  const fetchRoles = async () => {
+    try {
+      const response = await fetch(API_URL, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      if (!response.ok) throw new Error("Failed to fetch roles");
+
+      const data: BackendRole[] = await response.json();
+
+      // ИСПРАВЛЕНИЕ: Оставляем permissions как объект, как и просит TS
+      const mappedRoles: Role[] = data.map((r) => ({
+        id: r.id.toString(),
+        name: r.name,
+        description: r.description || "",
+        permissions: r.permissions || {},
+      }));
+
+      setRoles(mappedRoles);
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
   const filtered = roles.filter((r) =>
-    r.name.toLowerCase().includes(search.toLowerCase()),
+    r.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     if (!editRole) return;
-    setRoles(roles.map((r) => (r.id === editRole.id ? editRole : r)));
-    setEditRole(null);
+    try {
+      const response = await fetch(`${API_URL}/${editRole.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({
+          name: editRole.name,
+          description: editRole.description,
+          permissions: editRole.permissions, // Отправляем объект напрямую
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update role");
+
+      await fetchRoles();
+      setEditRole(null);
+    } catch (error) {
+      console.error("Error updating role:", error);
+    }
   };
 
-  const addRole = () => {
-    setRoles([...roles, { ...newRole, id: `role-${Date.now()}` }]);
-    setNewRole(emptyRole);
-    setShowAdd(false);
+  const addRole = async () => {
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({
+          name: newRole.name,
+          description: newRole.description,
+          permissions: newRole.permissions, // Отправляем объект напрямую
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to create role");
+
+      await fetchRoles();
+      setNewRole(emptyRole);
+      setShowAdd(false);
+    } catch (error) {
+      console.error("Error creating role:", error);
+    }
   };
 
-  const deleteRole = (id) => setRoles(roles.filter((r) => r.id !== id));
+  const deleteRole = async (id: string) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
 
-  const togglePerm = (perm, role, setRole) => {
-    const updated = role.permissions.includes(perm)
-      ? role.permissions.filter((p) => p !== perm)
-      : [...role.permissions, perm];
-    setRole({ ...role, permissions: updated });
+      if (!response.ok) throw new Error("Failed to delete role");
+
+      await fetchRoles();
+    } catch (error) {
+      console.error("Error deleting role:", error);
+    }
+  };
+
+  // ИСПРАВЛЕНИЕ: Функция переключения для объекта (Record), а не массива
+  const togglePerm = (
+    perm: string,
+    setRoleFunc: React.Dispatch<React.SetStateAction<Role>>
+  ) => {
+    setRoleFunc((prev) => {
+      const currentPerms = prev.permissions || {};
+      return {
+        ...prev,
+        permissions: {
+          ...currentPerms,
+          [perm]: !currentPerms[perm], // Инвертируем true/false
+        },
+      };
+    });
   };
 
   return (
@@ -67,7 +167,7 @@ export default function Roles() {
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold text-sm">
-                  {role.name[0]}
+                  {role.name[0]?.toUpperCase()}
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">{role.name}</p>
@@ -93,14 +193,17 @@ export default function Roles() {
               Permissions
             </p>
             <div className="flex flex-wrap gap-1">
-              {role.permissions.map((perm) => (
-                <span
-                  key={perm}
-                  className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs"
-                >
-                  {perm}
-                </span>
-              ))}
+
+              {Object.entries(role.permissions || {})
+                .filter(([, isGranted]) => isGranted)
+                .map(([perm]) => (
+                  <span
+                    key={perm}
+                    className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs"
+                  >
+                    {perm}
+                  </span>
+                ))}
             </div>
           </div>
         ))}
@@ -115,9 +218,7 @@ export default function Roles() {
         {editRole && (
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">
-                Role Name
-              </label>
+              <label className="text-sm font-medium text-gray-700">Role Name</label>
               <input
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
                 value={editRole.name}
@@ -127,9 +228,7 @@ export default function Roles() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">
-                Description
-              </label>
+              <label className="text-sm font-medium text-gray-700">Description</label>
               <input
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
                 value={editRole.description}
@@ -150,8 +249,9 @@ export default function Roles() {
                   >
                     <input
                       type="checkbox"
-                      checked={editRole.permissions.includes(perm)}
-                      onChange={() => togglePerm(perm, editRole, setEditRole)}
+                      // ИСПРАВЛЕНИЕ: Проверяем значение в объекте (true/false)
+                      checked={!!editRole.permissions[perm]}
+                      onChange={() => togglePerm(perm, setEditRole as React.Dispatch<React.SetStateAction<Role>>)}
                       className="accent-green-600"
                     />
                     {perm}
@@ -172,9 +272,7 @@ export default function Roles() {
       >
         <div className="flex flex-col gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Role Name
-            </label>
+            <label className="text-sm font-medium text-gray-700">Role Name</label>
             <input
               className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
               value={newRole.name}
@@ -182,9 +280,7 @@ export default function Roles() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Description
-            </label>
+            <label className="text-sm font-medium text-gray-700">Description</label>
             <input
               className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
               value={newRole.description}
@@ -205,8 +301,9 @@ export default function Roles() {
                 >
                   <input
                     type="checkbox"
-                    checked={newRole.permissions.includes(perm)}
-                    onChange={() => togglePerm(perm, newRole, setNewRole)}
+                    // ИСПРАВЛЕНИЕ: Проверяем значение в объекте
+                    checked={!!newRole.permissions[perm]}
+                    onChange={() => togglePerm(perm, setNewRole)}
                     className="accent-green-600"
                   />
                   {perm}
@@ -220,8 +317,10 @@ export default function Roles() {
         isOpen={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
         onConfirm={() => {
-          deleteRole(confirmDelete?.id ?? "");
-          setConfirmDelete(null);
+          if (confirmDelete) {
+            deleteRole(confirmDelete.id);
+            setConfirmDelete(null);
+          }
         }}
         name={confirmDelete?.name ?? ""}
         type="Role"

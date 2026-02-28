@@ -2,15 +2,19 @@ import { MoreHorizontal, Pencil, CheckCircle, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface DropdownProps {
-  order: { status: string };
+  order: OrderInfo;
   onDelete: () => void;
+  onChangeStatus: (newStatus: string) => void;
   onEdit?: () => void;
-  onStatusChange?: (newStatus: string) => void;
+  unblockStatus?: string;
 }
 
 export default function DropdownMenu({
   order,
   onDelete,
+  onChangeStatus,
+  onEdit,
+  unblockStatus = "Pending",
   onEdit,
   onStatusChange,
 }: DropdownProps) {
@@ -31,6 +35,15 @@ export default function DropdownMenu({
 
 
   const statusOptions = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
+  const isBlocked = order.status === "Blocked";
+  const handleToggleBlock = () => {
+    if (isBlocked) {
+      onChangeStatus(unblockStatus);
+    } else {
+      onChangeStatus("Blocked");
+    }
+    setActive(false);
+  };
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>

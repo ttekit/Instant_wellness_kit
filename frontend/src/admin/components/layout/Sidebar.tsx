@@ -40,19 +40,19 @@ export default function Sidebar() {
           </h3>
           <ul className="flex flex-col gap-1">
             <li>
-              <NavLink to="/dashboard" className={getLinkClasses}>
+              <NavLink to="/admin/dashboard" className={getLinkClasses}>
                 <LayoutDashboard size={18} />
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink to="/tax-lookup" className={getLinkClasses}>
+              <NavLink to="/admin/tax-lookup" className={getLinkClasses}>
                 <Calculator size={18} />
                 Tax Lookup
               </NavLink>
             </li>
             <li>
-              <NavLink to="/orders" className={getLinkClasses}>
+              <NavLink to="/admin/orders" className={getLinkClasses}>
                 <ShoppingCart size={18} />
                 Orders
               </NavLink>
@@ -66,19 +66,19 @@ export default function Sidebar() {
           </h3>
           <ul className="flex flex-col gap-1">
             <li>
-              <NavLink to="/wellness-packages" className={getLinkClasses}>
+              <NavLink to="/admin/wellness-packages" className={getLinkClasses}>
                 <Package size={18} />
                 Wellness Packages
               </NavLink>
             </li>
             <li>
-              <NavLink to="/products" className={getLinkClasses}>
+              <NavLink to="/admin/products" className={getLinkClasses}>
                 <Box size={18} />
                 Products
               </NavLink>
             </li>
             <li>
-              <NavLink to="/jurisdictions" className={getLinkClasses}>
+              <NavLink to="/admin/jurisdictions" className={getLinkClasses}>
                 <MapPin size={18} />
                 Jurisdictions
               </NavLink>
@@ -92,13 +92,13 @@ export default function Sidebar() {
           </h3>
           <ul className="flex flex-col gap-1">
             <li>
-              <NavLink to="/users" className={getLinkClasses}>
+              <NavLink to="/admin/users" className={getLinkClasses}>
                 <Users size={18} />
                 Users
               </NavLink>
             </li>
             <li>
-              <NavLink to="/roles" className={getLinkClasses}>
+              <NavLink to="/admin/roles" className={getLinkClasses}>
                 <Shield size={18} />
                 Roles
               </NavLink>
