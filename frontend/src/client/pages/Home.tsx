@@ -42,7 +42,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/45" />
         <div className="absolute bottom-0 left-0 w-full h-40 bg-linear-to-t from-[#f3f6f4] to-transparent" />
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pb-12 pt-24">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pt-16 pb-32">
           <div className="badge flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-xs font-semibold tracking-widest uppercase rounded-full px-4 py-2 mb-6">
             <span className="dot w-2 h-2 rounded-full bg-yellow-400 inline-block" />
             Now Delivering Across New York
@@ -76,23 +76,13 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="h5 flex items-center gap-10 mt-12">
+          <div className="h5 flex items-center gap-10 mt-8">
             <Stat
               label="20–30 min"
               sub="Delivery"
               icon={
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
-                  />
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
                 </svg>
               }
             />
@@ -101,23 +91,9 @@ export default function Home() {
               label="GPS Pin"
               sub="Precision"
               icon={
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                  />
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                 </svg>
               }
             />
@@ -126,18 +102,8 @@ export default function Home() {
               label="Drone"
               sub="Powered"
               icon={
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 3v1m0 16v1M4.22 4.22l.707.707m12.02 12.02.708.708M1 12h2m18 0h2M4.22 19.78l.707-.707M18.95 5.05l.708-.708"
-                  />
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1M4.22 4.22l.707.707m12.02 12.02.708.708M1 12h2m18 0h2M4.22 19.78l.707-.707M18.95 5.05l.708-.708" />
                 </svg>
               }
             />

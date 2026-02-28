@@ -10,15 +10,11 @@ export default function Account() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("access_token");
-      if (!token) {
-        navigate("/");
-        return;
-      }
+      if (!token) { navigate("/"); return; }
 
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const currentUserId = payload.sub || payload.id;
-
         if (!currentUserId) return;
 
         const response = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${currentUserId}`, {
@@ -27,7 +23,6 @@ export default function Account() {
 
         if (response.ok) {
           const userData = await response.json();
-
           setUser({
             name: userData.name || userData.email || "My Account",
             email: userData.email || "",
@@ -46,66 +41,61 @@ export default function Account() {
     const handleProfileUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<{ name: string; email: string }>;
       const { name, email } = customEvent.detail;
-
       setUser({
         name: name || email || "My Account",
         email: email || "",
-        initials: name
-          ? name[0].toUpperCase()
-          : (email ? email[0].toUpperCase() : "U"),
+        initials: name ? name[0].toUpperCase() : (email ? email[0].toUpperCase() : "U"),
       });
     };
 
     window.addEventListener('profile_updated', handleProfileUpdate);
-
-    return () => {
-      window.removeEventListener('profile_updated', handleProfileUpdate);
-    };
+    return () => window.removeEventListener('profile_updated', handleProfileUpdate);
   }, [navigate]);
 
   return (
-    <div className="fixed inset-0 bg-[#f3f6f4] z-50 overflow-y-auto">
-      <Navbar />
+    <>
+      <style>{`
+        @keyframes avatarSpin {
+          0%   { background-position: 0%   50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0%   50%; }
+        }
+        .avatar-gradient-lg {
+          background: linear-gradient(135deg, #2596be, #7dd3fc, #a5f3fc, #38bdf8, #0e7490, #2596be);
+          background-size: 300% 300%;
+          animation: avatarSpin 4s ease infinite;
+        }
+      `}</style>
 
-      <div className="bg-white border-b border-gray-100 px-6 py-8 pt-20">
-        <div className="max-w-2xl mx-auto">
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors mb-6 outline-none border-0 bg-transparent cursor-pointer"
-          >
-            <svg
-              className="w-3.5 h-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+      <div className="fixed inset-0 bg-[#f3f6f4] z-50 overflow-y-auto">
+        <Navbar />
+
+        <div className="bg-white border-b border-gray-100 px-6 py-8 pt-20">
+          <div className="max-w-2xl mx-auto">
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors mb-6 outline-none border-0 bg-transparent cursor-pointer"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-            Back to Home
-          </button>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Home
+            </button>
 
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-[#1a5c3a] flex items-center justify-center shrink-0">
-              <span className="text-white font-black text-lg">
-                {user.initials}
-              </span>
-            </div>
-            <div>
-              <p className="text-base font-black text-gray-900">{user.name}</p>
-              <p className="text-xs text-gray-400">{user.email}</p>
+            <div className="flex items-center gap-4">
+              <div className="avatar-gradient-lg w-14 h-14 rounded-full shrink-0" />
+              <div>
+                <p className="text-base font-black text-gray-900">{user.name}</p>
+                <p className="text-xs text-gray-400">{user.email}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-2xl mx-auto px-6 py-8">
-        <AccountTabs />
+        <div className="max-w-2xl mx-auto px-6 py-8">
+          <AccountTabs />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
