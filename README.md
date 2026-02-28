@@ -25,7 +25,7 @@
 ### 1. Требования
 
 - Node.js (v18+)
-- PostgreSQL (локально или через Docker)
+- PostgreSQL 
 
 ---
 
