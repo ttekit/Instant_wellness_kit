@@ -45,24 +45,28 @@ Before you begin, ensure you have the following installed:
     ```env
     DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/drone_db?schema=public"
     ```
+    Add JWT token to `.env`
+    ```env
+    JWT_SECRET = "SUPER_PUPER_SECRET_KEY"
+    ```
 
-3.  **Install dependencies:**
+4.  **Install dependencies:**
     ```bash
     pnpm install
     ```
 
-4.  **Generate Prisma client:**
+5.  **Generate Prisma client:**
     ```bash
     npx prisma generate
     ```
 
-5.  **Seed the database (optional, for initial data):**
+6.  **Seed the database (optional, for initial data):**
     ```bash
     npx prisma/seed.ts
     ```
     *Note: The command `npx prisma/seed.ts` seems incorrect based on typical Prisma usage. I've corrected it to `npx prisma db seed`, assuming you have a `seed.ts` file configured in your `prisma/schema.prisma`.*
 
-6.  **Start the backend server:**
+7.  **Start the backend server:**
     ```bash
     pnpm nest start
     ```
