@@ -41,9 +41,11 @@ DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/drone_db?schema=public"
 
 ```bash
 cd backend
-npm install
+pnpm install
 npx prisma migrate dev --name init
 npx prisma generate
+npx prisma/seed.ts
+
 ```
 
 ---
@@ -51,7 +53,7 @@ npx prisma generate
 ### 3. Запуск Backend (NestJS)
 
 ```bash
-npm run start:dev
+pnpm run start:dev
 ```
 
 API URL:  
@@ -67,17 +69,17 @@ http://localhost:3000/api
 В папке `frontend` создайте файл `.env`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000
-VITE_API_ORDERS_URL=http://localhost:3000/orders
-VITE_API_JURISDICTIONS_URL=http://localhost:3000/jurisdictions
+VITE_API_BASE_URL=http://localhost:4200
+VITE_API_ORDERS_URL=http://localhost:4200/orders
+VITE_API_JURISDICTIONS_URL=http://localhost:4200/jurisdictions
 ```
 
 Запустите сервер разработки:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 App URL:  
