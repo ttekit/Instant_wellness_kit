@@ -2,14 +2,14 @@ import { Calculator, Search } from "lucide-react";
 import { useState } from "react";
 
 interface CalcProp {
-  onSearch: (latitude: number | null, longitude: number | null, kitPrice: number | null) => void;
+  onSearch: (latitude: string, longitude: string, kitPrice: string) => void;
   compact?: boolean;
 }
 
 export default function TaxCalc({ onSearch, compact = false }: CalcProp) {
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [kitPrice, setKitPrice] = useState<number | null>(null);
+  const [latitude, setLatitude] = useState<string>("");
+  const [longitude, setLongitude] = useState<string>("");
+  const [kitPrice, setKitPrice] = useState<string>("");
 
   const handleSearch = () => {
     onSearch(latitude, longitude, kitPrice);
@@ -41,8 +41,8 @@ export default function TaxCalc({ onSearch, compact = false }: CalcProp) {
             id="latitude"
             type="number"
             placeholder="e.g. 42.0124"
-            value={latitude === null ? '' : latitude}
-            onChange={(e) => setLatitude(e.target.value === '' ? null : parseFloat(e.target.value))}
+            value={latitude}
+            onChange={(e) => setLatitude(e.target.value)}
             className="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
           />
         </div>
@@ -54,8 +54,8 @@ export default function TaxCalc({ onSearch, compact = false }: CalcProp) {
             id="longitude"
             type="number"
             placeholder="e.g. -78.8672"
-            value={longitude === null ? '' : longitude}
-            onChange={(e) => setLongitude(e.target.value === '' ? null : parseFloat(e.target.value))}
+            value={longitude}
+            onChange={(e) => setLongitude(e.target.value)}
             className="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
           />
         </div>
@@ -70,8 +70,8 @@ export default function TaxCalc({ onSearch, compact = false }: CalcProp) {
             id="kitPrice"
             type="number"
             placeholder="e.g. 34.99"
-            value={kitPrice === null ? '' : kitPrice}
-            onChange={(e) => setKitPrice(e.target.value === '' ? null : parseFloat(e.target.value))}
+            value={kitPrice}
+            onChange={(e) => setKitPrice(e.target.value)}
             className="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
           />
         </div>
