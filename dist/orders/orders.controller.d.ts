@@ -13,8 +13,6 @@ export declare class OrdersController {
             jurisdiction_id: number;
         }[];
     } & {
-        id: number;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
@@ -26,6 +24,15 @@ export declare class OrdersController {
         packageId: number;
     }>;
     findAll(): Promise<({
+        user: {
+            id: number;
+            email: string;
+            name: string;
+            surname: string;
+            password: string;
+            createdAt: Date;
+            roleId: number;
+        };
         jurisdictions: ({
             jurisdiction: {
                 id: number;
@@ -42,8 +49,6 @@ export declare class OrdersController {
             jurisdiction_id: number;
         })[];
     } & {
-        id: number;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
@@ -134,8 +139,6 @@ export declare class OrdersController {
             jurisdiction_id: number;
         })[];
     } & {
-        id: number;
-        userId: number;
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
@@ -240,6 +243,8 @@ export declare class OrdersController {
         })[];
         id: number;
         userId: number;
+    }>;
+    update(id: number, updateOrderDto: UpdateOrderDto): Promise<{
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
@@ -253,6 +258,8 @@ export declare class OrdersController {
     remove(id: number): Promise<{
         id: number;
         userId: number;
+    }>;
+    remove(id: number): Promise<{
         subtotal: import("@prisma/client/runtime/client").Decimal;
         composite_tax_rate: import("@prisma/client/runtime/client").Decimal;
         tax_amount: import("@prisma/client/runtime/client").Decimal;
