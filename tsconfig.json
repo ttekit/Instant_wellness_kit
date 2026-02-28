@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    // "resolvePackageJsonExports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
@@ -13,6 +12,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "../src/generated/prisma": ["./src/generated/prisma/index.d.ts"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -26,5 +28,10 @@
   },
   "include": [
     "src/**/*"
+<<<<<<< HEAD
 , "prisma/seed.ts"  ]
 }
+=======
+  ]
+}
+>>>>>>> 406dbb64315ebd9c4769bf54a7eb434734397bfa

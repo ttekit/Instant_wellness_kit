@@ -3,12 +3,23 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Status } from 'src/generated/prisma/client';
 
 export class CreateProductDto {
+<<<<<<< HEAD
   @ApiProperty({ description: 'The name of the product', example: 'Organic Green Tea' })
+=======
+  @ApiProperty({
+    description: "The name of the product",
+    example: "Organic Green Tea",
+  })
+>>>>>>> 406dbb64315ebd9c4769bf54a7eb434734397bfa
   @IsString()
   @IsNotEmpty()
   product: string;
 
+<<<<<<< HEAD
   @ApiProperty({ description: 'The price of the product', example: 10.99 })
+=======
+  @ApiProperty({ description: "The price of the product", example: 10.99 })
+>>>>>>> 406dbb64315ebd9c4769bf54a7eb434734397bfa
   @IsDecimal()
   @IsNotEmpty()
   price: number;

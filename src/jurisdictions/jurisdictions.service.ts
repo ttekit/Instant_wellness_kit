@@ -9,12 +9,15 @@ export class JurisdictionsService {
 
 
     async create(dto: CreateJurisdictionDto) {
-
         return this.prisma.jurisdiction.create({
             data: {
                 name: dto.name,
                 type: dto.type,
                 fipsCode: dto.fipsCode,
+                minLat: dto.minLat,
+                maxLat: dto.maxLat,
+                minLong: dto.minLong,
+                maxLong: dto.maxLong,
                 tax_rates: {
                     create: {
                         rate: dto.rate,
@@ -59,7 +62,7 @@ export class JurisdictionsService {
             data: {
                 name: updateJurisdictionDto.name,
                 type: updateJurisdictionDto.type,
-                fipsCode: updateJurisdictionDto.fipsCode,
+                fipsCode: updateJurisdictionDto.fipsCode
             },
         });
     }

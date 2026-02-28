@@ -15,14 +15,17 @@ async function bootstrap() {
   console.log('DATABASE_URL:', process.env.DATABASE_URL);
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+  }));
 
   const config = new DocumentBuilder()
     .setTitle('Instant Wellness Kit API')
     .setDescription('The Instant Wellness Kit API description')
     .setVersion('1.0')
     .addTag('roles')
-    .addTag('billings', 'Operations related to user billing information') // Add this line
+    .addTag('billings', 'Operations related to user billing information')
+    .addTag('jurisdictions', 'Operations related to jurisdictions')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

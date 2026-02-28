@@ -17,7 +17,7 @@ import { Express } from "express";
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(CreateOrderDto: CreateOrderDto) {
     const user = await this.prisma.user.findUnique({
