@@ -3,9 +3,9 @@ import SearchBar from "../components/ui/SearchBar";
 import OrdersTable, { OrderInfo } from "../components/ui/OrdersTable";
 import Window from "../components/ui/Window";
 import ConfirmDelete from "../components/ui/ConfirmDelete";
-import { Jurisdiction, DBOrder } from "../types";
-
-
+import { OrderInfo } from "../components/ui/OrdersTable";
+import { Jurisdiction } from "../types";
+import ImportOrders from "../components/ui/ImportOrders";
 
 export default function Orders() {
   const [search, setSearch] = useState<string>("");
@@ -131,8 +131,16 @@ export default function Orders() {
         </div>
       </div>
 
-      <SearchBar placeholder="Search orders..." value={search} onChange={setSearch} />
-
+      <div className="flex items-center gap-3">
+        <div className="flex-1">
+          <SearchBar
+            placeholder="Search by customer, order ID, or jurisdiction..."
+            value={search}
+            onChange={setSearch}
+          />
+        </div>
+        <ImportOrders />
+      </div>
       <div className="mt-4">
         <OrdersTable orders={filtered} onEdit={setEditOrder} onDelete={setConfirmDelete} />
       </div>
