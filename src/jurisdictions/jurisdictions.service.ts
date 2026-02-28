@@ -60,7 +60,6 @@ export class JurisdictionsService {
                 name: updateJurisdictionDto.name,
                 type: updateJurisdictionDto.type,
                 fipCode: updateJurisdictionDto.fipsCode,
-                status: updateJurisdictionDto.status,
             },
         });
     }
