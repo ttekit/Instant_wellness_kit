@@ -46,23 +46,30 @@ model Order {
   userId             Int                   @map("user_id")
   user               User                  @relation(fields: [userId], references: [id])
   jurisdictions      OrderOnJurisdiction[]
-
+  status             Status                @default(PENDING)
+  packageId          Int                   @map("package_id")
+  package            ProductPackage        @relation(fields: [packageId], references: [id])
   @@map("order")
 }
 
 model Jurisdiction {
   id        Int                   @id @default(autoincrement())
   name      String
-  type      String  
+  type      String
   fipsCode  String                @map("fipsCode")
+
+  minLat    Float?
+  maxLat    Float?
+  minLong   Float?
+  maxLong   Float?
+
   orders    OrderOnJurisdiction[]
   tax_rates TaxRate[]
+  products  Product[]
 }
 
 
-  tax_rates   TaxRate[]
-  orders      OrderOnJurisdiction[]
-}
+
 model OrderOnJurisdiction {
   order_id        Int          @map("order_id")
   jurisdiction_id Int          @map("jurisdiction_id")
@@ -83,7 +90,7 @@ model TaxRate {
   created_at      DateTime     @default(now()) @map("created_at")
   updated_at      DateTime     @updatedAt @map("updated_at")
   jurisdiction_id Int          @map("jurisdiction_id")
-  jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id])
+  jurisdiction    Jurisdiction @relation(fields: [jurisdiction_id], references: [id], onDelete: Cascade)
 
   @@map("tax_rates")
 }
@@ -98,8 +105,51 @@ model Role {
   @@map("roles")
 }
 
+
+
+model ProductPackage {
+  id       Int                @id @default(autoincrement())
+  package  String
+  price    Decimal
+  status   Status             @default(PENDING)
+  taxRate  Decimal            @map("tax_rate")
+  products ProductOnPackage[]
+
+  orders   Order[]
+
+  @@map("products_packegs")
+}
+model Product {
+  id            Int              @id @default(autoincrement())
+  product       String
+  price         Decimal
+  status        Status           @default(PENDING)
+
+  packages      ProductOnPackage[]
+  jurisdictions Jurisdiction[]
+
+  @@map("products")
+}
+
+model ProductOnPackage {
+  productId Int @map("product_id")
+  packageId Int @map("package_id")
+
+  product   Product        @relation(fields: [productId], references: [id])
+  package   ProductPackage @relation(fields: [packageId], references: [id])
+
+  @@id([productId, packageId])
+  @@map("product_on_package")
+}
+
 enum PaymentMethodType {
   CREDIT_CARD
   PAYPAL
   BANK_TRANSFER
+}
+enum Status {
+  ARRIVED
+  DELIVERING
+  PENDING
+  BLOCKED
 }

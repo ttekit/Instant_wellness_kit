@@ -14,7 +14,11 @@ export class JurisdictionsService {
             data: {
                 name: dto.name,
                 type: dto.type,
-                fipCode: dto.fipsCode,
+                fipsCode: dto.fipsCode,
+                minLat: dto.minLat,
+                maxLat: dto.maxLat,
+                minLong: dto.minLong,
+                maxLong: dto.maxLong,
                 tax_rates: {
                     create: {
                         rate: dto.rate,
