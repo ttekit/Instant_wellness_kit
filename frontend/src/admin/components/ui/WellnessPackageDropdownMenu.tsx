@@ -1,29 +1,27 @@
 import { MoreHorizontal, Pencil, CheckCircle, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-interface DropdownProps {
-  order: OrderInfo;
+interface WellnessPackageDropdownProps {
+  packageStatus: string;
   onDelete: () => void;
-  onChangeStatus: (newStatus: string) => void;
   onEdit?: () => void;
-  unblockStatus?: string;
+  onBlock: () => void;
+  onUnblock: () => void;
 }
 
-export default function DropdownMenu({
-  order,
+export default function WellnessPackageDropdownMenu({
+  packageStatus,
   onDelete,
-  onChangeStatus,
   onEdit,
-  unblockStatus = "Pending",
-  onEdit,
-  onStatusChange,
-}: DropdownProps) {
+  onBlock,
+  onUnblock,
+}: WellnessPackageDropdownProps) {
   const [active, setActive] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handler = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setActive(false);
       }
     };
@@ -32,15 +30,12 @@ export default function DropdownMenu({
     return () => document.removeEventListener("click", handler);
   }, [dropdownRef]);
 
-
-
-  const statusOptions = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
-  const isBlocked = order.status === "Blocked";
+  const isBlocked = packageStatus === "BLOCKED";
   const handleToggleBlock = () => {
     if (isBlocked) {
-      onChangeStatus(unblockStatus);
+      onUnblock();
     } else {
-      onChangeStatus("Blocked");
+      onBlock();
     }
     setActive(false);
   };
@@ -57,7 +52,7 @@ export default function DropdownMenu({
       </button>
 
       {active && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-10">
+        <div className="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg border border-gray-100 z-10">
           <div className="py-2 flex flex-col">
             <button
               onClick={() => {
@@ -70,32 +65,14 @@ export default function DropdownMenu({
               Edit
             </button>
 
+            <button
+              onClick={handleToggleBlock}
+              className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+            >
+              <CheckCircle size={16} className="text-gray-500" />
+              {isBlocked ? "Unblock" : "Block"}
+            </button>
 
-
-            {onStatusChange && (
-              <>
-                <div className="border-t border-gray-100 my-1"></div>
-                <span className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">
-                  Change Status
-                </span>
-                {statusOptions
-                  .filter((s) => s !== order.status)
-                  .map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => {
-                        onStatusChange(status);
-                        setActive(false);
-                      }}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
-                    >
-                      {status}
-                    </button>
-                  ))}
-              </>
-            )}
-
-            <div className="border-t border-gray-100 my-1"></div>
             <button
               onClick={() => {
                 onDelete();
