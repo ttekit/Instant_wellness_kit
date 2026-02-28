@@ -15,16 +15,11 @@ export default function TaxLookup() {
   const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async (
-    latitude: number | null,
-    longitude: number | null,
-    kitPrice: number | null,
+    latitude: string,
+    longitude: string,
+    kitPrice: string,
   ) => {
-    if (
-      latitude === null ||
-      isNaN(latitude) ||
-      longitude === null ||
-      isNaN(longitude)
-    ) {
+    if (!latitude || !longitude) {
       setError("Please enter valid latitude and longitude.");
       setTaxRateResult(null);
       setJurisdictionResult(null);
@@ -37,9 +32,9 @@ export default function TaxLookup() {
     setJurisdictionResult(null);
 
     try {
-      let url = `http://localhost:4200/tax-rates/lookup?latitude=${latitude.toString()}&longitude=${longitude.toString()}`;
-      if (kitPrice !== null && !isNaN(kitPrice)) {
-        url += `&kitPrice=${kitPrice.toString()}`;
+      let url = `http://localhost:4200/tax-rates/lookup?latitude=${latitude}&longitude=${longitude}`;
+      if (kitPrice) {
+        url += `&kitPrice=${kitPrice}`;
       }
 
       const response = await fetch(url);
