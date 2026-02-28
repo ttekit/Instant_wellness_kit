@@ -57,7 +57,10 @@ export const ModelName = {
   Jurisdiction: 'Jurisdiction',
   OrderOnJurisdiction: 'OrderOnJurisdiction',
   TaxRate: 'TaxRate',
-  Role: 'Role'
+  Role: 'Role',
+  ProductPackage: 'ProductPackage',
+  Product: 'Product',
+  ProductOnPackage: 'ProductOnPackage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -110,7 +113,9 @@ export const OrderScalarFieldEnum = {
   timestamp: 'timestamp',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  userId: 'userId'
+  userId: 'userId',
+  status: 'status',
+  packageId: 'packageId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -119,13 +124,12 @@ export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof Or
 export const JurisdictionScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  code: 'code',
-  fipCode: 'fipCode',
-  description: 'description',
   type: 'type',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  fipsCode: 'fipsCode',
+  minLat: 'minLat',
+  maxLat: 'maxLat',
+  minLong: 'minLong',
+  maxLong: 'maxLong'
 } as const
 
 export type JurisdictionScalarFieldEnum = (typeof JurisdictionScalarFieldEnum)[keyof typeof JurisdictionScalarFieldEnum]
@@ -143,9 +147,9 @@ export const TaxRateScalarFieldEnum = {
   id: 'id',
   rate: 'rate',
   local_rate: 'local_rate',
-  type: 'type',
-  composite: 'composite',
   mctd: 'mctd',
+  composite: 'composite',
+  type: 'type',
   created_at: 'created_at',
   updated_at: 'updated_at',
   jurisdiction_id: 'jurisdiction_id'
@@ -162,6 +166,37 @@ export const RoleScalarFieldEnum = {
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
+
+
+export const ProductPackageScalarFieldEnum = {
+  id: 'id',
+  package: 'package',
+  description: 'description',
+  img_link: 'img_link',
+  price: 'price',
+  status: 'status',
+  taxRate: 'taxRate'
+} as const
+
+export type ProductPackageScalarFieldEnum = (typeof ProductPackageScalarFieldEnum)[keyof typeof ProductPackageScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  product: 'product',
+  price: 'price',
+  status: 'status'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const ProductOnPackageScalarFieldEnum = {
+  productId: 'productId',
+  packageId: 'packageId'
+} as const
+
+export type ProductOnPackageScalarFieldEnum = (typeof ProductOnPackageScalarFieldEnum)[keyof typeof ProductOnPackageScalarFieldEnum]
 
 
 export const SortOrder = {

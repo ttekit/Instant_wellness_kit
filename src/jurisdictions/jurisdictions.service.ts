@@ -14,7 +14,7 @@ export class JurisdictionsService {
             data: {
                 name: dto.name,
                 type: dto.type,
-                fipCode: dto.fipsCode,
+                fipsCode: dto.fipsCode,
                 tax_rates: {
                     create: {
                         rate: dto.rate,
@@ -59,7 +59,7 @@ export class JurisdictionsService {
             data: {
                 name: updateJurisdictionDto.name,
                 type: updateJurisdictionDto.type,
-                fipCode: updateJurisdictionDto.fipsCode,
+                fipsCode: updateJurisdictionDto.fipsCode,
             },
         });
     }

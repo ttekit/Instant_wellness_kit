@@ -24,11 +24,22 @@ export class UsersService {
     };
 
     async create(createUserDto: CreateUserDto) {
-        const { email, password, name, surname, roleId } = createUserDto;
+        const { email, password, name, surname } = createUserDto;
 
         const userExist = await this.prisma.user.findUnique({ where: { email } });
         if (userExist) {
             throw new ConflictException('User with this email already exists');
+        }
+
+        let role = await this.prisma.role.findUnique({ where: { name: 'User' } });
+
+        if (!role) {
+            role = await this.prisma.role.create({
+                data: {
+                    name: 'User',
+                    permissions: {}
+                }
+            });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,7 +50,7 @@ export class UsersService {
                 password: hashedPassword,
                 name,
                 surname,
-                roleId,
+                roleId: role.id,
             },
             select: this.userSelect,
         });
@@ -65,11 +76,9 @@ export class UsersService {
     }
 
     async update(id: number, updateUserDto: UpdateUserDto) {
-
         await this.findOne(id);
 
-        const dataToUpdate: any = { ...updateUserDto };
-
+        const dataToUpdate = { ...updateUserDto };
 
         if (dataToUpdate.password) {
             dataToUpdate.password = await bcrypt.hash(dataToUpdate.password, 10);
@@ -84,6 +93,26 @@ export class UsersService {
 
     async remove(id: number) {
         await this.findOne(id);
+
+        const orders = await this.prisma.order.findMany({
+            where: { userId: id }
+        });
+
+        const orderIds = orders.map(o => o.id);
+
+        if (orderIds.length > 0) {
+            await this.prisma.orderOnJurisdiction.deleteMany({
+                where: { order_id: { in: orderIds } }
+            });
+        }
+
+        await this.prisma.order.deleteMany({
+            where: { userId: id }
+        });
+
+        await this.prisma.billing.deleteMany({
+            where: { userId: id }
+        });
 
         return this.prisma.user.delete({
             where: { id },

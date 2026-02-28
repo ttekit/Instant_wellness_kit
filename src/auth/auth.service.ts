@@ -1,95 +1,87 @@
-import { ConflictException, ForbiddenException, Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt'
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
-
 @Injectable()
 export class AuthService {
-
   constructor(
     private prisma: PrismaService,
-    private jwtToken: JwtService
+    private jwtService: JwtService
   ) { }
 
-  async register(registerDto: RegisterDto) {
+  async register(dto: RegisterDto) {
+    const userExists = await this.prisma.user.findUnique({
+      where: { email: dto.email }
+    });
 
-    const { email, password, name, surname, roleId } = registerDto;
-
-    if (!email || !password || !name || !surname || !roleId) {
-      throw new BadRequestException('All fields (email, password, name, surname, roleId) are necessary for registration');
-    }
-
-    const userExist = await this.prisma.user.findFirst({
-      where: { email }
-    })
-
-    if (userExist) {
+    if (userExists) {
       throw new ConflictException('User with this email already exists');
     }
 
-    const roleExist = await this.prisma.role.findUnique({
-      where: { id: roleId }
+    let role = await this.prisma.role.findUnique({
+      where: { name: 'user' }
     });
 
-    if (!roleExist) {
-      throw new BadRequestException(`Role with ID ${roleId} does not exist`);
+    if (!role) {
+      role = await this.prisma.role.create({
+        data: {
+          name: 'user',
+          permissions: {}
+        }
+      });
     }
 
-    const hashed_password = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    return this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
-        email,
-        password: hashed_password,
-        name,
-        surname,
-        role: {
-          connect: { id: roleId }
-        }
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        surname: true,
-        role: {
-          select: {
-            id: true,
-            name: true,
-          }
-        }
+        email: dto.email,
+        password: hashedPassword,
+        name: dto.name,
+        surname: dto.surname || '',
+        roleId: role.id,
       }
-    })
-  }
+    });
 
-  async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
-
-    if (!email || !password) {
-      throw new BadRequestException('Email and password are necessary');
-    }
-
-    const userExist = await this.prisma.user.findUnique({
-      where: { email }
-    })
-
-    if (!userExist) {
-      throw new UnauthorizedException('User does not exist');
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, userExist.password)
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Wrong password');
-    }
-
-    const payload = { sub: userExist.id, email: userExist.email, roleId: userExist.roleId };
+    const payload = { sub: user.id, email: user.email };
 
     return {
-      access_token: await this.jwtToken.signAsync(payload)
+      access_token: await this.jwtService.signAsync(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      }
+    };
+  }
+
+  async login(dto: LoginDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email }
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
     }
+
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const payload = { sub: user.id, email: user.email };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      }
+    };
   }
 }

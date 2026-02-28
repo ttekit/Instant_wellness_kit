@@ -16,4 +16,9 @@ export class CreateTaxRateDto {
     @IsInt()
     @IsNotEmpty()
     jurisdiction_id: number;
+
+    @ApiProperty({ description: 'The ID of the jurisdiction this tax rate belongs to', example: 1 })
+    @IsInt()
+    @IsNotEmpty()
+    local_rate: number;
 }

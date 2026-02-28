@@ -22,7 +22,8 @@ export class TaxRatesService {
                 type: createTaxRateDto.type,
                 jurisdiction: { connect: { id: createTaxRateDto.jurisdiction_id } },
                 created_at: new Date(),
-                updated_at: new Date()
+                updated_at: new Date(),
+                local_rate: createTaxRateDto.local_rate,
             }, include: { jurisdiction: true }
 
         })
