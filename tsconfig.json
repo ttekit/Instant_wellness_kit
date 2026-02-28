@@ -13,7 +13,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "../src/generated/prisma": ["./src/generated/prisma/index.d.ts"]
+      "../src/generated/prisma": ["./src/generated/prisma/index.d.ts"],
     },
     "incremental": true,
     "skipLibCheck": true,
@@ -26,12 +26,5 @@
     // "noEmit": true,
     // "allowImportingTsExtensions": true
   },
-  "include": [
-    "src/**/*"
-<<<<<<< HEAD
-, "prisma/seed.ts"  ]
+  "include": ["src/**/*", "prisma/seed.ts"],
 }
-=======
-  ]
-}
->>>>>>> 406dbb64315ebd9c4769bf54a7eb434734397bfa

@@ -17,10 +17,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "csv-parse": "^6.1.0",
-<<<<<<< HEAD
-=======
     "csv-parser": "^3.2.0",
->>>>>>> 406dbb64315ebd9c4769bf54a7eb434734397bfa
     "decimal.js": "^10.6.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
@@ -33,14 +30,9 @@
   "devDependencies": {
     "@faker-js/faker": "^10.3.0",
     "@types/jest": "^30.0.0",
-<<<<<<< HEAD
     "@types/pg": "^8.16.0"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
-=======
-    "@types/pg": "^8.16.0",
-    "ts-node": "^10.9.2"
->>>>>>> 406dbb64315ebd9c4769bf54a7eb434734397bfa
   }
 }
