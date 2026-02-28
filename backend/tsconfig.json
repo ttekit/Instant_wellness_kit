@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
-<<<<<<<< HEAD:backend/tsconfig.json
+
     "module": "commonjs",
-========
-    "module": "esnext",
-    // "resolvePackageJsonExports": true,
->>>>>>>> 521661111b6c04cf5d7b9196b91cd37d2ed9d082:frontend/tsconfig.json
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
@@ -15,14 +11,12 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2024",
     "sourceMap": true,
-<<<<<<<< HEAD:backend/tsconfig.json
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
       "../src/generated/prisma": ["./src/generated/prisma/index.d.ts"],
     },
-========
->>>>>>>> 521661111b6c04cf5d7b9196b91cd37d2ed9d082:frontend/tsconfig.json
+
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -37,15 +31,5 @@
       "vite/client"
     ]
   },
-<<<<<<<< HEAD:backend/tsconfig.json
-  "include": ["src/**/*", "prisma/seed.ts"],
+  "include": ["src/*/", "prisma/seed.ts"]
 }
-========
-  "include": [
-    "src",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "vite-env.d.ts",
-  ]
-}
->>>>>>>> 521661111b6c04cf5d7b9196b91cd37d2ed9d082:frontend/tsconfig.json
