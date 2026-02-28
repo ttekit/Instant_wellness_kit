@@ -1,16 +1,67 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import AccountTabs from "../components/ui/AccountTabs";
 
-// тимчасовий юз підтягніть бек пжпжпжппжжп
-const user = {
-  name: "te",
-  email: "dg@gsm.cio",
-  initials: "T",
-};
-
 export default function Account() {
   const navigate = useNavigate();
+  const [user, setUser] = useState({ name: "", email: "", initials: "" });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentUserId = payload.sub || payload.id;
+
+        if (!currentUserId) return;
+
+        const response = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${currentUserId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+
+          setUser({
+            name: userData.name || userData.email || "My Account",
+            email: userData.email || "",
+            initials: userData.name
+              ? userData.name[0].toUpperCase()
+              : (userData.email ? userData.email[0].toUpperCase() : "U"),
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUser();
+
+    const handleProfileUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ name: string; email: string }>;
+      const { name, email } = customEvent.detail;
+
+      setUser({
+        name: name || email || "My Account",
+        email: email || "",
+        initials: name
+          ? name[0].toUpperCase()
+          : (email ? email[0].toUpperCase() : "U"),
+      });
+    };
+
+    window.addEventListener('profile_updated', handleProfileUpdate);
+
+    return () => {
+      window.removeEventListener('profile_updated', handleProfileUpdate);
+    };
+  }, [navigate]);
 
   return (
     <div className="fixed inset-0 bg-[#f3f6f4] z-50 overflow-y-auto">

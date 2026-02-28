@@ -2,31 +2,22 @@ import { useState } from 'react'
 import { StepDots } from './ModalUI'
 import StepContents from './steps/StepContents'
 import StepLocation from './steps/StepLocation'
-import StepConfirm  from './steps/StepConfirm'
-import StepSuccess  from './steps/StepSuccess'
+import StepConfirm from './steps/StepConfirm'
+import StepSuccess from './steps/StepSuccess'
+import { Product } from '../../data/products'
 
-export type Product = {
-  id: number
-  name: string
-  tagline: string
-  price: number
-  image: string
-  contents: string[]
-  time: string
-}
+export type Coords = { lat: number; lng: number }
 
-type Coords = { lat: number; lng: number }
-
-const generateOrderId = () => `INK-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
 
 export default function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
-  const [step, setStep]       = useState(1)
-  const [coords, setCoords]   = useState<Coords | null>(null)
-  const [closing, setClosing] = useState(false)
-  const [orderId]             = useState(generateOrderId)
+  const [step, setStep] = useState<number>(1)
+  const [coords, setCoords] = useState<Coords | null>(null)
+  const [closing, setClosing] = useState<boolean>(false)
+  const [serverOrderId, setServerOrderId] = useState<string>('')
 
   const close = () => { setClosing(true); setTimeout(onClose, 220) }
   const handleLocation = (c: Coords) => { setCoords(c); setStep(3) }
+  const handleConfirm = (id: number) => { setServerOrderId(`INK-${id}`); setStep(4) }
 
   return (
     <div className={`fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 ${closing ? 'b-out' : 'b-in'}`}>
@@ -50,8 +41,8 @@ export default function ProductModal({ product, onClose }: { product: Product; o
           <StepDots step={step} />
           {step === 1 && <StepContents product={product} onNext={() => setStep(2)} />}
           {step === 2 && <StepLocation onNext={handleLocation} />}
-          {step === 3 && coords && <StepConfirm product={product} coords={coords} onNext={() => setStep(4)} />}
-          {step === 4 && coords && <StepSuccess product={product} coords={coords} orderId={orderId} onClose={close} />}
+          {step === 3 && coords && <StepConfirm product={product} coords={coords} onNext={handleConfirm} />}
+          {step === 4 && coords && <StepSuccess product={product} coords={coords} orderId={serverOrderId} onClose={close} />}
         </div>
 
       </div>

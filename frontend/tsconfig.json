@@ -22,5 +22,10 @@
     "allowJs": true,
     "moduleResolution": "bundler"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite-env.d.ts"
+  ]
 }

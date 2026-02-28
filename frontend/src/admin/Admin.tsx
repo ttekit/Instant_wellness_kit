@@ -12,8 +12,12 @@ import Roles from "./pages/Roles";
 export default function Admin() {
   return (
     <Routes>
-      <Route element={<AdminLayout />}>
+
+      <Route path="/admin" element={<AdminLayout />}>
+
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
+
+
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="orders" element={<Orders />} />
         <Route path="tax-lookup" element={<TaxLookup />} />
