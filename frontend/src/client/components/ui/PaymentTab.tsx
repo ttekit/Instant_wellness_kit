@@ -1,16 +1,52 @@
 import { useState, useEffect } from 'react'
 
+interface CardDetails {
+  number: string;
+  expiry: string;
+}
+
+interface BillingRecord {
+  id: number;
+  userId: number;
+  paymentMethod: string;
+  details: CardDetails;
+}
+
 export default function PaymentTab() {
-  const [showForm, setShowForm] = useState(false)
-  const [cardNumber, setCardNumber] = useState('')
-  const [expiry, setExpiry] = useState('')
-  const [savedCard, setSavedCard] = useState<{ number: string; expiry: string } | null>(null)
+  const [showForm, setShowForm] = useState<boolean>(false)
+  const [cardNumber, setCardNumber] = useState<string>('')
+  const [expiry, setExpiry] = useState<string>('')
+  const [savedCard, setSavedCard] = useState<CardDetails | null>(null)
+  const [billingId, setBillingId] = useState<number | null>(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem('saved_card')
-    if (stored) {
-      setSavedCard(JSON.parse(stored))
+    const loadBilling = async (): Promise<void> => {
+      try {
+        const token = localStorage.getItem('access_token')
+        if (!token) return
+
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const currentUserId = Number(payload.sub || payload.id)
+
+        const res = await fetch(import.meta.env.VITE_API_BILLINGS_URL, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        if (res.ok) {
+          const allBillings: BillingRecord[] = await res.json()
+          const userBilling = allBillings.find(b => b.userId === currentUserId)
+
+          if (userBilling) {
+            setBillingId(userBilling.id)
+            setSavedCard(userBilling.details)
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
     }
+
+    loadBilling()
   }, [])
 
   const formatCard = (v: string) => v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim()
@@ -19,20 +55,71 @@ export default function PaymentTab() {
     return c.length >= 3 ? `${c.slice(0, 2)}/${c.slice(2)}` : c
   }
 
-  const handleSave = () => {
+  const handleSave = async (): Promise<void> => {
     if (cardNumber.length >= 19 && expiry.length >= 5) {
-      const card = { number: cardNumber, expiry }
-      localStorage.setItem('saved_card', JSON.stringify(card))
-      setSavedCard(card)
-      setShowForm(false)
+      try {
+        const token = localStorage.getItem('access_token')
+        if (!token) return
+
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const currentUserId = Number(payload.sub || payload.id)
+
+        const cardDetails: CardDetails = { number: cardNumber, expiry }
+
+        const requestBody = {
+          userId: currentUserId,
+          paymentMethod: 'CREDIT_CARD',
+          details: cardDetails
+        }
+
+        const url = billingId
+          ? `${import.meta.env.VITE_API_BILLINGS_URL}/${billingId}`
+          : import.meta.env.VITE_API_BILLINGS_URL
+
+        const method = billingId ? 'PATCH' : 'POST'
+
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(requestBody)
+        })
+
+        if (res.ok) {
+          const savedData: BillingRecord = await res.json()
+          setBillingId(savedData.id)
+          setSavedCard(cardDetails)
+          setShowForm(false)
+        }
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 
-  const handleRemove = () => {
-    localStorage.removeItem('saved_card')
-    setSavedCard(null)
-    setCardNumber('')
-    setExpiry('')
+  const handleRemove = async (): Promise<void> => {
+    if (!billingId) return
+
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) return
+
+      const res = await fetch(`${import.meta.env.VITE_API_BILLINGS_URL}/${billingId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      if (res.ok || res.status === 204) {
+        setSavedCard(null)
+        setBillingId(null)
+        setCardNumber('')
+        setExpiry('')
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   if (savedCard && !showForm) return (
@@ -48,7 +135,7 @@ export default function PaymentTab() {
             <p className="text-xs text-gray-500">Expires {savedCard.expiry}</p>
           </div>
         </div>
-        <button onClick={handleRemove} className="text-xs font-semibold text-red-500 hover:text-red-600 outline-none">
+        <button onClick={handleRemove} className="text-xs font-semibold text-red-500 hover:text-red-600 outline-none border-0 bg-transparent">
           Remove
         </button>
       </div>

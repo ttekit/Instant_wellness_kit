@@ -4,36 +4,85 @@ import { ShoppingCart, DollarSign, Package, Truck } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import TaxCalc from "../components/ui/TaxCalc";
 import TaxResult from "../components/ui/TaxResult";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Order } from "../types/Orders.types";
 
 export default function Dashboard() {
   const [hasData, setHasData] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalTaxCollected, setTotalTaxCollected] = useState(0);
+  const [activeDeliveries, setActiveDeliveries] = useState(0);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const ordersResponse = await fetch("http://localhost:4200/orders/details");
+        if (!ordersResponse.ok) {
+          throw new Error(`HTTP error! status: ${ordersResponse.status}`);
+        }
+        const ordersData: Order[] = await ordersResponse.json();
+        setOrders(ordersData.data);
+
+        const dashboardResponse = await fetch("http://localhost:4200/orders/dashboard");
+        if (!dashboardResponse.ok) {
+          throw new Error(`HTTP error! status: ${dashboardResponse.status}`);
+        }
+        const dashboardData = await dashboardResponse.json();
+        setTotalOrders(dashboardData.totalOrders);
+        setTotalRevenue(dashboardData.revenue);
+        setTotalTaxCollected(dashboardData.taxCollected);
+        setActiveDeliveries(dashboardData.activeDeliveries);
+
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-600">Loading dashboard data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-center text-red-600">Error: {error}</div>;
+  }
+
   return (
     <div className="p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <Card
           title="Total Orders"
-          value={0}
+          value={totalOrders}
           descr="All time"
           icon={<ShoppingCart size={20} />}
         />
         <Card
           title="Revenue"
           dollarSign="$"
-          value={0}
+          value={totalRevenue}
           descr="Before tax"
           icon={<DollarSign size={20} />}
         />
         <Card
           title="Tax Collected"
           dollarSign="$"
-          value={0}
+          value={totalTaxCollected}
           descr="Sales tax"
           icon={<Package size={20} />}
         />
         <Card
           title="Active Deliveries"
-          value={0}
+          value={activeDeliveries}
           descr="In transit"
           icon={<Truck size={20} />}
         />
@@ -45,7 +94,7 @@ export default function Dashboard() {
             <h2 className="text-lg font-bold text-gray-900">Recent Orders</h2>
           </div>
           <div className="p-0">
-            <OrdersTable orders={[]} limit={5} />
+            <OrdersTable orders={orders} limit={5} />
           </div>
         </div>
 

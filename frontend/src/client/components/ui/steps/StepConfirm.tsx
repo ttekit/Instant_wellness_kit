@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Row } from '../ModalUI'
 import { Product } from '../../../data/products'
 
@@ -11,6 +11,12 @@ interface CreateOrderPayload {
   jurisdictionIds?: number[];
 }
 
+interface Jurisdiction {
+  id: number;
+  name: string;
+  type: string;
+}
+
 type Props = {
   product: Product;
   coords: { lat: number; lng: number };
@@ -19,6 +25,31 @@ type Props = {
 
 export default function StepConfirm({ product, coords, onNext }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [jurisdictionId, setJurisdictionId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const fetchJurisdictions = async () => {
+      try {
+        const token = localStorage.getItem('access_token')
+        if (!token) return
+
+        const res = await fetch(import.meta.env.VITE_API_JURISDICTIONS_URL, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        if (res.ok) {
+          const data: Jurisdiction[] = await res.json()
+          if (data.length > 0) {
+            setJurisdictionId(data[0].id)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    fetchJurisdictions()
+  }, [])
 
   const handlePlaceOrder = async (): Promise<void> => {
     setLoading(true)
@@ -35,7 +66,7 @@ export default function StepConfirm({ product, coords, onNext }: Props) {
         composite_tax_rate: 0,
         tax_amount: 0,
         total_amount: product.price,
-        jurisdictionIds: [1]
+        jurisdictionIds: jurisdictionId ? [jurisdictionId] : []
       }
 
       const res = await fetch(import.meta.env.VITE_API_ORDERS_URL, {
@@ -53,7 +84,7 @@ export default function StepConfirm({ product, coords, onNext }: Props) {
         onNext(Number(savedOrder.id))
       }
     } catch (e) {
-      console.error(e)
+      console.log(e)
     } finally {
       setLoading(false)
     }

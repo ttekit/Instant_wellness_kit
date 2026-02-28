@@ -55,7 +55,7 @@ export default function Roles() {
   }, []);
 
   const filtered = roles.filter((r) =>
-    r.name.toLowerCase().includes(search.toLowerCase())
+    r.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const saveEdit = async () => {
@@ -126,7 +126,7 @@ export default function Roles() {
   // ИСПРАВЛЕНИЕ: Функция переключения для объекта (Record), а не массива
   const togglePerm = (
     perm: string,
-    setRoleFunc: React.Dispatch<React.SetStateAction<Role>>
+    setRoleFunc: React.Dispatch<React.SetStateAction<Role>>,
   ) => {
     setRoleFunc((prev) => {
       const currentPerms = prev.permissions || {};
@@ -193,7 +193,6 @@ export default function Roles() {
               Permissions
             </p>
             <div className="flex flex-wrap gap-1">
-
               {Object.entries(role.permissions || {})
                 .filter(([, isGranted]) => isGranted)
                 .map(([perm]) => (
@@ -218,7 +217,9 @@ export default function Roles() {
         {editRole && (
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">Role Name</label>
+              <label className="text-sm font-medium text-gray-700">
+                Role Name
+              </label>
               <input
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
                 value={editRole.name}
@@ -228,7 +229,9 @@ export default function Roles() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Description</label>
+              <label className="text-sm font-medium text-gray-700">
+                Description
+              </label>
               <input
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
                 value={editRole.description}
@@ -251,7 +254,14 @@ export default function Roles() {
                       type="checkbox"
                       // ИСПРАВЛЕНИЕ: Проверяем значение в объекте (true/false)
                       checked={!!editRole.permissions[perm]}
-                      onChange={() => togglePerm(perm, setEditRole as React.Dispatch<React.SetStateAction<Role>>)}
+                      onChange={() =>
+                        togglePerm(
+                          perm,
+                          setEditRole as React.Dispatch<
+                            React.SetStateAction<Role>
+                          >,
+                        )
+                      }
                       className="accent-green-600"
                     />
                     {perm}
@@ -272,7 +282,9 @@ export default function Roles() {
       >
         <div className="flex flex-col gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-700">Role Name</label>
+            <label className="text-sm font-medium text-gray-700">
+              Role Name
+            </label>
             <input
               className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
               value={newRole.name}
@@ -280,7 +292,9 @@ export default function Roles() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">Description</label>
+            <label className="text-sm font-medium text-gray-700">
+              Description
+            </label>
             <input
               className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
               value={newRole.description}

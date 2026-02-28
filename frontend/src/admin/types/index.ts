@@ -1,15 +1,9 @@
 export interface Jurisdiction {
-  id: string;
+  id: number;
   name: string;
   type: string;
-  fips: string;
-  stateRate: number;
-  localRate: number;
-  mctd: number | null;
-  composite: number;
+  fipsCode: string;
 }
-
-
 
 export interface BackendTaxRate {
   rate: string | number;
@@ -27,13 +21,11 @@ export interface BackendJurisdiction {
 }
 
 export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  status: "Available" | "Blocked";
-  jurisdictionIds: string[] | "all";
-  time: string;
+  id: number;
+  product: string;
+  price: string;
+  status: "Available" | "Blocked" | "PENDING";
+  jurisdictions: Jurisdiction[];
 }
 
 export interface BackendUser {
@@ -48,15 +40,15 @@ export interface BackendUser {
   };
 }
 
-
 export interface WellnessPackage {
   id: string;
   name: string;
   description: string;
+  img_link: string;
   price: number;
   taxRate: "auto" | number;
   status: "Available" | "Blocked";
-  jurisdictionIds: string[] | "all";
+  jurisdictions: Jurisdiction[];
   productIds: string[];
 }
 
@@ -85,7 +77,6 @@ export const allPermissions = [
   "Tax Lookup",
 ] as const;
 
-
 export interface UIUser {
   id: string;
   name: string;
@@ -101,7 +92,7 @@ export interface CreateOrderPayload {
   composite_tax_rate: number;
   tax_amount: number;
   total_amount: number;
-  jurisdictionIds?: number[];
+  jurisdictions?: Jurisdiction[];
 }
 
 export interface DBOrder {
@@ -128,7 +119,6 @@ export interface DBOrder {
 //   contents: string[]
 //   time: string
 // }
-
 
 export interface NewUserForm extends UIUser {
   password?: string;
@@ -157,5 +147,3 @@ export const emptyUser: NewUserForm = {
   status: "Active",
   password: "",
 };
-
-

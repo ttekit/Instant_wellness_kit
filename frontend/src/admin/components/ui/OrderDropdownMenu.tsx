@@ -1,27 +1,26 @@
-import { MoreHorizontal, Pencil, CheckCircle, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Order } from "../../types/Orders.types";
 
-interface DropdownProps {
-  order: OrderInfo;
-  onDelete: () => void;
-  onChangeStatus: (newStatus: string) => void;
-  onEdit?: () => void;
-  unblockStatus?: string;
+interface OrderDropdownProps {
+  order: Order;
+  onDelete: (order: Order) => void;
+  onEdit?: (order: Order) => void;
+  onStatusChange?: (orderId: number, newStatus: string) => void;
 }
 
-export default function DropdownMenu({
+export default function OrderDropdownMenu({
   order,
   onDelete,
-  onChangeStatus,
   onEdit,
-  unblockStatus = "Pending",
-}: DropdownProps) {
+  onStatusChange,
+}: OrderDropdownProps) {
   const [active, setActive] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handler = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setActive(false);
       }
     };
@@ -30,18 +29,7 @@ export default function DropdownMenu({
     return () => document.removeEventListener("click", handler);
   }, [dropdownRef]);
 
-
-
-  const statusOptions = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
-  const isBlocked = order.status === "Blocked";
-  const handleToggleBlock = () => {
-    if (isBlocked) {
-      onChangeStatus(unblockStatus);
-    } else {
-      onChangeStatus("Blocked");
-    }
-    setActive(false);
-  };
+  const statusOptions = ["ARRIVED", "DELIVERING", "PENDING", "BLOCKED"];
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
@@ -57,22 +45,22 @@ export default function DropdownMenu({
       {active && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-10">
           <div className="py-2 flex flex-col">
-            <button
-              onClick={() => {
-                onEdit?.();
-                setActive(false);
-              }}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
-            >
-              <Pencil size={16} className="text-gray-500" />
-              Edit
-            </button>
-
-
+            {onEdit && (
+              <button
+                onClick={() => {
+                  onEdit(order);
+                  setActive(false);
+                }}
+                className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+              >
+                <Pencil size={16} className="text-gray-500" />
+                Edit
+              </button>
+            )}
 
             {onStatusChange && (
               <>
-                <div className="border-t border-gray-100 my-1"></div>
+                {onEdit && <div className="border-t border-gray-100 my-1"></div>}
                 <span className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">
                   Change Status
                 </span>
@@ -82,7 +70,7 @@ export default function DropdownMenu({
                     <button
                       key={status}
                       onClick={() => {
-                        onStatusChange(status);
+                        onStatusChange(order.id, status);
                         setActive(false);
                       }}
                       className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
@@ -96,7 +84,7 @@ export default function DropdownMenu({
             <div className="border-t border-gray-100 my-1"></div>
             <button
               onClick={() => {
-                onDelete();
+                onDelete(order);
                 setActive(false);
               }}
               className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
