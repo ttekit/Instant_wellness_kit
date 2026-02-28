@@ -61,21 +61,30 @@ export default function DropdownMenu({
               Edit
             </button>
 
-            <div className="border-t border-gray-100 my-1"></div>
-            <span className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">
-              Change Status
-            </span>
-            {statusOptions
-              .filter((s) => s !== order.status)
-              .map((status) => (
-                <button
-                  key={status}
-                  onClick={() => { onChangeStatus(status); setActive(false); }}
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
-                >
-                  {status}
-                </button>
-              ))}
+
+
+            {onStatusChange && (
+              <>
+                <div className="border-t border-gray-100 my-1"></div>
+                <span className="px-4 py-2 text-xs font-medium text-gray-500 uppercase">
+                  Change Status
+                </span>
+                {statusOptions
+                  .filter((s) => s !== order.status)
+                  .map((status) => (
+                    <button
+                      key={status}
+                      onClick={() => {
+                        onStatusChange(status);
+                        setActive(false);
+                      }}
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+                    >
+                      {status}
+                    </button>
+                  ))}
+              </>
+            )}
 
             <div className="border-t border-gray-100 my-1"></div>
             <button

@@ -48,6 +48,7 @@ export default function Dashboard() {
     fetchDashboardData();
   }, []);
 
+
   if (loading) {
     return <div className="p-8 text-center text-gray-600">Loading dashboard data...</div>;
   }

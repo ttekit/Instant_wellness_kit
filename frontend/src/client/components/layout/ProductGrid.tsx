@@ -103,8 +103,8 @@ function ProductGrid() {
             >
               <div className="relative">
                 <img
-                  src={p.image}
-                  alt={p.name}
+                  src={p.img_link}
+                  alt={p.package}
                   className="w-full h-36 object-cover bg-gray-100"
                   onError={e => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${p.id}/500/300` }}
                 />
@@ -120,8 +120,8 @@ function ProductGrid() {
                     ${Number(p.price).toFixed(2)}
                   </span>
                 </div>
-                <p className="text-[11px] font-semibold text-[#2596be] italic mb-2">{p.tagline}</p>
-                <p className="text-[11px] text-gray-500 leading-relaxed mb-3 flex-1">{p.desc}</p>
+                <p className="text-[11px] font-semibold text-[#2596be] italic mb-2">Wellness Pack</p>
+                <p className="text-[11px] text-gray-500 leading-relaxed mb-3 flex-1">{p.description}</p>
                 <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-3">
                   <span>{p.time}</span>
                   <span>{p.items} items</span>
