@@ -89,12 +89,12 @@ export default function StepSuccess({ product, coords, orderId, onClose }: Props
             </svg>
           </div>
           <h3 className="font-black text-gray-900 text-base mb-1">Delivered! 🎉</h3>
-          <p className="text-xs text-gray-400 mb-4">Your {product.name} kit has arrived</p>
+          <p className="text-xs text-gray-400 mb-4">Your {product.package} kit has arrived</p>
         </>
       ) : (
         <>
           <h3 className="font-black text-gray-900 text-base mb-1">Order Confirmed</h3>
-          <p className="text-xs text-gray-400 mb-1">Your {product.name} kit is on its way</p>
+          <p className="text-xs text-gray-400 mb-1">Your {product.package} kit is on its way</p>
           <div className="flex items-center justify-center gap-1.5 mb-4">
             <span className="text-xs text-gray-500">Est. arrival in</span>
             <span className="font-black text-[#1a5c3a] text-sm tabular-nums">{mm}:{ss}</span>

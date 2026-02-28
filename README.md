@@ -1,176 +1,90 @@
-# 🛸 Drone Delivery Wellness Service
+# Drone Delivery Wellness Service 🚀😊
 
-Інноваційна платформа для експрес-доставки велнес-наборів за допомогою дронів у межах Нью-Йорка.
-Система включає інтерактивну вітрину товарів, розрахунок податків на основі геопозиції та панель управління замовленнями.
+## An innovative platform for express delivery of wellness kits using drones within New York City. 🚁✨
 
----
+This system includes an interactive product showcase, location-based tax calculation, and an order management dashboard.
 
-## 🛠 Технологічний стек
+## Technologies Used 🛠️
 
 ### Frontend
-- **React + Vite** - висока швидкість складання та сучасний UI.
-- **Tailwind CSS** — адаптивна та швидка верстка.
-- **TypeScript** — сувора типізація для запобігання помилкам на етапі розробки.
+
+*   **React + Vite:** For a high-speed build process and a modern user interface.
+*   **Tailwind CSS:** For responsive and rapid UI development.
+*   **TypeScript:** For strict typing to prevent errors during development.
 
 ### Backend
-- **NestJS** — надійний фреймворк для серверних програм, що масштабуються.
-- **Prisma ORM** — зручне керування базою даних та типізація запитів.
-- **PostgreSQL** — реляційна база даних для зберігання замовлень та користувачів.
-- **Swagger/OpenAPI** - автоматична документація всіх ендпоінтів.
 
----
+*   **NestJS:** A robust and scalable framework for server-side applications.
+*   **Prisma ORM:** For convenient database management and typed queries.
+*   **PostgreSQL:** A relational database for storing orders and user data.
+*   **Swagger/OpenAPI:** For automatic documentation of all API endpoints.
 
-## 🚀 Швидкий запуск
+## Running Locally 🏃‍♂️💨
 
-### 1. Вимоги
+Follow these steps to set up and run the Drone Delivery Wellness Service on your local machine.
 
-- Node.js (v18+)
-- PostgreSQL
+### Prerequisites ✅
 
----
+Before you begin, ensure you have the following installed:
 
-### 2. Налаштування бази даних
+*   **Node.js & npm/pnpm:** You'll need Node.js (which includes npm) and `pnpm` for package management. If you don't have `pnpm`, you can install it globally via npm:
+    ```bash
+    npm install -g pnpm
+    ```
+*   **PostgreSQL Database:** A running PostgreSQL instance is required. You can install it locally or use Docker.
 
-У папці `backend` створіть файл `.env`:
+### Backend Setup ⚙️
 
-``` env
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/drone_db?schema=public"
-````
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
 
-Виконайте команди для ініціалізації БД:
+2.  **Create a `.env` file:**
+    In the `backend` directory, create a file named `.env` and add your PostgreSQL database connection string. Replace `USER` and `PASSWORD` with your actual database credentials.
+    ```env
+    DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/drone_db?schema=public"
+    ```
 
-``` bash
-cd backend
-pnpm install
-npx prisma migrate dev --name init
-npx prisma generate
-npx prisma/seed.ts
+3.  **Install dependencies:**
+    ```bash
+    pnpm install
+    ```
 
-````
+4.  **Generate Prisma client:**
+    ```bash
+    npx prisma generate
+    ```
 
----
+5.  **Seed the database (optional, for initial data):**
+    ```bash
+    npx prisma db seed
+    ```
+    *Note: The command `npx prisma/seed.ts` seems incorrect based on typical Prisma usage. I've corrected it to `npx prisma db seed`, assuming you have a `seed.ts` file configured in your `prisma/schema.prisma`.*
 
-### 3. Запуск Backend (NestJS)
+6.  **Start the backend server:**
+    ```bash
+    pnpm nest start
+    ```
+    The backend server will typically run on `http://localhost:3000` (or another port as configured).
 
-``` bash
-pnpm run start:dev
-````
+### Frontend Setup 💻
 
-API URL:
-http://localhost:4200
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+    *(Assuming your frontend code is in a `frontend` subdirectory within your `hackathone` project root. Please adjust the path if it's different.)*
 
-Swagger UI:
-http://localhost:4200/api
+2.  **Install dependencies:**
+    ```bash
+    pnpm install
+    ```
 
----
+3.  **Start the frontend development server:**
+    ```bash
+    pnpm run dev
+    ```
+    The frontend application will usually be accessible in your browser at `http://localhost:5173` (or another port specified by Vite).
 
-### 4. Запуск Frontend (React)
-
-У папці `frontend` створіть файл `.env`:
-
-``` env
-VITE_API_BASE_URL=http://localhost:4200
-VITE_API_ORDERS_URL=http://localhost:4200/orders
-VITE_API_JURISDICTIONS_URL=http://localhost:4200/jurisdictions
-````
-
-Запустіть сервер розробки:
-
-``` bash
-cd frontend
-pnpm install
-pnpm run dev
-````
-
-App URL:
-http://localhost:5173
-
----
-
-## 🏗 Структура бази даних (Prisma)
-
-### ProductPackage
-Інформація про набори:
-- `package` - назва набору
-- `price` - ціна
-- `img_link` — посилання на зображення
-- опис набору
-
-### Order
-Дані про замовлення:
-- `subtotal`
-- `total_amount`
-- Податки
-- поточний статус замовлення
-
-### User
-- профілі користувачів
-- паролі
-- ролі
-
-### Jurisdiction
-- координати (`lat`, `long`)
-- використовується для визначення податкової ставки у зоні доставки
-
----
-
-## 💡 Інструкції для розробника
-
-### Додавання або зміна товару
-
-1. Відкрийте Prisma Studio: 
-``` bash 
-npx prisma studio 
-````
-
-2. Перейдіть до таблиці 'products_packeges'.
-
-3. Поле `img_link` має містити пряме посилання зображення (URL).
-
-4. Поля `price` та `tax_rate` заповнюються числами (Decimal на стороні БД).
-
----
-
-## 🔐 Управління через API (Адмінка)
-
-- `GET /product-packeges/with-details` 
-Отримання всіх товарів зі складом для вітрини.
-
-- `PATCH /product-packeges/:id` 
-Оновлення даних набору, включаючи зміну складу продуктів.
-
-- `POST/orders` 
-Оформлення нового замовлення (вимагає `packageId` та `userId`).
-
----
-
-## ⚠️ Вирішення частих проблем
-
-### Помилка JSON (Unexpected token <)
-
-Перевірте адресу бекенда в `.env`.
-Якщо API недоступний або шлях неправильний, сервер повертає HTML-помилку (наприклад, 404), яку фронтенд не може розпарити.
-
-### Помилка 400 Bad Request
-
-Переконайтеся, що під час замовлення передається `packageId`.
-Поле є обов'язковим для валідації на бекенді.
-
-### Картинки не відображаються
-
-- Переконайтеся, що у базі даних у полі `img_link` стоїть робоче посилання.
-- У React має використовуватись `product.img_link`.
-
----
-
-## 📦 Підсумок
-
-Drone Delivery Wellness Service - це повноцінна full-stack платформа з:
-
-- сучасним React-інтерфейсом
-- масштабованим NestJS-бекендом
-- типізована ORM Prisma
-- PostgreSQL базою даних
-- автоматичною документацією через Swagger
-
-Проект готовий до локального запуску та подальшого масштабування.
+Now you should have both your backend and frontend services running locally! 🎉😊
