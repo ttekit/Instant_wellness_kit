@@ -103,7 +103,7 @@ function ProductGrid() {
             >
               <div className="relative">
                 <img
-                  src={p.img_link}
+                  src={p.image}
                   alt={p.package}
                   className="w-full h-36 object-cover bg-gray-100"
                   onError={e => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${p.id}/500/300` }}

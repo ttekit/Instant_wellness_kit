@@ -44,7 +44,7 @@ export default function ProductModal({ product, onClose }: { product: Product; o
 
           <img
             src={product.image}
-            alt={product.name}
+            alt={product.package}
             className="w-full h-full object-cover"
             style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
             onLoad={() => setImgLoaded(true)}
@@ -61,7 +61,7 @@ export default function ProductModal({ product, onClose }: { product: Product; o
           >✕</button>
           <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
             <div>
-              <p className="text-white font-black text-base leading-tight">{product.name}</p>
+              <p className="text-white font-black text-base leading-tight">{product.package}</p>
               <p className="text-white/70 text-xs">{product.tagline}</p>
             </div>
             <span className="bg-white/20 backdrop-blur-sm text-white text-sm font-bold px-3 py-1 rounded-lg">

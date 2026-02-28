@@ -1,15 +1,26 @@
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { products, Product } from '../../data/products'
 import ProductModal from './ProductModal'
+import { Product } from '../../data/products'
+
+// interface Product {
+//   id: number;
+//   package: string;
+//   price: number;
+//   description?: string;
+//   img_link: string;
+//   tagline?: string;
+//   time?: string;
+//   popular?: boolean;
+// }
 
 interface ServerOrder {
   id: number;
   subtotal: string | number;
   userId: number;
   timestamp: string;
-  productId?: number;
-  productName?: string;
+  packageId?: number;
+  package?: { package: string; img_link: string };
 }
 
 interface UIOrder {
@@ -20,26 +31,48 @@ interface UIOrder {
   price: number;
 }
 
-function matchProduct(o: ServerOrder): { name: string; image: string } {
-  if (o.productId) {
-    const p = products.find(p => p.id === o.productId)
-    if (p) return { name: p.name, image: p.image }
+function normalizeProduct(p: any) {
+  if (p.package !== undefined) {
+    return {
+      id: p.id,
+      name: p.package,
+      tagline: 'Wellness Pack',
+      desc: p.description,
+      price: Number(p.price),
+      image: p.img_link,
+      time: '20-25 min',
+      items: p.products?.length || 0,
+      popular: false,
+      contents: p.products?.map((x: any) => x.product?.product || x.product || x.name || x) || [],
+    }
   }
-  if (o.productName) {
-    const p = products.find(p => p.name === o.productName)
-    if (p) return { name: p.name, image: p.image }
+  return p
+}
+
+function matchProduct(o: ServerOrder, loadedProducts: any[]): { name: string; image: string } {
+  if (o.package) {
+    return { name: o.package.package, image: o.package.img_link };
   }
-  const byPrice = products.find(p => p.price === Number(o.subtotal))
-  if (byPrice) return { name: byPrice.name, image: byPrice.image }
-  return { name: 'Wellness Kit', image: '' }
+
+  if (o.packageId) {
+    const p = loadedProducts.find(p => p.id === o.packageId);
+    if (p) return { name: p.name, image: p.image };
+  }
+
+  const byPrice = loadedProducts.find(p => Number(p.price) === Number(o.subtotal));
+  if (byPrice) return { name: byPrice.name, image: byPrice.image };
+
+  return { name: 'Wellness Kit', image: '' };
 }
 
 export default function OrdersTab() {
   const [showKits, setShowKits] = useState(false)
   const [myOrders, setMyOrders] = useState<UIOrder[]>([])
+  const [availableProducts, setAvailableProducts] = useState<any[]>([])
   const kitsRef = useRef<HTMLDivElement>(null)
 
-  const loadOrders = async (): Promise<void> => {
+  // Загружаем и товары, и заказы
+  const loadData = async (): Promise<void> => {
     try {
       const token = localStorage.getItem('access_token')
       if (!token) return
@@ -47,7 +80,17 @@ export default function OrdersTab() {
       const payload = JSON.parse(atob(token.split('.')[1]))
       const currentUserId = Number(payload.sub || payload.id)
 
-      const res = await fetch(import.meta.env.VITE_API_ORDERS_URL, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4200'
+      const prodRes = await fetch(`${baseUrl}/product-packeges/with-details`)
+      let productsData: any[] = []
+      if (prodRes.ok) {
+        const rawData = await prodRes.json()
+        productsData = rawData.map(normalizeProduct)
+        setAvailableProducts(productsData)
+      }
+
+      const ordersUrl = import.meta.env.VITE_API_ORDERS_URL || 'http://localhost:4200/orders'
+      const res = await fetch(ordersUrl, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
@@ -56,43 +99,23 @@ export default function OrdersTab() {
         const formatted: UIOrder[] = allOrders
           .filter(o => o.userId === currentUserId)
           .map(o => {
-            const { name, image } = matchProduct(o)
+            const { name, image } = matchProduct(o, productsData)
             return { id: o.id, orderId: `INK-${o.id}`, name, image, price: Number(o.subtotal) }
           })
           .sort((a, b) => b.id - a.id)
         setMyOrders(formatted)
       }
     } catch (e) {
-      console.error(e)
+      console.error("Error loading orders tab data:", e)
     }
   }
 
-  const handleOrderPlaced = (e: Event) => {
-    const detail = (e as CustomEvent).detail as {
-      orderId: string;
-      product?: Product;
-      price?: number;
-      serverOrderId?: number;
-    } | undefined
-
-    if (detail?.product) {
-      const newOrder: UIOrder = {
-        id: detail.serverOrderId ?? Date.now(),
-        orderId: detail.orderId,
-        name: detail.product.name,
-        image: detail.product.image,
-        price: detail.price ?? detail.product.price,
-      }
-      setMyOrders(prev => {
-        if (prev.some(o => o.orderId === newOrder.orderId)) return prev
-        return [newOrder, ...prev]
-      })
-    }
-    loadOrders()
+  const handleOrderPlaced = () => {
+    loadData()
   }
 
   useEffect(() => {
-    loadOrders()
+    loadData()
     window.addEventListener('order_placed', handleOrderPlaced)
     return () => window.removeEventListener('order_placed', handleOrderPlaced)
   }, [])
@@ -123,16 +146,19 @@ export default function OrdersTab() {
           <div className="space-y-3">
             {myOrders.map((o) => (
               <div key={o.id} className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4">
-                {/* REPLACED IMAGE WITH DYNAMIC BLUE BLOCK */}
-                <div 
-                  className="w-12 h-12 rounded-lg shrink-0 flex items-center justify-center text-white font-bold text-[10px] shadow-sm"
-                  style={{ 
-                    backgroundColor: `hsl(196, 67%, ${40 + (o.id % 15)}%)` 
-                  }}
+                <div
+                  className="w-12 h-12 rounded-lg shrink-0 flex items-center justify-center overflow-hidden shadow-sm"
                 >
-                  {o.name.substring(0, 2).toUpperCase()}
+                  {o.image ? (
+                    <img src={o.image} alt={o.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white font-bold text-[10px]"
+                      style={{ backgroundColor: `hsl(196, 67%, ${40 + (o.id % 15)}%)` }}>
+                      {o.name.substring(0, 2).toUpperCase()}
+                    </div>
+                  )}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-bold text-gray-900 truncate">{o.name}</p>
                   <p className="text-[10px] text-gray-500 mt-0.5">Order ID: {o.orderId}</p>
@@ -170,9 +196,30 @@ export default function OrdersTab() {
 
 function KitGrid() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [products, setProducts] = useState<any[]>([])
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const fetchKits = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4200'
+        const res = await fetch(`${baseUrl}/product-packeges/with-details`)
+        if (res.ok) {
+          const rawData = await res.json()
+          setProducts(rawData.map(normalizeProduct))
+        }
+      } catch (e) {
+        console.error("Error fetching kits in KitGrid:", e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchKits()
+  }, [])
+
+  useEffect(() => {
+    if (products.length === 0) return
     const observer = new IntersectionObserver(
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('reveal-visible'); observer.unobserve(e.target) }
@@ -181,7 +228,9 @@ function KitGrid() {
     )
     const t = setTimeout(() => { cardRefs.current.forEach(c => { if (c) observer.observe(c) }) }, 50)
     return () => { clearTimeout(t); observer.disconnect() }
-  }, [])
+  }, [products])
+
+  if (loading) return <p className="text-xs text-gray-400">Loading kits...</p>
 
   return (
     <>
@@ -193,23 +242,23 @@ function KitGrid() {
             className="reveal bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col"
             style={{ transitionDelay: `${i * 80}ms` }}
           >
-            <div className="relative">
-              {/* REPLACED GRID IMAGE WITH DYNAMIC BLUE BLOCK */}
-              <div 
-                className="w-full h-28 flex items-center justify-center text-white font-black text-2xl"
-                style={{ backgroundColor: `hsl(196, 67%, ${35 + (p.id % 20)}%)` }}
-              >
-                {p.name.substring(0, 2).toUpperCase()}
-              </div>
+            <div className="relative h-28 bg-gray-100">
+              {p.image ? (
+                <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[#2596be] font-black text-2xl">
+                  {p.name.substring(0, 2).toUpperCase()}
+                </div>
+              )}
               {p.popular && <span className="absolute top-2 left-2 bg-yellow-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Popular</span>}
             </div>
             <div className="p-3 flex flex-col flex-1">
               <div className="flex items-center justify-between mb-0.5">
                 <p className="text-xs font-bold text-gray-900">{p.name}</p>
-                <span className="text-xs font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded-md">${p.price.toFixed(2)}</span>
+                <span className="text-xs font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded-md">${Number(p.price).toFixed(2)}</span>
               </div>
-              <p className="text-[11px] font-semibold text-[#2596be] italic mb-1">{p.tagline}</p>
-              <p className="text-[10px] text-gray-400 leading-relaxed mb-3 flex-1">{p.desc}</p>
+              <p className="text-[11px] font-semibold text-[#2596be] italic mb-1">{p.tagline || 'Wellness Kit'}</p>
+              <p className="text-[10px] text-gray-400 leading-relaxed mb-3 flex-1 line-clamp-2">{p.desc}</p>
               <button
                 onClick={() => setSelectedProduct(p)}
                 className="card-btn w-full bg-[#2596be] hover:bg-[#1a7a9e] text-white text-xs font-semibold py-2 rounded-lg"
@@ -221,7 +270,7 @@ function KitGrid() {
         ))}
       </div>
       {selectedProduct && createPortal(
-        <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />,
+        <ProductModal product={selectedProduct as any} onClose={() => setSelectedProduct(null)} />,
         document.body
       )}
     </>
