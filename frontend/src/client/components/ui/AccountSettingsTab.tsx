@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import LoginModal from './Modal'
 
 export default function AccountSettingsTab() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [userId, setUserId] = useState<number | null>(null)
+  const [saved, setSaved] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -15,16 +20,13 @@ export default function AccountSettingsTab() {
         try {
           const payload = JSON.parse(atob(token.split('.')[1]))
           currentUserId = payload.sub || payload.id
-        } catch (e) {
-          console.log(e)
-        }
+        } catch (e) { console.log(e) }
 
         if (!currentUserId) return
-
         setUserId(currentUserId)
 
         const res = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${currentUserId}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
         })
 
         if (res.ok) {
@@ -32,38 +34,34 @@ export default function AccountSettingsTab() {
           setName(data.name || '')
           setEmail(data.email || '')
         }
-      } catch (e) {
-        console.log(e)
-      }
+      } catch (e) { console.log(e) }
     }
     loadProfile()
   }, [])
 
   const handleSave = async () => {
     if (!userId) return
-
     try {
       const token = localStorage.getItem('access_token')
       const res = await fetch(`${import.meta.env.VITE_API_USERS_URL}/${userId}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, email })
       })
-
       if (res.ok) {
+        localStorage.setItem('user', JSON.stringify({ name, email }))
+        window.dispatchEvent(new Event('user_updated'))
         window.dispatchEvent(new CustomEvent('profile_updated', { detail: { name, email } }))
+        setSaved(true)
+        setTimeout(() => setSaved(false), 2000)
       }
-    } catch (e) {
-      console.log(e)
-    }
+    } catch (e) { console.log(e) }
   }
 
   const handleSignOut = () => {
     localStorage.removeItem('access_token')
-    window.location.reload()
+    localStorage.removeItem('user')
+    setShowLogin(true)
   }
 
   return (
@@ -85,7 +83,9 @@ export default function AccountSettingsTab() {
           </div>
         </div>
         <div className="field-row">
-          <button onClick={handleSave} className="sbtn bg-[#1a5c3a] hover:bg-[#154d30] text-white text-xs font-semibold px-5 py-2.5 rounded-xl">Save Changes</button>
+          <button onClick={handleSave} className="sbtn bg-[#1a5c3a] hover:bg-[#154d30] text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition-all">
+            {saved ? '✓ Saved!' : 'Save Changes'}
+          </button>
         </div>
       </div>
 
@@ -101,6 +101,10 @@ export default function AccountSettingsTab() {
           Sign Out
         </button>
       </div>
+
+      {showLogin && (
+        <LoginModal onClose={() => navigate('/')} blurBg />
+      )}
     </div>
   )
 }

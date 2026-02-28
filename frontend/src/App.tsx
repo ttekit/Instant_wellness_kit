@@ -1,10 +1,11 @@
-import { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./client/pages/Home";
-import Admin from "./admin/Admin";
-import Account from "./client/pages/Account";
-
+import { useEffect } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import Home from './client/pages/Home'
+import Admin from './admin/Admin'
+import Account from './client/pages/Account'
 export default function App() {
+  const location = useLocation()
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -22,11 +23,26 @@ export default function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/admin/*" element={<Admin />} />
-      <Route path="/account" element={<Account />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
+    <>
+      <style>{`
+        @keyframes pageFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .page-enter {
+          animation: pageFadeIn 0.25s ease forwards;
+        }
+      `}</style>
+
+      <div key={location.pathname} className="page-enter">
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/admin/*" element={<Admin />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </>
+  )
 }
+

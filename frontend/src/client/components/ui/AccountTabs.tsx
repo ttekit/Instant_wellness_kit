@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import OrdersTab from './OrdersTab'
 import PaymentTab from './PaymentTab'
 import AccountSettingsTab from './AccountSettingsTab'
@@ -12,30 +13,29 @@ const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
 ]
 
 export default function AccountTabs() {
-  const [active, setActive] = useState<Tab>('orders')
+  const location = useLocation()
+  const initialTab = (location.state as { tab?: Tab } | null)?.tab
+  const [active, setActive] = useState<Tab>(
+    initialTab && tabs.some(t => t.id === initialTab) ? initialTab : 'orders'
+  )
 
   return (
     <div>
       <div className="flex bg-[#eef2ee] rounded-full p-1 mb-8 max-w-sm">
         {tabs.map(t => (
           <button key={t.id} onClick={() => setActive(t.id)}
-            className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-2 rounded-full font-medium transition-all outline-none border-0 ${active === t.id ? 'bg-white shadow text-gray-800' : 'bg-transparent text-gray-500 hover:text-gray-700'
-              }`}
+            className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-2 rounded-full font-medium transition-all outline-none border-0 ${
+              active === t.id ? 'bg-white shadow text-gray-800' : 'bg-transparent text-gray-500 hover:text-gray-700'
+            }`}
           >
             {t.icon}{t.label}
           </button>
         ))}
       </div>
 
-      <div className={active === 'orders' ? 'block' : 'hidden'}>
-        <OrdersTab />
-      </div>
-      <div className={active === 'payment' ? 'block' : 'hidden'}>
-        <PaymentTab />
-      </div>
-      <div className={active === 'account' ? 'block' : 'hidden'}>
-        <AccountSettingsTab />
-      </div>
+      <div className={active === 'orders'  ? 'block' : 'hidden'}><OrdersTab /></div>
+      <div className={active === 'payment' ? 'block' : 'hidden'}><PaymentTab /></div>
+      <div className={active === 'account' ? 'block' : 'hidden'}><AccountSettingsTab /></div>
     </div>
   )
 }

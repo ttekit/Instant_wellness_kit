@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom'
 
-// Це для логіна!! Я просто коли пробувала змінити ім'я, то весь сайт ламався womp womp
 type FieldProps = { label: string; icon?: string; suffix?: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>
 
 const Field = ({ label, icon, suffix, ...props }: FieldProps) => (
@@ -17,30 +16,21 @@ const Field = ({ label, icon, suffix, ...props }: FieldProps) => (
 
 const USERS_URL = import.meta.env.VITE_API_AUTH_URL;
 
-function Modal({ onClose }: { onClose: () => void }) {
-  const navigate = useNavigate();
-
+function Modal({ onClose, blurBg = false }: { onClose: () => void; blurBg?: boolean }) {
   const [tab, setTab] = useState<'signin' | 'create'>('signin')
   const [showPw, setShowPw] = useState(false)
   const [closing, setClosing] = useState(false)
   const [anim, setAnim] = useState('')
   const [key, setKey] = useState(0)
-
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-  };
+  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    setError('')
+  }
 
   const close = () => { setClosing(true); setTimeout(onClose, 220) }
 
@@ -57,78 +47,58 @@ function Modal({ onClose }: { onClose: () => void }) {
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
 
   const handle_submit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     setError('')
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
-
-      // Логин
-
       if (tab === 'signin') {
+        if (!formData.email || !formData.password) throw new Error('Please fill in all fields')
+
         const response = await fetch(`${USERS_URL}/login`, {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          })
+          method: 'POST',
+          headers: { 'Content-type': 'application/json' },
+          body: JSON.stringify({ email: formData.email, password: formData.password })
         })
-        if (!response.ok) {
-          throw new Error("Email or password is incorrect")
-        }
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access_token);
-        navigate('/account')
-        close();
-      }
+        if (!response.ok) throw new Error('Email or password is incorrect')
 
-      // Рег
+        const data = await response.json()
+        localStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        close()
+      } else {
+        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword)
+          throw new Error('Please fill in all fields')
+        if (formData.password !== formData.confirmPassword)
+          throw new Error('Passwords arent matching')
 
-      else {
-        if (formData.password !== formData.confirmPassword) {
-          throw new Error("Passwords arent matching")
-        }
-
-        const [name, ...surnameParts] = formData.fullName.split(" ")
-        const surname = surnameParts.join(" ") || "User"
+        const [name, ...surnameParts] = formData.fullName.split(' ')
+        const surname = surnameParts.join(' ') || 'User'
 
         const response = await fetch(`${USERS_URL}/register`, {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            name,
-            surname,
-            email: formData.email,
-            password: formData.password,
-            roleId: 7
-          }),
+          method: 'POST',
+          headers: { 'Content-type': 'application/json' },
+          body: JSON.stringify({ name, surname, email: formData.email, password: formData.password, roleId: 7 })
         })
 
         if (!response.ok) {
-          const errText = await response.text();
-          let errorMessage = 'Registration error';
+          const errText = await response.text()
+          let errorMessage = 'Registration error'
           try {
-            const errData = JSON.parse(errText);
-
-            errorMessage = Array.isArray(errData.message)
-              ? errData.message.join(', ')
-              : (errData.message || errorMessage);
+            const errData = JSON.parse(errText)
+            errorMessage = Array.isArray(errData.message) ? errData.message.join(', ') : (errData.message || errorMessage)
           } catch (e) {
             errorMessage = errText || errorMessage
             console.log(e)
           }
-
           throw new Error(errorMessage)
         }
 
         switchTab('signin')
-        setError("Succsesful, now login")
+        setError('Succsesful, now login')
       }
     } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError(e.message)
-      }
+      if (e instanceof Error) setError(e.message)
     } finally {
       setIsLoading(false)
     }
@@ -136,15 +106,13 @@ function Modal({ onClose }: { onClose: () => void }) {
 
   const pwType = showPw ? 'text' : 'password'
   const eyeBtn = (
-    <button
-      type='button'
-      onClick={() => setShowPw(p => !p)}
+    <button type='button' onClick={() => setShowPw(p => !p)}
       style={{ opacity: showPw ? .7 : 1, transition: 'opacity .15s' }}
       className="!bg-transparent !text-gray-400 text-sm ml-2 outline-none !border-0">👁</button>
   )
 
-  return (
-    <div className={`fixed inset-0 bg-black/50 z-50 flex items-center justify-center select-none ${closing ? 'b-out' : 'b-in'}`}>
+  return createPortal(
+    <div className={`fixed inset-0 z-[9999] flex items-center justify-center select-none ${blurBg ? 'bg-white/60 backdrop-blur-md' : 'bg-black/50'} ${closing ? 'b-out' : 'b-in'}`}>
       <div className={`!bg-[#f5f7f5] rounded-2xl p-6 w-full max-w-sm relative border !border-gray-200 ${closing ? 'm-out' : 'm-in'}`}>
 
         <button onClick={close} className="xbtn absolute top-4 right-4 !bg-transparent !text-gray-400 hover:!text-gray-600 text-lg outline-none !border-0">✕</button>
@@ -168,26 +136,26 @@ function Modal({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        <form onSubmit={handle_submit} key={key} className={`flex flex-col gap-4 ${anim}`}>
+        <form onSubmit={handle_submit} key={key} noValidate className={`flex flex-col gap-4 ${anim}`}>
           {tab === 'signin' ? <>
-            <Field label="Email" name="email" value={formData.email} onChange={handleChange} icon="✉" type="email" placeholder="you@example.com" required />
-            <Field label="Password" name="password" value={formData.password} onChange={handleChange} type={pwType} placeholder="Enter your password" suffix={eyeBtn} required />
+            <Field label="Email" name="email" value={formData.email} onChange={handleChange} icon="✉" type="email" placeholder="you@example.com" />
+            <Field label="Password" name="password" value={formData.password} onChange={handleChange} type={pwType} placeholder="Enter your password" suffix={eyeBtn} />
             <div className="field-row">
               <button disabled={isLoading} className="sbtn w-full !bg-[#2596be] !text-white py-3 rounded-xl text-sm font-semibold outline-none !border-0 disabled:opacity-50">{isLoading ? 'Loading...' : 'Sign In'}</button>
             </div>
           </> : <>
-            <Field label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} icon="👤" type="text" placeholder="Jane Doe" required />
-            <Field label="Email" name="email" value={formData.email} onChange={handleChange} icon="✉" type="email" placeholder="you@example.com" required />
-            <Field label="Password" name="password" value={formData.password} onChange={handleChange} type={pwType} placeholder="Min. 8 characters" suffix={eyeBtn} minLength={8} required />
-            <Field label="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type="password" placeholder="Re-enter password" minLength={8} required />
+            <Field label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} icon="👤" type="text" placeholder="Jane Doe" />
+            <Field label="Email" name="email" value={formData.email} onChange={handleChange} icon="✉" type="email" placeholder="you@example.com" />
+            <Field label="Password" name="password" value={formData.password} onChange={handleChange} type={pwType} placeholder="Min. 8 characters" suffix={eyeBtn} minLength={8} />
+            <Field label="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type="password" placeholder="Re-enter password" minLength={8} />
             <div className="field-row">
               <button disabled={isLoading} className="sbtn w-full !bg-[#2596be] !text-white py-3 rounded-xl text-sm font-semibold outline-none !border-0 disabled:opacity-50">{isLoading ? 'Loading...' : 'Create Account'}</button>
             </div>
           </>}
         </form>
-
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

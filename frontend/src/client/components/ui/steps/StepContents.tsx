@@ -1,10 +1,13 @@
+import { Product } from '../../../data/products'
+
+
 type Props = {
   product: any;
   onNext: () => void
 }
 
 export default function StepContents({ product, onNext }: Props) {
-
+  // Безопасно достаем список товаров из структуры Prisma: product.products -> массив объектов
   const items = product?.products || [];
 
   return (

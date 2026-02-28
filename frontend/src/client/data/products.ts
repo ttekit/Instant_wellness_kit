@@ -2,14 +2,13 @@ export type Product = {
   id: number
   package: string
   tagline: string
-  description: string
+  desc: string
   price: number
   time: string
   items: number
   popular: boolean
   image: string
   contents: string[]
-
 }
 
 export const products: Product[] = [
@@ -17,7 +16,7 @@ export const products: Product[] = [
     id: 1,
     package: 'Stress Relief',
     tagline: 'Breathe deep. Let go.',
-    description: 'A calming collection designed to melt away tension and restore your inner balance in minutes.',
+    desc: 'A calming collection designed to melt away tension and restore your inner balance in minutes.',
     price: 34.99,
     time: '20–25 min',
     items: 5,
@@ -29,7 +28,7 @@ export const products: Product[] = [
     id: 2,
     package: 'Energy Boost',
     tagline: 'Power through your afternoon.',
-    description: 'Beat the midday slump with this energizing kit packed with natural pick-me-ups.',
+    desc: 'Beat the midday slump with this energizing kit packed with natural pick-me-ups.',
     price: 29.99,
     time: '20–25 min',
     items: 5,
@@ -41,7 +40,7 @@ export const products: Product[] = [
     id: 3,
     package: 'Outdoor Fitness',
     tagline: 'Your park is your gym.',
-    description: 'Everything you need for a spontaneous outdoor workout, delivered right to where you are.',
+    desc: 'Everything you need for a spontaneous outdoor workout, delivered right to where you are.',
     price: 39.99,
     time: '25–30 min',
     items: 5,
@@ -53,7 +52,7 @@ export const products: Product[] = [
     id: 4,
     package: 'Sleep Reset',
     tagline: 'Wind down. Drift off.',
-    description: 'Prepare for the most restful sleep of your life with this soothing nighttime ritual kit.',
+    desc: 'Prepare for the most restful sleep of your life with this soothing nighttime ritual kit.',
     price: 36.99,
     time: '20–25 min',
     items: 5,
@@ -65,7 +64,7 @@ export const products: Product[] = [
     id: 5,
     package: 'Mindful Focus',
     tagline: 'Clarity in a box.',
-    description: 'Sharpen your mind and reclaim your focus with this carefully curated concentration kit.',
+    desc: 'Sharpen your mind and reclaim your focus with this carefully curated concentration kit.',
     price: 32.99,
     time: '20–25 min',
     items: 5,

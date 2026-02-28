@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from '../ui/Modal'
+import LoggedNavbar from './LoggedNavbar'
 
 function Navbar() {
   const [showModal, setShowModal]         = useState(false)
   const [showOrderHint, setShowOrderHint] = useState(false)
   const [hintClosing, setHintClosing]     = useState(false)
   const navigate = useNavigate()
+
+  const isLoggedIn = !!localStorage.getItem('access_token')
 
   const scrollTo = (id: string) => {
     if (window.location.pathname !== '/') {
@@ -24,6 +27,8 @@ function Navbar() {
     setTimeout(() => setHintClosing(true), 2000)
     setTimeout(() => setShowOrderHint(false), 2200)
   }
+
+  if (isLoggedIn) return <LoggedNavbar />
 
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-8 py-2 bg-[#e8eceb] select-none">

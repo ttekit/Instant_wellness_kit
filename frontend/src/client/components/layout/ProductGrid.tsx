@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ProductModal from '../ui/ProductModal'
 import LoginModal from '../ui/Modal'
+import { products as localProducts } from '../../data/products'
 
 function preloadImage(src: string, fallbackSeed: number) {
   const img = new Image()
@@ -10,6 +11,24 @@ function preloadImage(src: string, fallbackSeed: number) {
 
 function isLoggedIn() {
   return !!localStorage.getItem('access_token')
+}
+
+function normalizeProduct(p: any) {
+  if (p.package !== undefined) {
+    return {
+      id: p.id,
+      name: p.package,
+      tagline: 'Wellness Pack',
+      desc: p.description,
+      price: Number(p.price),
+      image: p.img_link,
+      time: '20-25 min',
+      items: p.products?.length || 0,
+      popular: false,
+      contents: p.products?.map((x: any) => x.name || x) || [],
+    }
+  }
+  return p
 }
 
 function ProductGrid() {
@@ -22,20 +41,22 @@ function ProductGrid() {
   useEffect(() => {
     const fetchKits = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4200';
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4200'
         const res = await fetch(`${baseUrl}/product-packeges/with-details`)
         if (res.ok) {
           const data = await res.json()
-          setProducts(data)
-          data.forEach((p: any) => preloadImage(p.img_link, p.id))
+          if (Array.isArray(data) && data.length > 0) {
+            setProducts(data.map(normalizeProduct))
+            data.forEach((p: any) => preloadImage(p.img_link, p.id))
+            return
+          }
         }
       } catch (e) {
-        console.error("Failed to fetch products:", e)
-      } finally {
-        setLoading(false)
+        console.warn('API unavailable, using local products:', e)
       }
+      setProducts(localProducts)
     }
-    fetchKits()
+    fetchKits().finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -87,11 +108,14 @@ function ProductGrid() {
                   className="w-full h-36 object-cover bg-gray-100"
                   onError={e => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${p.id}/500/300` }}
                 />
+                {p.popular && (
+                  <span className="absolute top-2 left-2 bg-yellow-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Popular</span>
+                )}
               </div>
 
               <div className="p-4 flex flex-col flex-1">
                 <div className="flex items-center justify-between mb-0.5">
-                  <h3 className="text-sm font-bold text-gray-900">{p.package}</h3>
+                  <h3 className="text-sm font-bold text-gray-900">{p.name}</h3>
                   <span className="text-xs font-bold text-gray-800 bg-gray-100 px-2 py-0.5 rounded-md">
                     ${Number(p.price).toFixed(2)}
                   </span>
@@ -99,8 +123,8 @@ function ProductGrid() {
                 <p className="text-[11px] font-semibold text-[#2596be] italic mb-2">Wellness Pack</p>
                 <p className="text-[11px] text-gray-500 leading-relaxed mb-3 flex-1">{p.description}</p>
                 <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-3">
-                  <span className="flex items-center gap-1">20-25 min</span>
-                  <span className="flex items-center gap-1">{p.products?.length || 0} items</span>
+                  <span>{p.time}</span>
+                  <span>{p.items} items</span>
                 </div>
                 <button
                   onClick={() => handleSelectKit(p)}

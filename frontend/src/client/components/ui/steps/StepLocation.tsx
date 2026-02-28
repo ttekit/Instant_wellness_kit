@@ -7,6 +7,10 @@ function isInNYC(lat: number, lng: number) {
   return lat >= 40.4774 && lat <= 40.9176 && lng >= -74.2591 && lng <= -73.7004
 }
 
+function isValidCoord(lat: number, lng: number) {
+  return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180
+}
+
 export default function StepLocation({ onNext }: Props) {
   const [coords, setCoords]         = useState<Coords | null>(null)
   const [error, setError]           = useState('')
@@ -14,24 +18,36 @@ export default function StepLocation({ onNext }: Props) {
   const [manualMode, setManualMode] = useState(false)
   const [manualLat, setManualLat]   = useState('')
   const [manualLng, setManualLng]   = useState('')
+  const [shake, setShake]           = useState(false)
+
+  const triggerShake = () => {
+    setShake(true)
+    setTimeout(() => setShake(false), 500)
+  }
+
+  const showError = (msg: string) => {
+    setError(msg)
+    triggerShake()
+  }
 
   const detect = () => {
     setLoading(true); setError('')
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude: lat, longitude: lng } }) => {
         setLoading(false)
-        if (!isInNYC(lat, lng)) return setError('Sorry, delivery is only available in New York City.')
+        if (!isInNYC(lat, lng)) return showError('🗽 Delivery is only available in New York City. Try entering NYC coordinates manually.')
         setCoords({ lat, lng })
       },
-      () => { setLoading(false); setError('Could not detect location. Please allow location access.') },
+      () => { setLoading(false); showError('Could not detect location. Please allow location access or enter manually.') },
       { timeout: 10000 }
     )
   }
 
   const submitManual = () => {
     const lat = parseFloat(manualLat), lng = parseFloat(manualLng)
-    if (isNaN(lat) || isNaN(lng)) return setError('Please enter valid coordinates.')
-    if (!isInNYC(lat, lng)) return setError('Sorry, delivery is only available in New York City.')
+    if (isNaN(lat) || isNaN(lng)) return showError('Please enter valid numbers for both coordinates.')
+    if (!isValidCoord(lat, lng)) return showError('These don\'t look like valid coordinates. Lat must be -90 to 90, Lng -180 to 180.')
+    if (!isInNYC(lat, lng)) return showError('🗽 Delivery is only available in New York City. Try: 40.7128, -74.0060')
     setError(''); setCoords({ lat, lng })
   }
 
@@ -43,7 +59,7 @@ export default function StepLocation({ onNext }: Props) {
       <p className="text-xs text-gray-400 mb-4">Share your GPS coordinates so our drone knows exactly where to find you</p>
 
       {coords ? (
-        <div className="bg-[#e8f5e9] rounded-xl p-4 mb-4 text-center">
+        <div className="payment-enter bg-[#e8f5e9] rounded-xl p-4 mb-4 text-center">
           <svg className="w-6 h-6 text-[#1a5c3a] mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -53,7 +69,7 @@ export default function StepLocation({ onNext }: Props) {
           <button onClick={reset} className="text-[11px] text-[#2596be] mt-2 underline outline-none border-0 bg-transparent">Change location</button>
         </div>
       ) : manualMode ? (
-        <div className="mb-4 space-y-3">
+        <div className="payment-enter mb-4 space-y-3">
           <p className="text-xs text-gray-500">Enter your NYC coordinates (e.g. 40.7128, -74.0060)</p>
           {[
             { label: 'Lat', value: manualLat, set: setManualLat, placeholder: '40.7128' },
@@ -62,13 +78,13 @@ export default function StepLocation({ onNext }: Props) {
             <div key={label} className="iw flex items-center border !border-gray-200 rounded-xl px-3 py-2 !bg-white">
               <span className="text-gray-400 text-xs mr-2 w-6">{label}</span>
               <input type="number" step="any" placeholder={placeholder} value={value}
-                onChange={e => set(e.target.value)}
+                onChange={e => { set(e.target.value); setError('') }}
                 className="flex-1 text-sm outline-none bg-transparent text-gray-800 select-text" />
             </div>
           ))}
         </div>
       ) : (
-        <div className="bg-gray-50 rounded-xl p-5 mb-4 text-center">
+        <div className="payment-enter bg-gray-50 rounded-xl p-5 mb-4 text-center">
           <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
           </svg>
@@ -79,7 +95,12 @@ export default function StepLocation({ onNext }: Props) {
         </div>
       )}
 
-      {error && <p className="text-xs text-red-500 mb-3 text-center">{error}</p>}
+      {error && (
+        <div className={`flex items-start gap-2 bg-red-50 border border-red-100 text-red-500 text-xs rounded-xl px-3 py-2.5 mb-3 ${shake ? 'loc-shake' : ''}`}>
+          <span className="mt-0.5 flex-shrink-0">⚠️</span>
+          <span>{error}</span>
+        </div>
+      )}
 
       {!coords && !manualMode && (
         <>
