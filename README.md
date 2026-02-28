@@ -58,7 +58,7 @@ Before you begin, ensure you have the following installed:
 
 5.  **Seed the database (optional, for initial data):**
     ```bash
-    npx prisma db seed
+    npx prisma/seed.ts
     ```
     *Note: The command `npx prisma/seed.ts` seems incorrect based on typical Prisma usage. I've corrected it to `npx prisma db seed`, assuming you have a `seed.ts` file configured in your `prisma/schema.prisma`.*
 
