@@ -9,7 +9,6 @@ export class JurisdictionsService {
 
 
     async create(dto: CreateJurisdictionDto) {
-
         return this.prisma.jurisdiction.create({
             data: {
                 name: dto.name,
@@ -63,8 +62,7 @@ export class JurisdictionsService {
             data: {
                 name: updateJurisdictionDto.name,
                 type: updateJurisdictionDto.type,
-                fipCode: updateJurisdictionDto.fipsCode,
-                status: updateJurisdictionDto.status,
+                fipsCode: updateJurisdictionDto.fipsCode
             },
         });
     }

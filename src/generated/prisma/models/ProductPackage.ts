@@ -41,6 +41,8 @@ export type ProductPackageSumAggregateOutputType = {
 export type ProductPackageMinAggregateOutputType = {
   id: number | null
   package: string | null
+  description: string | null
+  img_link: string | null
   price: runtime.Decimal | null
   status: $Enums.Status | null
   taxRate: runtime.Decimal | null
@@ -49,6 +51,8 @@ export type ProductPackageMinAggregateOutputType = {
 export type ProductPackageMaxAggregateOutputType = {
   id: number | null
   package: string | null
+  description: string | null
+  img_link: string | null
   price: runtime.Decimal | null
   status: $Enums.Status | null
   taxRate: runtime.Decimal | null
@@ -57,6 +61,8 @@ export type ProductPackageMaxAggregateOutputType = {
 export type ProductPackageCountAggregateOutputType = {
   id: number
   package: number
+  description: number
+  img_link: number
   price: number
   status: number
   taxRate: number
@@ -79,6 +85,8 @@ export type ProductPackageSumAggregateInputType = {
 export type ProductPackageMinAggregateInputType = {
   id?: true
   package?: true
+  description?: true
+  img_link?: true
   price?: true
   status?: true
   taxRate?: true
@@ -87,6 +95,8 @@ export type ProductPackageMinAggregateInputType = {
 export type ProductPackageMaxAggregateInputType = {
   id?: true
   package?: true
+  description?: true
+  img_link?: true
   price?: true
   status?: true
   taxRate?: true
@@ -95,6 +105,8 @@ export type ProductPackageMaxAggregateInputType = {
 export type ProductPackageCountAggregateInputType = {
   id?: true
   package?: true
+  description?: true
+  img_link?: true
   price?: true
   status?: true
   taxRate?: true
@@ -190,6 +202,8 @@ export type ProductPackageGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type ProductPackageGroupByOutputType = {
   id: number
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal
   status: $Enums.Status
   taxRate: runtime.Decimal
@@ -221,6 +235,8 @@ export type ProductPackageWhereInput = {
   NOT?: Prisma.ProductPackageWhereInput | Prisma.ProductPackageWhereInput[]
   id?: Prisma.IntFilter<"ProductPackage"> | number
   package?: Prisma.StringFilter<"ProductPackage"> | string
+  description?: Prisma.StringFilter<"ProductPackage"> | string
+  img_link?: Prisma.StringFilter<"ProductPackage"> | string
   price?: Prisma.DecimalFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFilter<"ProductPackage"> | $Enums.Status
   taxRate?: Prisma.DecimalFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -231,6 +247,8 @@ export type ProductPackageWhereInput = {
 export type ProductPackageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   package?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  img_link?: Prisma.SortOrder
   price?: Prisma.SortOrder
   status?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -244,6 +262,8 @@ export type ProductPackageWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ProductPackageWhereInput[]
   NOT?: Prisma.ProductPackageWhereInput | Prisma.ProductPackageWhereInput[]
   package?: Prisma.StringFilter<"ProductPackage"> | string
+  description?: Prisma.StringFilter<"ProductPackage"> | string
+  img_link?: Prisma.StringFilter<"ProductPackage"> | string
   price?: Prisma.DecimalFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFilter<"ProductPackage"> | $Enums.Status
   taxRate?: Prisma.DecimalFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -254,6 +274,8 @@ export type ProductPackageWhereUniqueInput = Prisma.AtLeast<{
 export type ProductPackageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   package?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  img_link?: Prisma.SortOrder
   price?: Prisma.SortOrder
   status?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -270,6 +292,8 @@ export type ProductPackageScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ProductPackageScalarWhereWithAggregatesInput | Prisma.ProductPackageScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"ProductPackage"> | number
   package?: Prisma.StringWithAggregatesFilter<"ProductPackage"> | string
+  description?: Prisma.StringWithAggregatesFilter<"ProductPackage"> | string
+  img_link?: Prisma.StringWithAggregatesFilter<"ProductPackage"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusWithAggregatesFilter<"ProductPackage"> | $Enums.Status
   taxRate?: Prisma.DecimalWithAggregatesFilter<"ProductPackage"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -277,6 +301,8 @@ export type ProductPackageScalarWhereWithAggregatesInput = {
 
 export type ProductPackageCreateInput = {
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -287,6 +313,8 @@ export type ProductPackageCreateInput = {
 export type ProductPackageUncheckedCreateInput = {
   id?: number
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -296,6 +324,8 @@ export type ProductPackageUncheckedCreateInput = {
 
 export type ProductPackageUpdateInput = {
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -306,6 +336,8 @@ export type ProductPackageUpdateInput = {
 export type ProductPackageUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -316,6 +348,8 @@ export type ProductPackageUncheckedUpdateInput = {
 export type ProductPackageCreateManyInput = {
   id?: number
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -323,6 +357,8 @@ export type ProductPackageCreateManyInput = {
 
 export type ProductPackageUpdateManyMutationInput = {
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -331,6 +367,8 @@ export type ProductPackageUpdateManyMutationInput = {
 export type ProductPackageUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -344,6 +382,8 @@ export type ProductPackageScalarRelationFilter = {
 export type ProductPackageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   package?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  img_link?: Prisma.SortOrder
   price?: Prisma.SortOrder
   status?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -358,6 +398,8 @@ export type ProductPackageAvgOrderByAggregateInput = {
 export type ProductPackageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   package?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  img_link?: Prisma.SortOrder
   price?: Prisma.SortOrder
   status?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -366,6 +408,8 @@ export type ProductPackageMaxOrderByAggregateInput = {
 export type ProductPackageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   package?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  img_link?: Prisma.SortOrder
   price?: Prisma.SortOrder
   status?: Prisma.SortOrder
   taxRate?: Prisma.SortOrder
@@ -407,6 +451,8 @@ export type ProductPackageUpdateOneRequiredWithoutProductsNestedInput = {
 
 export type ProductPackageCreateWithoutOrdersInput = {
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -416,6 +462,8 @@ export type ProductPackageCreateWithoutOrdersInput = {
 export type ProductPackageUncheckedCreateWithoutOrdersInput = {
   id?: number
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -440,6 +488,8 @@ export type ProductPackageUpdateToOneWithWhereWithoutOrdersInput = {
 
 export type ProductPackageUpdateWithoutOrdersInput = {
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -449,6 +499,8 @@ export type ProductPackageUpdateWithoutOrdersInput = {
 export type ProductPackageUncheckedUpdateWithoutOrdersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -457,6 +509,8 @@ export type ProductPackageUncheckedUpdateWithoutOrdersInput = {
 
 export type ProductPackageCreateWithoutProductsInput = {
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -466,6 +520,8 @@ export type ProductPackageCreateWithoutProductsInput = {
 export type ProductPackageUncheckedCreateWithoutProductsInput = {
   id?: number
   package: string
+  description: string
+  img_link: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.Status
   taxRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -490,6 +546,8 @@ export type ProductPackageUpdateToOneWithWhereWithoutProductsInput = {
 
 export type ProductPackageUpdateWithoutProductsInput = {
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -499,6 +557,8 @@ export type ProductPackageUpdateWithoutProductsInput = {
 export type ProductPackageUncheckedUpdateWithoutProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   package?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  img_link?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   taxRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -548,6 +608,8 @@ export type ProductPackageCountOutputTypeCountOrdersArgs<ExtArgs extends runtime
 export type ProductPackageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   package?: boolean
+  description?: boolean
+  img_link?: boolean
   price?: boolean
   status?: boolean
   taxRate?: boolean
@@ -559,6 +621,8 @@ export type ProductPackageSelect<ExtArgs extends runtime.Types.Extensions.Intern
 export type ProductPackageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   package?: boolean
+  description?: boolean
+  img_link?: boolean
   price?: boolean
   status?: boolean
   taxRate?: boolean
@@ -567,6 +631,8 @@ export type ProductPackageSelectCreateManyAndReturn<ExtArgs extends runtime.Type
 export type ProductPackageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   package?: boolean
+  description?: boolean
+  img_link?: boolean
   price?: boolean
   status?: boolean
   taxRate?: boolean
@@ -575,12 +641,14 @@ export type ProductPackageSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type ProductPackageSelectScalar = {
   id?: boolean
   package?: boolean
+  description?: boolean
+  img_link?: boolean
   price?: boolean
   status?: boolean
   taxRate?: boolean
 }
 
-export type ProductPackageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "package" | "price" | "status" | "taxRate", ExtArgs["result"]["productPackage"]>
+export type ProductPackageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "package" | "description" | "img_link" | "price" | "status" | "taxRate", ExtArgs["result"]["productPackage"]>
 export type ProductPackageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | Prisma.ProductPackage$productsArgs<ExtArgs>
   orders?: boolean | Prisma.ProductPackage$ordersArgs<ExtArgs>
@@ -598,6 +666,8 @@ export type $ProductPackagePayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     package: string
+    description: string
+    img_link: string
     price: runtime.Decimal
     status: $Enums.Status
     taxRate: runtime.Decimal
@@ -1028,6 +1098,8 @@ export interface Prisma__ProductPackageClient<T, Null = never, ExtArgs extends r
 export interface ProductPackageFieldRefs {
   readonly id: Prisma.FieldRef<"ProductPackage", 'Int'>
   readonly package: Prisma.FieldRef<"ProductPackage", 'String'>
+  readonly description: Prisma.FieldRef<"ProductPackage", 'String'>
+  readonly img_link: Prisma.FieldRef<"ProductPackage", 'String'>
   readonly price: Prisma.FieldRef<"ProductPackage", 'Decimal'>
   readonly status: Prisma.FieldRef<"ProductPackage", 'Status'>
   readonly taxRate: Prisma.FieldRef<"ProductPackage", 'Decimal'>

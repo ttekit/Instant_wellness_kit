@@ -171,6 +171,8 @@ export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof Role
 export const ProductPackageScalarFieldEnum = {
   id: 'id',
   package: 'package',
+  description: 'description',
+  img_link: 'img_link',
   price: 'price',
   status: 'status',
   taxRate: 'taxRate'

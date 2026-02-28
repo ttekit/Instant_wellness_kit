@@ -34,6 +34,8 @@ export class OrdersService {
         jurisdiction: { connect: { id } },
       })) || [];
 
+    console.log(jurisdictionsData);
+
     return this.prisma.order.create({
       data: {
         subtotal: CreateOrderDto.subtotal,

@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { PrismaService } from "src/prisma.service";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 @Injectable()
 export class ProductsService {
@@ -21,6 +21,33 @@ export class ProductsService {
 
   async findAll() {
     return this.prisma.product.findMany();
+  }
+
+  async getProductsWithDetails() {
+    const products = await this.prisma.product.findMany({
+      include: {
+        jurisdictions: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            fipsCode: true,
+          },
+        },
+      },
+    });
+
+    return products.map((product) => ({
+      id: product.id,
+      product: product.product,
+      price: product.price,
+      jurisdictions: product.jurisdictions.map((j) => ({
+        id: j.id,
+        name: j.name,
+        type: j.type,
+        fipsCode: j.fipsCode,
+      })),
+    }));
   }
 
   async findOne(id: number) {
@@ -50,7 +77,6 @@ export class ProductsService {
     return {
       product: product.product,
       price: product.price,
-      status: product.status,
       jurisdictions: product.jurisdictions.map((j) => j.name),
     };
   }
@@ -58,7 +84,7 @@ export class ProductsService {
   async update(id: number, updateProductDto: UpdateProductDto) {
     const { jurisdictionIds, ...productData } = updateProductDto;
 
-    const product = await this.prisma.product.update({
+    const updatedProduct = await this.prisma.product.update({
       where: { id },
       data: {
         ...productData,
@@ -66,11 +92,31 @@ export class ProductsService {
           set: jurisdictionIds?.map((id) => ({ id })),
         },
       },
+      include: {
+        jurisdictions: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            fipsCode: true,
+          },
+        },
+      },
     });
-    if (!product) {
+    if (!updatedProduct) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    return product;
+    return {
+      id: updatedProduct.id,
+      product: updatedProduct.product,
+      price: updatedProduct.price,
+      jurisdictions: updatedProduct.jurisdictions.map((j) => ({
+        id: j.id,
+        name: j.name,
+        type: j.type,
+        fipsCode: j.fipsCode,
+      })),
+    };
   }
 
   async remove(id: number) {

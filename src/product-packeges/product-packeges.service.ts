@@ -2,19 +2,31 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { ProductPackage, Status } from 'src/generated/prisma/client';
-import { CreateProductPackageDto } from './dto/create-product-package.dto';
-import { UpdateProductPackageDto } from './dto/update-product-package.dto';
-import { ProductPackageDetailsDto } from './dto/product-package-detail.dto';
+} from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { ProductPackage, Status } from "src/generated/prisma/client";
+import { CreateProductPackageDto } from "./dto/create-product-package.dto";
+import { UpdateProductPackageDto } from "./dto/update-product-package.dto";
+import { ProductPackageDetailsDto } from "./dto/product-package-detail.dto";
 
 @Injectable()
 export class ProductPackegesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createProductPackageDto: CreateProductPackageDto): Promise<ProductPackage> {
+  async create(
+    createProductPackageDto: CreateProductPackageDto,
+  ): Promise<ProductPackage> {
     const { productIds, ...productPackageData } = createProductPackageDto;
+
+    const existingPackage = await this.prisma.productPackage.findFirst({
+      where: { package: productPackageData.package },
+    });
+
+    if (existingPackage) {
+      throw new ConflictException(
+        `Product package with name '${productPackageData.package}' already exists.`,
+      );
+    }
 
     if (productIds && productIds.length > 0) {
       const existingProducts = await this.prisma.product.findMany({
@@ -31,7 +43,7 @@ export class ProductPackegesService {
           (id) => !foundProductIds.has(id),
         );
         throw new NotFoundException(
-          `Products with IDs ${nonExistentProductIds.join(', ')} not found.`,
+          `Products with IDs ${nonExistentProductIds.join(", ")} not found.`,
         );
       }
     }
@@ -54,7 +66,7 @@ export class ProductPackegesService {
         return productPackage;
       });
     } catch (error) {
-      throw new ConflictException('Error creating product package');
+      throw new ConflictException("Error creating product package");
     }
   }
 
@@ -74,7 +86,10 @@ export class ProductPackegesService {
     return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
-  async update(id: number, updateProductPackageDto: UpdateProductPackageDto): Promise<ProductPackageDetailsDto | null> {
+  async update(
+    id: number,
+    updateProductPackageDto: UpdateProductPackageDto,
+  ): Promise<ProductPackageDetailsDto | null> {
     console.log(updateProductPackageDto);
     const { productIds, ...productPackageData } = updateProductPackageDto;
 
@@ -93,7 +108,7 @@ export class ProductPackegesService {
           (productId) => !foundProductIds.has(productId),
         );
         throw new NotFoundException(
-          `Products with IDs ${nonExistentProductIds.join(', ')} not found.`,
+          `Products with IDs ${nonExistentProductIds.join(", ")} not found.`,
         );
       }
     }
@@ -169,7 +184,9 @@ export class ProductPackegesService {
     return this.getProductPackegeWithJurisdictionAndProductsById(id);
   }
 
-  async getProductPackegeWithJurisdictionAndProducts(): Promise<ProductPackageDetailsDto[]> {
+  async getProductPackegeWithJurisdictionAndProducts(): Promise<
+    ProductPackageDetailsDto[]
+  > {
     const packages = await this.prisma.productPackage.findMany({
       include: {
         products: {
@@ -218,7 +235,9 @@ export class ProductPackegesService {
     });
   }
 
-  async getProductPackegeWithJurisdictionAndProductsById(id: number): Promise<ProductPackageDetailsDto | null> {
+  async getProductPackegeWithJurisdictionAndProductsById(
+    id: number,
+  ): Promise<ProductPackageDetailsDto | null> {
     const pkg = await this.prisma.productPackage.findUnique({
       where: { id },
       include: {
